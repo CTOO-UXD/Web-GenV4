@@ -4,4 +4,4 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/checkbox/checkbox.js';
+import 'genv4/checkbox/checkbox.js';

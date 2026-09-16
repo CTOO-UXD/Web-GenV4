@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/slider/slider.js';
+import 'genv4/slider/slider.js';
 
-import type {MdSlider} from '@material/web/slider/slider.js';
+import type {MdSlider} from 'genv4/slider/slider.js';
 import {css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {styleMap} from 'lit/directives/style-map.js';

@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/select/filled-select.js';
-import '@material/web/select/outlined-select.js';
-import '@material/web/select/select-option.js';
+import 'genv4/select/filled-select.js';
+import 'genv4/select/outlined-select.js';
+import 'genv4/select/select-option.js';

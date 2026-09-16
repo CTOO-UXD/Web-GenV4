@@ -1,10 +1,10 @@
 {
-  "name": "@material/web",
-  "version": "2.5.0",
+  "name": "genv4",
+  "version": "0.0.1",
   "publishConfig": {
     "access": "public"
   },
-  "description": "Material web components",
+  "description": "GenV4 web components, based on Google's Material Web",
   "keywords": [
     "material",
     "material design",
@@ -15,14 +15,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/material-components/material-web.git"
+    "url": "git+https://github.com/bingomaha-creator/GenV4.git"
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/material-components/material-web/issues"
+    "url": "https://github.com/bingomaha-creator/GenV4/issues"
   },
-  "homepage": "https://github.com/material-components/material-web#readme",
+  "homepage": "https://github.com/bingomaha-creator/GenV4#readme",
   "scripts": {
+    "prepack": "npm run build",
     "build": "wireit",
     "build:ts": "wireit",
     "build:css-to-ts": "wireit",

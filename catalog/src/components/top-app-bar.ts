@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/focus/md-focus-ring.js';
-import '@material/web/icon/icon.js';
-import '@material/web/iconbutton/icon-button.js';
+import 'genv4/focus/md-focus-ring.js';
+import 'genv4/icon/icon.js';
+import 'genv4/iconbutton/icon-button.js';
 
-import type {MdIconButton} from '@material/web/iconbutton/icon-button.js';
+import type {MdIconButton} from 'genv4/iconbutton/icon-button.js';
 import {css, html, LitElement} from 'lit';
 import {customElement, query, state} from 'lit/decorators.js';
 import {live} from 'lit/directives/live.js';

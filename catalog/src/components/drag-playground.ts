@@ -9,7 +9,7 @@ import { LitElement, css, html } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import '@material/web/icon/icon.js';
+import 'genv4/icon/icon.js';
 
 /**
  * A playground preview + editor with a draggable handle.

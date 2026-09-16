@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/focus/md-focus-ring.js';
-import '@material/web/icon/icon.js';
-import '@material/web/labs/segmentedbutton/outlined-segmented-button.js';
-import '@material/web/labs/segmentedbuttonset/outlined-segmented-button-set.js';
+import 'genv4/focus/md-focus-ring.js';
+import 'genv4/icon/icon.js';
+import 'genv4/labs/segmentedbutton/outlined-segmented-button.js';
+import 'genv4/labs/segmentedbuttonset/outlined-segmented-button-set.js';
 import './copy-code-button.js';
 import './hct-slider.js';
 
-import type {MdOutlinedSegmentedButton} from '@material/web/labs/segmentedbutton/outlined-segmented-button.js';
+import type {MdOutlinedSegmentedButton} from 'genv4/labs/segmentedbutton/outlined-segmented-button.js';
 import {css, html, LitElement} from 'lit';
 import {customElement, query, queryAll, state} from 'lit/decorators.js';
 import {live} from 'lit/directives/live.js';

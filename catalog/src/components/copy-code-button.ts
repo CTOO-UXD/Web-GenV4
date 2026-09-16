@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/icon/icon.js';
-import '@material/web/iconbutton/icon-button.js';
+import 'genv4/icon/icon.js';
+import 'genv4/iconbutton/icon-button.js';
 
-import {MdIconButton} from '@material/web/iconbutton/icon-button.js';
+import {MdIconButton} from 'genv4/iconbutton/icon-button.js';
 import {css, html, LitElement} from 'lit';
 import {
   customElement,

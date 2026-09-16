@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/iconbutton/outlined-icon-button.js';
+import 'genv4/iconbutton/outlined-icon-button.js';
 
-import {MdOutlinedIconButton} from '@material/web/iconbutton/outlined-icon-button.js';
+import {MdOutlinedIconButton} from 'genv4/iconbutton/outlined-icon-button.js';
 import type {PlaygroundPreview} from 'playground-elements/playground-preview.js';
 import {PostDoc} from 'postdoc-lib';
 
