@@ -1,6 +1,8 @@
 name: Tests
 
-on: [push]
+# 手动触发(Actions 页面 Run workflow);发版前的全量测试在 publish.yml 中执行
+on:
+  workflow_dispatch:
 
 permissions:
   contents: read
