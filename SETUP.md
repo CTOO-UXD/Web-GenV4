@@ -81,6 +81,10 @@ VSCode 打开仓库根目录即可，仓库自带的 `.vscode/settings.json` 已
 git clone https://github.com/bingomaha-creator/GenV4.git
 cd GenV4
 
+# 1b. 添加上游 remote（用于同步 Google 官方修复；remote 配置不随仓库走，clone 后必须手动补）
+git remote add upstream https://github.com/material-components/material-web.git
+git remote -v   # 应看到 origin(你的仓库)和 upstream(Google 官方)各两行
+
 # 2. 安装依赖（根包 + catalog workspace 一次装齐）
 npm install
 
