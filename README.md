@@ -1,86 +1,72 @@
-# Material Web
+# GenV4
 
-<img src="./docs/images/material-web.gif"
-  title="Material web components"
-  alt="A collection of Material web components"
-  style="border-radius: 32px">
+GenV4 是基于 Google [Material Web](https://github.com/material-components/material-web)（`@material/web` v2.5.0+）二次开发的 Web Components 组件库，使用 [Lit](https://lit.dev/) 构建，遵循 Material Design 3 规范。
 
-[![Published on npm](https://img.shields.io/npm/v/%40material%2Fweb)](https://www.npmjs.com/package/@material/web)
-[![Join our Discord](https://img.shields.io/badge/discord-join%20chat-5865F2.svg?logo=discord&logoColor=fff&label=%23material)](https://lit.dev/discord/)
-[![Test status](https://github.com/material-components/material-web/actions/workflows/test.yml/badge.svg)](https://github.com/material-components/material-web/actions/workflows/test.yml)
-[![npm Downloads](https://img.shields.io/npm/dm/%40material%2Fweb?label=npm%20downloads)](https://npm-stat.com/charts.html?package=%40material%2Fweb)
-[![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/%40material%2Fweb)](https://www.jsdelivr.com/package/npm/@material/web?tab=stats)
+> 内部二开版本，仅供公司内部项目使用。
 
-`@material/web` is a library of
-[web components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)<!-- {.external} -->
-that helps build beautiful and accessible web applications. It uses
-[Material 3](https://m3.material.io/)<!-- {.external} -->, the latest version of Google's
-open-source design system.
+## 安装
 
-**Note:
-[MWC is in maintenance mode pending new maintainers](https://github.com/material-components/material-web/discussions/5642).**
-
-## Resources
-
--   [Introduction](./docs/intro.md)
--   [Roadmap](./docs/roadmap.md)
--   [Component docs](./docs/components/)
--   [Bundle size](./docs/size.md)
--   [Browser support and FAQ](./docs/support.md)
-
-## Quick start
-
-> Tip: Using Angular? We recommend using
-> [Angular Material](https://material.angular.io/)<!-- {.external} --> components
-> instead.
-
-This code snippet is a buildless example that loads `@material/web` from a CDN.
-Check out the [quick start](./docs/quick-start.md) guide to install and build
-for production.
-
-<!-- LINT.IfChange -->
-
-```html
-<head>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <script type="importmap">
-    {
-      "imports": {
-        "@material/web/": "https://esm.run/@material/web/"
-      }
-    }
-  </script>
-  <script type="module">
-    import '@material/web/all.js';
-    import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
-
-    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
-  </script>
-</head>
-<body>
-  <h1 class="md-typescale-display-medium">Hello Material!</h1>
-  <form>
-    <p class="md-typescale-body-medium">Check out these controls in a form!</p>
-    <md-checkbox></md-checkbox>
-    <div>
-      <md-radio name="group"></md-radio>
-      <md-radio name="group"></md-radio>
-      <md-radio name="group"></md-radio>
-    </div>
-
-    <md-outlined-text-field label="Favorite color" value="Purple"></md-outlined-text-field>
-
-    <md-outlined-button type="reset">Reset</md-outlined-button>
-  </form>
-  <style>
-    form {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
-    }
-  </style>
-</body>
+```bash
+npm install genv4
 ```
 
-<!-- LINT.ThenChange(./g3doc/docs/quick-start.md) -->
+## 快速上手
+
+```html
+<script type="module">
+  import 'genv4/button/filled-button.js';
+  import 'genv4/icon/icon.js';
+</script>
+
+<md-filled-button>
+  <md-icon slot="icon">favorite</md-icon>
+  Button
+</md-filled-button>
+```
+
+按需引入各组件模块（如 `genv4/button/filled-button.js`），也可从 `genv4/all.js` 一次性引入全部组件。
+
+## 主题定制
+
+组件通过 CSS 自定义属性（design tokens）定制，推荐覆盖系统级 token：
+
+```css
+md-filled-button.brand {
+  --md-sys-color-primary: #006a6a;
+  --md-sys-color-on-primary: #ffffff;
+}
+```
+
+完整 token 列表见各组件源码目录 `tokens/_md-comp-*.scss`，使用说明见 Material Web 官方文档的 [Theming](https://material-web.dev/theming/) 章节。
+
+## 本地开发
+
+```bash
+npm install            # 安装依赖（含 catalog workspace）
+npm run build          # 构建（TS + Sass + manifest）
+npm test               # 运行测试（首次需 npx playwright install chromium）
+```
+
+组件文档站（catalog）：
+
+```bash
+cd catalog
+npm run serve:dev      # 终端 A：起服务 http://localhost:8000
+npm run build:dev      # 终端 B：改完组件源码后重新构建，浏览器自动刷新
+```
+
+详细环境搭建见 [SETUP.md](./SETUP.md)。
+
+## 与上游的关系
+
+本仓库 fork 自 `material-components/material-web`，`company-baseline` 标签标记了 fork 起点。上游的修复可通过以下方式同步：
+
+```bash
+git fetch upstream
+git log --oneline main..upstream/main   # 查看上游新提交
+git cherry-pick <commit>                # 按需摘取
+```
+
+## License
+
+Apache-2.0。基于 Google 的 Material Web 二次开发，遵循其原始许可条款。
