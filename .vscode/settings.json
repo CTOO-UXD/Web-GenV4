@@ -1,0 +1,5 @@
+{
+  // 仓库无格式化配置文件(Prettier/EditorConfig),保持上游单引号风格,
+  // 关闭保存时自动格式化以避免 diff 噪音。手动格式化:Shift+Option+F
+  "editor.formatOnSave": false
+}
