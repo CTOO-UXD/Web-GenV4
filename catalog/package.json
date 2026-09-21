@@ -30,7 +30,10 @@
       ]
     },
     "build:dev:eleventy": {
-      "command": "NODE_ENV=DEV eleventy",
+      "command": "eleventy",
+      "env": {
+        "NODE_ENV": "DEV"
+      },
       "files": [
         "site",
         "lib",
@@ -48,7 +51,10 @@
       ]
     },
     "build:dev:ts": {
-      "command": "NODE_ENV=DEV node esbuild.config.mjs",
+      "command": "node esbuild.config.mjs",
+      "env": {
+        "NODE_ENV": "DEV"
+      },
       "files": [
         "src",
         "tsconfig.json",
@@ -83,7 +89,10 @@
       ]
     },
     "build:prod:eleventy": {
-      "command": "NODE_ENV=PROD eleventy",
+      "command": "eleventy",
+      "env": {
+        "NODE_ENV": "PROD"
+      },
       "files": [
         "site",
         "build",
@@ -101,7 +110,10 @@
       ]
     },
     "build:prod:ts": {
-      "command": "NODE_ENV=PROD node esbuild.config.mjs",
+      "command": "node esbuild.config.mjs",
+      "env": {
+        "NODE_ENV": "PROD"
+      },
       "files": [
         "src",
         "tsconfig.json",

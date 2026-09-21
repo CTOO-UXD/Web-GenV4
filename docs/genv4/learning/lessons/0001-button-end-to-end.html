@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>第 1 课：一颗 Button 如何成为像素 · GenV4</title>
+    <link rel="stylesheet" href="../assets/course.css" />
+    <script src="../assets/quiz.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">Lesson 0001 · 约 15 分钟</p>
+        <h1>一颗 Button 如何成为像素</h1>
+        <p class="lead">
+          今天只建立一个能力：看到 Button 需求后，能沿着真实代码链找到正确修改层，而不是凭文件名猜。
+        </p>
+      </header>
+
+      <section class="callout">
+        <strong>完成标志</strong>
+        <p>
+          你能不看答案说清楚：
+          <code>&lt;md-filled-button&gt;</code> 如何经过 TypeScript、Lit、Token、SCSS 和构建，最终让浏览器画出背景色。
+        </p>
+      </section>
+
+      <h2>先拿住全景：两条链汇合</h2>
+      <p>Button 不是一条从上到下的文件链，而是“结构行为”和“视觉样式”两条链在公开组件类汇合。</p>
+
+      <div class="flow" aria-label="Button 端到端链路">
+        <div><b>HTML</b>标签与属性</div>
+        <div><b>Public class</b>注册与组装</div>
+        <div><b>Base class</b>模板与行为</div>
+        <div><b>Tokens</b>设计决策</div>
+        <div><b>SCSS</b>像素规则</div>
+        <div><b>Build</b>浏览器模块</div>
+      </div>
+
+      <pre><code>结构行为链：
+&lt;md-filled-button&gt;
+  → MdFilledButton
+  → FilledButton
+  → Button
+  → LitElement
+  → Shadow DOM
+
+视觉样式链：
+System Token
+  → Component Token
+  → private --_* variable
+  → CSS declaration
+  → Shadow DOM node</code></pre>
+
+      <p class="annotation">
+        先记住一句话：<strong>TypeScript 决定“里面有什么、怎么交互”；Token + SCSS 决定“长什么样”。</strong>
+      </p>
+
+      <h2>第 1 站：HTML 先触发元素注册</h2>
+      <p>消费者写的是：</p>
+      <pre><code>&lt;script type="module" src="/button/filled-button.js"&gt;&lt;/script&gt;
+
+&lt;md-filled-button&gt;保存&lt;/md-filled-button&gt;</code></pre>
+
+      <p>
+        浏览器本来不认识这个标签。入口文件
+        <a href="../../../../button/filled-button.ts"><code>button/filled-button.ts</code></a>
+        用 Lit 的装饰器完成注册：
+      </p>
+      <pre><code>@customElement('md-filled-button')
+export class MdFilledButton extends FilledButton {
+  static override styles = [
+    sharedStyles,
+    sharedElevationStyles,
+    filledStyles,
+  ];
+}</code></pre>
+
+      <section class="station">
+        <strong>这一层只负责两件关键事</strong>
+        <ol>
+          <li>把标签名 <code>md-filled-button</code> 绑定到类。</li>
+          <li>把共享样式、elevation 样式和 filled 专属样式组装进 Lit 的 <code>static styles</code>。</li>
+        </ol>
+        <p>
+          <code>HTMLElementTagNameMap</code> 只为 TypeScript 提供类型推断，不负责运行时注册。
+          可对照 Lit 官方的
+          <a href="https://lit.dev/docs/components/defining/">Defining a component</a>。
+        </p>
+      </section>
+
+      <h2>第 2 站：继承把“共性”和“变体”拆开</h2>
+      <p>
+        <a href="../../../../button/internal/filled-button.ts"><code>internal/filled-button.ts</code></a>
+        很短，因为 Filled 变体只增加 elevation：
+      </p>
+      <pre><code>export class FilledButton extends Button {
+  protected override renderElevationOrOutline() {
+    return html`&lt;md-elevation part="elevation"&gt;&lt;/md-elevation&gt;`;
+  }
+}</code></pre>
+
+      <p>
+        真正的共享实现位于
+        <a href="../../../../button/internal/button.ts"><code>internal/button.ts</code></a>：
+      </p>
+      <pre><code>protected override render() {
+  const isRippleDisabled = this.disabled || this.softDisabled;
+  const buttonOrLink = this.href ? this.renderLink() : this.renderButton();
+
+  return html`
+    ${this.renderElevationOrOutline?.()}
+    &lt;div class="background"&gt;&lt;/div&gt;
+    &lt;md-focus-ring ...&gt;&lt;/md-focus-ring&gt;
+    &lt;md-ripple ... ?disabled="${isRippleDisabled}"&gt;&lt;/md-ripple&gt;
+    ${buttonOrLink}
+  `;
+}</code></pre>
+
+      <p>所以同一个自定义元素内部实际包含背景、focus ring、ripple，以及原生 <code>button</code> 或 <code>a</code>。</p>
+
+      <section class="callout">
+        <strong>为什么还要保留原生 button / a？</strong>
+        <p>
+          自定义元素负责组件 API；原生元素继续提供键盘、链接和表单等平台语义。外层是 Shadow Host，模板渲染在 Shadow DOM 中。
+          这正是 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM">Shadow DOM</a>
+          用来封装内部结构和样式的场景。
+        </p>
+      </section>
+
+      <h2>第 3 站：属性变化如何进入模板</h2>
+      <p>以 <code>soft-disabled</code> 为例：</p>
+      <pre><code>@property({
+  type: Boolean,
+  attribute: 'soft-disabled',
+  reflect: true,
+})
+softDisabled = false;</code></pre>
+
+      <ul>
+        <li><code>@property</code>：告诉 Lit 这是响应式公共属性。</li>
+        <li><code>attribute: 'soft-disabled'</code>：HTML 使用 kebab-case 名字。</li>
+        <li><code>type: Boolean</code>：负责 attribute 与 property 的布尔转换。</li>
+        <li><code>reflect: true</code>：property 改变时也反映回 attribute，供 CSS 选择器使用。</li>
+      </ul>
+
+      <p>它同时影响行为和样式：</p>
+      <pre><code>// TypeScript：阻止事件和默认行为
+if (this.softDisabled || (this.disabled &amp;&amp; this.href)) {
+  event.stopImmediatePropagation();
+  event.preventDefault();
+}
+
+// SCSS：改变鼠标与视觉状态
+:host(:is([disabled], [soft-disabled])) {
+  cursor: default;
+  pointer-events: none;
+}</code></pre>
+
+      <h2>第 4 站：背景色从 System Token 走到 Component Token</h2>
+      <p>
+        上游生成文件
+        <a href="../../../../tokens/versions/v0_192/_md-comp-filled-button.scss">
+          <code>tokens/versions/v0_192/_md-comp-filled-button.scss</code>
+        </a>
+        给出 Material 设计映射：
+      </p>
+      <pre><code>@function values($deps: $_default, ...) {
+  @return (
+    'container-color':
+      map.get($deps, 'md-sys-color', 'primary'),
+    'label-text-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'container-shape':
+      map.get($deps, 'md-sys-shape', 'corner-full'),
+    ...
+  );
+}</code></pre>
+
+      <p>
+        这不是最终 CSS，而是一张 Sass Map：Filled Button 的
+        <code>container-color</code> 默认引用系统语义 <code>primary</code>。
+      </p>
+
+      <section class="callout">
+        <strong>为什么有 versions 和不带 versions 的两个文件？</strong>
+        <p>
+          <code>versions/v0_192</code> 是带版本的生成快照，文件头明确写着不要手改；
+          <code>tokens/_md-comp-filled-button.scss</code> 是稳定公共适配层，负责校验、重命名、补充逻辑形状与 CSS
+          变量回退。上游升级时，稳定层可以吸收生成模型的差异。
+        </p>
+      </section>
+
+      <h2>第 5 站：公开变量转成内部变量，再落到节点</h2>
+      <p>
+        公共 Token 文件为每项加入可覆盖的回退：
+      </p>
+      <pre><code>// tokens/_md-comp-filled-button.scss
+$tokens: map.set(
+  $tokens,
+  $token,
+  var(--md-filled-button-#{$token}, #{$value})
+);</code></pre>
+
+      <p>
+        Filled Button 的 SCSS 再把这张 Map 输出为 Shadow DOM 内使用的私有变量：
+      </p>
+      <pre><code>// button/internal/_filled-button.scss
+@mixin styles() {
+  $tokens: tokens.md-comp-filled-button-values();
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+  }
+}</code></pre>
+
+      <p>最终，共享样式消费私有变量：</p>
+      <pre><code>// button/internal/_shared.scss
+.background {
+  background: var(--_container-color);
+}
+
+.button {
+  color: var(--_label-text-color);
+}</code></pre>
+
+      <section class="station">
+        <strong>现在把完整颜色链读出来</strong>
+        <p>
+          <code>md-sys-color.primary</code>
+          → <code>--md-filled-button-container-color</code>
+          → <code>--_container-color</code>
+          → <code>.background { background: ... }</code>
+        </p>
+        <p>
+          公开变量允许消费者主题化，私有变量让内部 SCSS 统一消费。Material Web 官方
+          <a href="https://github.com/material-components/material-web/blob/main/docs/theming/README.md">Theming 文档</a>
+          将这三层定义为 System role、Component token 和具体组件实现。
+        </p>
+      </section>
+
+      <h2>第 6 站：SCSS 如何变成 Lit 能导入的代码</h2>
+      <p>浏览器不会执行 SCSS，TypeScript 也不能直接 import SCSS。构建链做了两次转换：</p>
+      <pre><code>button/internal/filled-styles.scss
+  │ npm run build:sass
+  ▼
+button/internal/filled-styles.css
+  │ npm run build:css-to-ts
+  ▼
+button/internal/filled-styles.cssresult.ts
+  │ npm run build:ts
+  ▼
+button/filled-button.js</code></pre>
+
+      <p>
+        最开始看到的 <code>filledStyles</code>，正是从生成的 <code>cssresult.ts</code> 导入。
+        Lit 将它放进组件 Shadow Root。可对照官方
+        <a href="https://lit.dev/docs/components/styles/">Styles</a> 文档中的 <code>static styles</code>。
+      </p>
+
+      <section class="callout">
+        <strong>源码与产物的边界</strong>
+        <p>
+          通常修改 <code>.ts</code>、公共 <code>tokens/*.scss</code> 或
+          <code>internal/_*.scss</code>；不要直接修改 <code>.css</code>、<code>.cssresult.ts</code>、
+          <code>.js</code> 和 <code>tokens/versions/**</code>。
+        </p>
+      </section>
+
+      <h2>三个真实需求，分别怎么改</h2>
+
+      <h3>例 1：只把一颗 Filled Button 改成错误色</h3>
+      <pre><code>md-filled-button.danger {
+  --md-filled-button-container-color: var(--md-sys-color-error);
+  --md-filled-button-label-text-color: var(--md-sys-color-on-error);
+}</code></pre>
+      <p>这是消费端实例主题，不应改变库默认值。</p>
+
+      <h3>例 2：GenV4 所有 Filled Button 默认改成品牌绿色</h3>
+      <pre><code>// 示意：放在 GenV4 的稳定覆盖层，而不是 versions 生成目录
+$filled-button-overrides: (
+  'container-color': #315c49,
+);</code></pre>
+      <p>
+        这是 Component Token 级需求。若设计说的是“全系统 primary 改成绿色”，才应该改 System Token；
+        两句话的影响范围完全不同。
+      </p>
+
+      <h3>例 3：soft-disabled 仍触发点击监听</h3>
+      <p>
+        这是行为缺陷，入口在 <code>button/internal/button.ts</code> 的 <code>handleClick()</code>，
+        验证入口是 <code>button/filled-button_test.ts</code> 或共享 Button 测试，而不是 Token 文件。
+      </p>
+
+      <h2>检索练习：先回答，再看反馈</h2>
+
+      <section
+        class="quiz"
+        data-answer="b"
+        data-explanation="只改变 Filled Button 的默认外观，影响范围对应 Component Token。">
+        <p><strong>问题 1：</strong>“primary 不变，只改 Filled Button 默认背景”应落在哪一层？</p>
+        <div data-choices>
+          <button type="button" data-choice="a" aria-pressed="false">A · 系统令牌层</button>
+          <button type="button" data-choice="b" aria-pressed="false">B · 组件令牌层</button>
+          <button type="button" data-choice="c" aria-pressed="false">C · 内部样式层</button>
+        </div>
+        <p data-feedback aria-live="polite"></p>
+      </section>
+
+      <section
+        class="quiz"
+        data-answer="c"
+        data-explanation="点击是否传播属于组件行为，应该从 Button 基类和行为测试入手。">
+        <p><strong>问题 2：</strong>“disabled link 仍然跳转”首先应检查哪一层？</p>
+        <div data-choices>
+          <button type="button" data-choice="a" aria-pressed="false">A · 组件文档层</button>
+          <button type="button" data-choice="b" aria-pressed="false">B · 组件样式层</button>
+          <button type="button" data-choice="c" aria-pressed="false">C · 组件逻辑层</button>
+        </div>
+        <p data-feedback aria-live="polite"></p>
+      </section>
+
+      <h2>本课的最小复述</h2>
+      <ol>
+        <li><code>button/filled-button.ts</code> 注册元素并组装样式。</li>
+        <li><code>internal/button.ts</code> 提供共享 Shadow DOM、属性和行为。</li>
+        <li>版本 Token 把组件属性映射到 System Token；稳定 Token 层添加公开 CSS 变量回退。</li>
+        <li>组件 SCSS 把公开值转为 <code>--_*</code>，再应用到内部节点。</li>
+        <li>构建把 SCSS 变成 CSSResult，再由 Lit 安装进 Shadow Root。</li>
+      </ol>
+
+      <section class="station">
+        <strong>离开页面前，用一句话回答</strong>
+        <p>
+          如果设计师说“按钮颜色改为绿色”，你还必须追问什么，才能决定修改 System Token 还是 Component Token？
+        </p>
+        <p class="annotation">
+          把你的答案发给我。我会据此更新学习记录，并决定下一课进入“亲手改一个 Button Token”还是先补 Shadow DOM。
+        </p>
+      </section>
+
+      <h2>课后只读一份主资料</h2>
+      <p>
+        首选：
+        <a href="https://github.com/material-components/material-web/blob/main/docs/theming/README.md">
+          Material Web 官方 Theming 文档
+        </a>。
+        阅读时只找三个词：Reference、System、Component。其余内容现在可以略过。
+      </p>
+
+      <footer>
+        <a href="../reference/button-chain.html">打开 Button 链路速查表</a>
+        ·
+        <a href="../RESOURCES.md">查看全部可信资料</a>
+        <p>任何代码或概念不清楚，直接把那一段发给我；我会按当前链路继续拆解。</p>
+      </footer>
+    </main>
+  </body>
+</html>

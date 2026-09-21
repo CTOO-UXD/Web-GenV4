@@ -150,7 +150,7 @@
       ]
     },
     "build:css-to-ts": {
-      "command": "find . \\( -path ./.wireit -o -path ./node_modules -o -path ./catalog \\) -prune -o -name '*.css' -print | xargs -L1 node scripts/css-to-ts.js --suffix=.cssresult",
+      "command": "node scripts/build-cross-platform.js css-to-ts",
       "files": [
         "**/*.css",
         "!catalog/"
@@ -166,7 +166,7 @@
       ]
     },
     "build:sass": {
-      "command": "sass --style=compressed --load-path=node_modules --load-path=node_modules/sass-true/sass $(ls -d */ | grep -vE 'node_modules|catalog')",
+      "command": "node scripts/build-cross-platform.js sass",
       "files": [
         "**/*.scss",
         "!catalog/"
@@ -181,7 +181,7 @@
       ]
     },
     "build:sass:generate": {
-      "command": "find tokens/versions/ -type f -name '_md-*.scss' ! -name '*-meta.scss' -print0 | xargs -0 node scripts/generate-sass-token-meta.js",
+      "command": "node scripts/build-cross-platform.js sass-token-meta",
       "files": [
         "tokens/versions/**/_md-*.scss",
         "!tokens/versions/**/*-meta.scss"

@@ -39,7 +39,9 @@ async function copyImages(path = '', includePath = '') {
  * @return A promise of all the markdwon filepaths in /docs/components/
  */
 async function getReadmeFiles(path = '', deep = false) {
-  const readmeFilesGlob = [join('../docs', path, deep ? '/**/' : '', '*.md')];
+  const readmeFilesGlob = [
+    join('../docs', path, deep ? '/**/' : '', '*.md').replaceAll('\\', '/'),
+  ];
   const readmeFiles = readmeFilesGlob.map(async (entry) => tinyGlob(entry));
   return (await Promise.all(readmeFiles)).flat();
 }

@@ -7,6 +7,7 @@
 @use 'sass:map';
 // go/keep-sorted end
 // go/keep-sorted start
+@use 'genv4/sys-color' as genv4-sys-color;
 @use 'internal/validate';
 @use 'md-ref-palette';
 @use 'versions/v0_192/md-sys-color';
@@ -101,6 +102,7 @@ $_default-light: (
   $exclude-custom-properties: false
 ) {
   $tokens: md-sys-color.values-light($deps);
+  $tokens: genv4-sys-color.apply-light($tokens);
 
   @if not $exclude-custom-properties {
     // Create --md-sys-color-* custom properties

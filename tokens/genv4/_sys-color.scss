@@ -1,0 +1,19 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+@use 'sass:map';
+
+$_light-overrides: (
+  'surface-container': #fff,
+  'surface-container-high': #fff,
+  'surface-container-highest': #fff,
+  'surface-container-low': #fff,
+  'surface-container-lowest': #fff,
+);
+
+/// Applies GenV4 light color overrides to Material system color tokens.
+@function apply-light($tokens) {
+  @return map.merge($tokens, $_light-overrides);
+}
