@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>GenV4 Card 验收</title>
     <script type="module">
+      import '../../button/text-button.js';
       import '../../labs/card/elevated-card.js';
       import '../../labs/card/filled-card.js';
       import '../../labs/card/outlined-card.js';
@@ -54,12 +55,36 @@
       }
 
       .media {
-        height: 96px;
+        height: 120px;
         background: #6750a4;
       }
 
-      button {
-        margin: 0 16px 16px;
+      .headline,
+      .subhead,
+      .supporting {
+        margin: 0;
+      }
+
+      .headline {
+        font-size: 18px;
+      }
+
+      .subhead {
+        margin-top: 4px;
+        color: #49454f;
+        font-size: 14px;
+      }
+
+      .supporting {
+        margin-top: 12px;
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        padding: 8px 16px 16px;
       }
     </style>
   </head>
@@ -87,18 +112,19 @@
       </section>
 
       <section>
-        <h2>主点击和内部按钮</h2>
-        <div class="row">
-          <md-filled-card id="linked" href="#opened">
-            <div class="media"></div>
-            <div slot="content">点击卡片</div>
-            <button slot="action" id="save" type="button">保存</button>
-          </md-filled-card>
-          <md-outlined-card href="#disabled" disabled>
-            <div class="media"></div>
-            <div slot="content">已禁用</div>
-          </md-outlined-card>
-        </div>
+        <h2>一张卡片里可以放的内容</h2>
+        <md-elevated-card id="album" href="#album-detail" style="width: 280px">
+          <div class="media"></div>
+          <div slot="content">
+            <h3 class="headline">周末相册</h3>
+            <p class="subhead">上海 · 12 张照片</p>
+            <p class="supporting">点击图片或文字进入详情。保存和分享是卡片内部的独立操作。</p>
+          </div>
+          <div class="actions" slot="action">
+            <md-text-button id="save" type="button">保存</md-text-button>
+            <md-text-button id="share" type="button">分享</md-text-button>
+          </div>
+        </md-elevated-card>
         <p id="status">还没有点击。</p>
       </section>
     </main>
@@ -107,7 +133,11 @@
         event.stopPropagation();
         document.querySelector('#status').textContent = '点击了保存，没有进入详情。';
       });
-      document.querySelector('#linked').addEventListener('click', () => {
+      document.querySelector('#share').addEventListener('click', (event) => {
+        event.stopPropagation();
+        document.querySelector('#status').textContent = '点击了分享，没有进入详情。';
+      });
+      document.querySelector('#album').addEventListener('click', () => {
         document.querySelector('#status').textContent = '点击了卡片主区域。';
       });
     </script>

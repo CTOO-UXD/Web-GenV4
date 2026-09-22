@@ -28,10 +28,12 @@ export class Card extends LitElement {
   protected override render() {
     return html`
       <md-elevation part="elevation"></md-elevation>
-      <div class="background"></div>
-      ${this.href ? this.renderPrimaryLink() : this.renderStaticContent()}
-      <slot name="action"></slot>
-      ${this.href ? html`<div class="state-layer"></div>` : nothing}
+      <div class="surface">
+        <div class="background"></div>
+        ${this.href ? this.renderPrimaryLink() : this.renderStaticContent()}
+        <slot name="action"></slot>
+        ${this.href ? html`<div class="state-layer"></div>` : nothing}
+      </div>
       <div class="outline"></div>
     `;
   }

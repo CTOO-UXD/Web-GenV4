@@ -28,6 +28,16 @@
   }
 
   // Separate element will be needed for disabled opacities (b/307361748)
+  .surface {
+    border-radius: inherit;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+  }
+
   .background {
     background: var(--_container-color);
     // Place behind content.
