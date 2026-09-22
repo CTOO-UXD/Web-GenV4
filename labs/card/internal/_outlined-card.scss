@@ -37,4 +37,21 @@
     border-color: var(--_outline-color);
     border-width: var(--_outline-width);
   }
+
+  :host([href][disabled]) .outline {
+    border-color: var(--_disabled-outline-color);
+    opacity: var(--_disabled-outline-opacity);
+  }
+
+  :host([href]:hover) .outline {
+    border-color: var(--_hover-outline-color);
+  }
+
+  :host([href]:focus-within) .outline {
+    border-color: var(--_focus-outline-color);
+  }
+
+  :host([href]:active) .outline {
+    border-color: var(--_pressed-outline-color);
+  }
 }

@@ -59,4 +59,59 @@
     // Allow content to inherit card's border radius
     border-radius: inherit;
   }
+
+  slot[name='content']::slotted(*) {
+    box-sizing: border-box;
+    padding-inline: 16px;
+    text-align: start;
+  }
+
+  .primary {
+    border-radius: inherit;
+    color: inherit;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    outline: none;
+    text-decoration: none;
+  }
+
+  .state-layer {
+    background: var(--_hover-state-layer-color);
+    border-radius: inherit;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  :host([href][disabled]) {
+    pointer-events: none;
+  }
+
+  :host([href]:hover) {
+    --_container-elevation: var(--_hover-container-elevation);
+  }
+
+  :host([href]:hover) .state-layer {
+    opacity: var(--_hover-state-layer-opacity);
+  }
+
+  :host([href]:focus-within) {
+    --_container-elevation: var(--_focus-container-elevation);
+  }
+
+  :host([href]:focus-within) .state-layer {
+    background: var(--_focus-state-layer-color);
+    opacity: var(--_focus-state-layer-opacity);
+  }
+
+  :host([href]:active) {
+    --_container-elevation: var(--_pressed-container-elevation);
+  }
+
+  :host([href]:active) .state-layer {
+    background: var(--_pressed-state-layer-color);
+    opacity: var(--_pressed-state-layer-opacity);
+  }
 }

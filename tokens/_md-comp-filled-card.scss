@@ -21,6 +21,16 @@ $supported-tokens: (
   'container-elevation',
   'container-shadow-color',
   'container-shape',
+  'disabled-container-opacity',
+  'focus-container-elevation',
+  'focus-state-layer-color',
+  'focus-state-layer-opacity',
+  'hover-container-elevation',
+  'hover-state-layer-color',
+  'hover-state-layer-opacity',
+  'pressed-container-elevation',
+  'pressed-state-layer-color',
+  'pressed-state-layer-opacity',
   // go/keep-sorted end
 );
 
@@ -30,21 +40,11 @@ $unsupported-tokens: (
   // go/keep-sorted start
   'disabled-container-color',
   'disabled-container-elevation',
-  'disabled-container-opacity',
   'dragged-container-elevation',
   'dragged-state-layer-color',
   'dragged-state-layer-opacity',
-  'focus-container-elevation',
-  'focus-state-layer-color',
-  'focus-state-layer-opacity',
-  'hover-container-elevation',
-  'hover-state-layer-color',
-  'hover-state-layer-opacity',
   'icon-color',
   'icon-size',
-  'pressed-container-elevation',
-  'pressed-state-layer-color',
-  'pressed-state-layer-opacity',
   // go/keep-sorted end
 );
 

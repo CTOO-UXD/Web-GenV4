@@ -32,4 +32,8 @@
       --_#{$token}: #{$value};
     }
   }
+
+  :host([href][disabled]) {
+    opacity: var(--_disabled-container-opacity);
+  }
 }
