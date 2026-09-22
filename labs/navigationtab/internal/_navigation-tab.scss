@@ -95,6 +95,25 @@ $animation-duration: 100ms;
     z-index: 1;
   }
 
+  md-badge {
+    position: absolute;
+    inset-inline-start: calc(
+      (var(--_active-indicator-width) + var(--_icon-size)) / 2 - 6px
+    );
+    inset-block-start: calc(
+      (var(--_active-indicator-height) - var(--_icon-size)) / 2
+    );
+  }
+
+  md-badge:not([value='']) {
+    inset-inline-start: calc(
+      (var(--_active-indicator-width) + var(--_icon-size)) / 2 - 14px
+    );
+    inset-block-start: calc(
+      (var(--_active-indicator-height) - var(--_icon-size)) / 2 - 4px
+    );
+  }
+
   .md3-navigation-tab__label-text {
     height: 16px;
     margin-top: 4px;

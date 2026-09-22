@@ -21,6 +21,24 @@ declare global {
   }
 }
 
+function badgeCornerOffset(tab: MdNavigationTab) {
+  const icon = tab.renderRoot.querySelector<HTMLElement>(
+    '.md3-navigation-tab__icon:not(.md3-navigation-tab__icon--active)',
+  );
+  const badge = tab.renderRoot.querySelector('md-badge');
+  const box = badge?.renderRoot.querySelector('div');
+  if (!icon || !box) {
+    throw new Error('Badge or icon was not rendered.');
+  }
+
+  const iconRect = icon.getBoundingClientRect();
+  const badgeRect = box.getBoundingClientRect();
+  return {
+    horizontal: Math.round(iconRect.right - badgeRect.left),
+    vertical: Math.round(badgeRect.bottom - iconRect.top),
+  };
+}
+
 describe('mwc-navigation-tab', () => {
   const env = new Environment();
 
@@ -190,6 +208,30 @@ describe('mwc-navigation-tab', () => {
 
       const badge = harness.element.renderRoot.querySelector('md-badge');
       expect(badge?.value).toEqual('9');
+    });
+
+    it('places an empty badge 6 by 6 from the icon corner', async () => {
+      const {harness} = await setupTest();
+      harness.element.showBadge = true;
+      harness.element.badgeValue = '';
+      await env.waitForStability();
+
+      expect(badgeCornerOffset(harness.element)).toEqual({
+        horizontal: 6,
+        vertical: 6,
+      });
+    });
+
+    it('places a labeled badge 14 by 12 from the icon corner', async () => {
+      const {harness} = await setupTest();
+      harness.element.showBadge = true;
+      harness.element.badgeValue = '3';
+      await env.waitForStability();
+
+      expect(badgeCornerOffset(harness.element)).toEqual({
+        horizontal: 14,
+        vertical: 12,
+      });
     });
   });
 
