@@ -1,57 +1,36 @@
 <!-- catalog-only-start --><!-- ---
-name: Support
-title: Support
-order: 4
+name: 问题与支持
+title: 问题与支持
+order: 3
 -----><!-- catalog-only-end -->
 
-# Support
+# 问题与支持
 
-<!-- go/mwc-support -->
+## 浏览器
 
-<!--*
-# Document freshness: For more information, see go/fresh-source.
-freshness: { owner: 'lizmitchell' reviewed: '2026-07-31' }
-*-->
+当前支持：
 
-<!-- [TOC] -->
 
-<!--#include file="../googlers/support.md" -->
+| 浏览器     | 版本     |
+| ------- | ------ |
+| Chrome  | 120 +  |
+| Edge    | 120 +  |
+| Firefox | 119 +  |
+| Safari* | 16.4 + |
 
-## Browsers
 
-<!-- go/mwc-browsers -->
+ 更早的 Safari 可以配合 `ElementInternals` [polyfill](https://www.npmjs.com/package/element-internals-polyfill) 使用。
 
-MWC aims to support the latest two major versions of browsers at the time of
-each release.
+## 常见问题
 
-Current browsers and versions supported:
+### 怎么改按钮的颜色？
 
-Browser | Version
-------- | -------
-Chrome  | 120 +
-Edge    | 120 +
-Firefox | 119 +
-Safari* | 16.4 +
+很多组件的同一种颜色会拆成悬停、聚焦、按下等多条变量。
 
-*\* previous versions of Safari may be supported with an
-[`ElementInternals` polyfill](https://www.npmjs.com/package/element-internals-polyfill).*
-
-## FAQ
-
-<!-- go/mwc-faq -->
-
-*If you have a question that isn't listed here, consider asking it so we can
-include it!*
-
-### How do I change the color of a button?
-
-Many components have multiple tokens for a color, including "hover", "focus",
-and "pressed" states.
-
-Use `--md-sys-color-*` tokens to change the key color that the component uses.
+改组件用到的 `--md-sys-color-*` 即可，不用把每个状态都设一遍。
 
 ```css
-/* Buttons use the `primary` key color */
+/* 实心按钮使用 primary */
 md-filled-button.spooky {
   --md-sys-color-primary: black;
   --md-sys-color-on-primary: yellow;
@@ -63,24 +42,20 @@ md-filled-button.error {
 }
 ```
 
-### Why does my color change on hover/focus/pressed?
 
-Many colors have multiple tokens, including "hover", "focus", and "pressed"
-states.
 
-Rather than setting all of them, or use the `--md-sys-color-*` token that the
-component maps to (see the previous question).
+### 为什么悬停、聚焦、按下时颜色又变了？
 
-### Why doesn't `prefers-color-scheme: dark` work?
+这些状态各有自己的变量。不要逐个去改，改组件映射到的那条 `--md-sys-color-*`，和上一题一样。
 
-It's up to the app to decide when and how dark mode is applied. Any selector can
-be used with `--md-sys-color-*` dark theme tokens to scope how the changes
-apply.
+### 为什么 `prefers-color-scheme: dark` 没有生效？
 
-For example, using Sass:
+深色模式由应用自己决定何时启用。可以用任意选择器，配上深色的 `--md-sys-color-*`。
+
+例如用 Sass：
 
 ```scss
-@use '@material/web/color/color';
+@use 'genv4/color/color';
 
 :root {
   @media (prefers-color-scheme: dark) {
@@ -89,44 +64,41 @@ For example, using Sass:
 }
 ```
 
-> **Why not automatically?** Not all apps need dark mode, and the CSS size for
-> automatically supporting it is much higher and not as flexible.
+不会默认打开深色模式。不是每个应用都需要，自动带上深色令牌也会让样式体积变大。
 
-See
-[How do I use `--md-sys-*` custom properties in my styles?](#how-do-i-use-md-sys-custom-properties-in-my-styles)
-for more info on how to generate a set of dark theme tokens.
+### 怎么在自己的样式里使用 `--md-sys-*`？
 
-### How do I use `--md-sys-*` custom properties in my styles?
+要在自己的样式里用这些颜色，在全站样式里引入一次即可，不用每个元素各引一遍。`color.light-theme` 会在 `:root` 上生成一整套 `--md-sys-color-*`。
 
--   Use Sass APIs.
+```scss
+@use 'genv4/color/color';
 
-    ```scss
-    @use '@material/web/color/color';
-    @use '@material/web/color/typography';
+:root {
+  @include color.light-theme;
+}
+```
 
-    :root {
-      @include color.light-theme;
-      @include typography.theme;
+之后就可以写：
 
-      @media (prefers-color-scheme: dark) {
-        @include color.dark-theme;
-      }
-    }
-    ```
+```css
+h1 {
+  color: var(--md-sys-color-primary);
+}
+```
 
--   Use the
-    [Material theme builder Figma plugin](https://www.figma.com/community/plugin/1034969338659738588/Material-Theme-Builder)<!-- {.external} -->
-    to generate a color scheme.
+深色那一套用 `color.dark-theme`，见上一题「为什么 `prefers-color-scheme: dark` 没有生效？」。
 
--   Use the
-    [`material-color-utilities` library](https://www.npmjs.com/package/@material/material-color-utilities)<!-- {.external} -->
-    to generate color schemes at runtime.
+<!--
+暂时不用。以后如果采用这两种方式，再去掉这段注释。
 
-### How do I customize an `<md-*>` element that is inside another component?
+- 用 [Material Theme Builder](https://www.figma.com/community/plugin/1034969338659738588/Material-Theme-Builder) 这个 Figma 插件生成一套颜色。
 
-Use [CSS `::part()`s](https://developer.mozilla.org/en-US/docs/Web/CSS/::part)
-to access sub-components. The part name is the sub-component's tag name without
-the "md-" prefix.
+- 用 [`material-color-utilities`](https://www.npmjs.com/package/@material/material-color-utilities) 在运行时生成颜色。
+-->
+
+### 怎么改套在别的组件里面的 `<md-*>`？
+
+用 [CSS](https://developer.mozilla.org/zh-CN/docs/Web/CSS/::part) `::part()`。part 名是内部组件的标签名，去掉 `md-` 前缀。
 
 ```css
 md-checkbox::part(focus-ring) {
@@ -134,3 +106,4 @@ md-checkbox::part(focus-ring) {
   height: 32px;
 }
 ```
+

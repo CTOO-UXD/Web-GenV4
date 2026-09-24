@@ -5,7 +5,6 @@
  */
 
 const markdownItAnchor = require('markdown-it-anchor');
-const slugifyLib = require('slugify');
 
 /**
  * An 11ty plugin that integrates `markdown-it-anchor` to 11ty's markdown
@@ -14,8 +13,16 @@ const slugifyLib = require('slugify');
  * @param markdownIt The markdown-it instance to use.
  */
 function permalinks(markdownIt) {
-  // Use the same slugify as 11ty for markdownItAnchor.
-  const slugify = (s) => slugifyLib(s, { lower: true });
+  // slugify drops non-Latin characters, so a Chinese-only heading gets an empty
+  // id and the TOC omits it. Keep letters and numbers from any language.
+  const slugify = (heading) =>
+    heading
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\p{L}\p{N}-]+/gu, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
 
   const linkAfterHeaderBase = markdownItAnchor.permalink.linkAfterHeader({
     style: 'visually-hidden',

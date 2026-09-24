@@ -11,7 +11,9 @@ import {COMPONENT_CUSTOM_ELEMENTS} from '../component-custom-elements.js';
  * with that documentation.
  */
 export const docsToElementMapping: {[key: string]: readonly string[]} = {
-  'button.md': COMPONENT_CUSTOM_ELEMENTS.button,
+  // Five buttons share one property table, so only the filled entry is registered.
+  // 'button.md': COMPONENT_CUSTOM_ELEMENTS.button,
+  'button.md': ['button/filled-button.ts'],
   'checkbox.md': COMPONENT_CUSTOM_ELEMENTS.checkbox,
   'chip.md': COMPONENT_CUSTOM_ELEMENTS.chips,
   'dialog.md': COMPONENT_CUSTOM_ELEMENTS.dialog,

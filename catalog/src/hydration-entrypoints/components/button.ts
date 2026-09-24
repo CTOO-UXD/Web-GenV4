@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import 'genv4/icon/icon.js';
 import 'genv4/button/elevated-button.js';
 import 'genv4/button/filled-button.js';
 import 'genv4/button/filled-tonal-button.js';

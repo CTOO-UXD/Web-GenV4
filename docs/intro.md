@@ -2,6 +2,7 @@
 name: Introduction
 title: Introduction
 order: 1
+eleventyExcludeFromCollections: true
 -----><!-- catalog-only-end -->
 
 # Intro to Material Web Components

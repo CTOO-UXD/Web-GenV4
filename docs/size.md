@@ -3,6 +3,7 @@ name: Bundle Sizes
 title: Bundle Sizes
 order: 5
 hasToc: false
+eleventyExcludeFromCollections: true
 -----><!-- catalog-only-end -->
 
 # Sizes

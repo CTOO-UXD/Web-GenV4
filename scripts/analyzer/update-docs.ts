@@ -83,9 +83,11 @@ async function updateDocFileApiSection(
   // and it's associated Property, Methods, and Events tables.
   const elementTableSections: ElementTableSection[] = [];
 
+  const zhHeaders = docFileName === 'button.md';
+
   for (const elementEntrypoint of elementEntrypoints) {
     elementTableSections.push(
-      generateTableSection(elementEntrypoint, packagePath, analyzer),
+      generateTableSection(elementEntrypoint, packagePath, analyzer, zhHeaders),
     );
   }
 
@@ -96,6 +98,9 @@ async function updateDocFileApiSection(
   const updatedFileContents = insertMarkdownTables(
     documentationFileContents.toString(),
     elementTableSections,
+    zhHeaders
+      ? '五种按钮的属性相同，下表适用于 `<md-filled-button>`、`<md-filled-tonal-button>`、`<md-elevated-button>`、`<md-outlined-button>`、`<md-text-button>`。'
+      : undefined,
   );
 
   await fs.writeFile(
@@ -120,6 +125,7 @@ function generateTableSection(
   elementEntrypoint: string,
   packagePath: string,
   analyzer: Analyzer,
+  zhHeaders = false,
 ): ElementTableSection {
   const elementDoc = analyzeElementApi(
     analyzer,
@@ -127,12 +133,12 @@ function generateTableSection(
   );
   const tables: MarkdownTableSection[] = [];
 
-  const propertiesTable = generateFieldMarkdownTable(elementDoc);
+  const propertiesTable = generateFieldMarkdownTable(elementDoc, zhHeaders);
   const methodsTable = generateMethodMarkdownTable(elementDoc);
   const eventsTable = generateEventsMarkdownTable(elementDoc);
 
   if (propertiesTable.rows.length > 0) {
-    tables.push({name: 'Properties', table: propertiesTable});
+    tables.push({name: zhHeaders ? '属性' : 'Properties', table: propertiesTable});
   }
 
   if (methodsTable.rows.length > 0) {
@@ -144,8 +150,8 @@ function generateTableSection(
   }
 
   return {
-    className: elementDoc.className,
-    customElementName: elementDoc.customElementName || '',
+    className: zhHeaders ? '' : elementDoc.className,
+    customElementName: zhHeaders ? '' : elementDoc.customElementName || '',
     summary: elementDoc.summary ?? '',
     description: elementDoc.description ?? '',
     tables,
@@ -188,14 +194,15 @@ function updateRow<T extends {[key: string]: unknown}>(
  * element. It is organized by inheritance order and with all reactive
  * properties listed first, then all other properties.
  */
-function generateFieldMarkdownTable(element: MdModuleInfo): MarkdownTable {
-  const propertiesTable = new MarkdownTable([
-    'Property',
-    'Attribute',
-    'Type',
-    'Default',
-    'Description',
-  ]);
+function generateFieldMarkdownTable(
+  element: MdModuleInfo,
+  zhHeaders = false,
+): MarkdownTable {
+  const propertiesTable = new MarkdownTable(
+    zhHeaders
+      ? ['属性', 'HTML 属性', '类型', '默认值', '说明']
+      : ['Property', 'Attribute', 'Type', 'Default', 'Description'],
+  );
   const fieldNameOrder: string[] = [];
   const fieldToRow = new Map<
     string,
@@ -226,9 +233,12 @@ function generateFieldMarkdownTable(element: MdModuleInfo): MarkdownTable {
     const row = {
       name: property.name,
       attribute: property.attribute,
-      type: property.type,
+      type:
+        zhHeaders && property.name === 'target' ? 'string' : property.type,
       default: defaultVal,
-      description: property.description,
+      description: zhHeaders
+        ? property.description?.split(/@en\b/)[0].trim()
+        : property.description,
     };
 
     const isPropertyInSubclass = fieldToRow.has(property.name);
@@ -427,6 +437,7 @@ function generateEventsMarkdownTable(element: MdModuleInfo): MarkdownTable {
 function insertMarkdownTables(
   fileContents: string,
   elementTableSections: ElementTableSection[],
+  intro?: string,
 ) {
   // A file that has no tables to insert should have its API section cleared.
   const hasContent = elementTableSections.reduce((hasContent, element) => {
@@ -440,7 +451,7 @@ function insertMarkdownTables(
 
   const tablesStrings = stringifyMarkdownTableSections(elementTableSections);
 
-  return replaceFileContents(fileContents, tablesStrings);
+  return replaceFileContents(fileContents, tablesStrings, intro);
 }
 
 /**
@@ -452,7 +463,11 @@ function insertMarkdownTables(
  * documentation file. If not provided, the API section will be cleared.
  * @returns The updated documentation file contents with the API section.
  */
-function replaceFileContents(fileContents: string, tablesStrings?: string) {
+function replaceFileContents(
+  fileContents: string,
+  tablesStrings?: string,
+  intro?: string,
+) {
   const injectionPointRegex =
     /<!-- auto-generated API docs start -->.*<!-- auto-generated API docs end -->/s;
 
@@ -470,7 +485,7 @@ function replaceFileContents(fileContents: string, tablesStrings?: string) {
 
 ## API
 
-${tablesStrings}
+${intro ? `${intro}\n\n` : ''}${tablesStrings}
 <!-- auto-generated API docs end -->`,
   );
 }
@@ -489,14 +504,18 @@ function stringifyMarkdownTableSections(elements: ElementTableSection[]) {
 
   for (const element of elements) {
     const {className, tables, customElementName} = element;
-    tablesStrings += `
+    const heading = className
+      ? `
 ### ${className}${
-      customElementName ? ` <code>&lt;${customElementName}&gt;</code>` : ''
-    }
+          customElementName ? ` <code>&lt;${customElementName}&gt;</code>` : ''
+        }`
+      : '';
+    const headingLevel = className ? '####' : '###';
+    tablesStrings += `${heading}
 ${tables
   .map(
     ({name, table}) => `
-#### ${name}
+${headingLevel} ${name}
 
 ${table.toString()}
 `,

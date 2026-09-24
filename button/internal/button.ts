@@ -37,10 +37,11 @@ export abstract class Button extends buttonBaseClass {
   };
 
   /**
-   * Whether or not the button is "soft-disabled" (disabled but still
-   * focusable).
+   * 禁用后仍可聚焦。需要让不可用的按钮仍能被键盘发现时使用。
    *
-   * Use this when a button needs increased visibility when disabled. See
+   * @en Whether or not the button is "soft-disabled" (disabled but still
+   * focusable). Use this when a button needs increased visibility when
+   * disabled. See
    * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_disabled_controls
    * for more guidance on when this is needed.
    */
@@ -48,37 +49,49 @@ export abstract class Button extends buttonBaseClass {
   softDisabled = false;
 
   /**
-   * The URL that the link button points to.
+   * 设置后按钮变成链接，指向该 URL。
+   *
+   * @en The URL that the link button points to.
    */
   @property() href = '';
 
   /**
-   * The filename to use when downloading the linked resource.
+   * 作为链接时，下载文件使用的文件名。不设置则由浏览器决定。
+   *
+   * @en The filename to use when downloading the linked resource.
    * If not specified, the browser will determine a filename.
    * This is only applicable when the button is used as a link (`href` is set).
    */
   @property() download = '';
 
   /**
-   * Where to display the linked `href` URL for a link button. Common options
+   * 作为链接时，在何处打开 href。常用 `_blank` 在新标签页打开。
+   *
+   * @en Where to display the linked `href` URL for a link button. Common options
    * include `_blank` to open in a new tab.
    */
   @property() target: '_blank' | '_parent' | '_self' | '_top' | '' = '';
 
   /**
-   * Sets the underlying `HTMLAnchorElement`'s `rel` attribute when `href` is
+   * 作为链接时，写到内部 a 元素的 rel。
+   *
+   * @en Sets the underlying `HTMLAnchorElement`'s `rel` attribute when `href` is
    * set.
    */
   @property() rel = '';
 
   /**
-   * Sets the underlying `HTMLAnchorElement`'s `referrerpolicy` attribute when
+   * 作为链接时，写到内部 a 元素的 referrerpolicy。
+   *
+   * @en Sets the underlying `HTMLAnchorElement`'s `referrerpolicy` attribute when
    * `href` is set.
    */
   @property() referrerPolicy = '';
 
   /**
-   * Whether to render the icon at the inline end of the label rather than the
+   * 把图标放到文字后面。链接按钮不能用末尾图标。
+   *
+   * @en Whether to render the icon at the inline end of the label rather than the
    * inline start.
    *
    * _Note:_ Link buttons cannot have trailing icons.
@@ -87,7 +100,9 @@ export abstract class Button extends buttonBaseClass {
   trailingIcon = false;
 
   /**
-   * Whether to display the icon or not.
+   * 是否显示图标。
+   *
+   * @en Whether to display the icon or not.
    */
   @property({type: Boolean, attribute: 'has-icon', reflect: true}) hasIcon =
     false;

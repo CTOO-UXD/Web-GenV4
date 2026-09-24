@@ -243,9 +243,12 @@
       ]
     },
     "update-docs:components": {
-      "command": "node scripts/analyzer/update-docs.js",
+      "command": "node scripts/analyzer/update-docs.js && node scripts/update-button-theme-docs.mjs",
       "files": [
         "docs/components/*.md",
+        "scripts/update-button-theme-docs.mjs",
+        "tokens/_md-comp-*-button.scss",
+        "tokens/versions/v0_192/_md-comp-*-button.scss",
         "**/*.ts",
         "!**/*.d.ts",
         "!**/*.cssresult.ts",
