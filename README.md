@@ -37,7 +37,7 @@ md-filled-button.brand {
 }
 ```
 
-完整 token 列表见各组件源码目录 `tokens/_md-comp-*.scss`，使用说明见 Material Web 官方文档的 [Theming](https://material-web.dev/theming/) 章节。
+系统 token 的默认值和使用方式见 [主题](./docs/theme.md)。某个组件具体有哪些变量，见该组件文档的主题表。
 
 ## 本地开发
 
