@@ -10,6 +10,8 @@ GenV4 是基于 Google [Material Web](https://github.com/material-components/mat
 npm install genv4
 ```
 
+当前 npm 上的版本是 `0.0.1`，还不包含此后提交的改动。要看最新代码，请克隆本仓库。
+
 ## 快速上手
 
 ```html

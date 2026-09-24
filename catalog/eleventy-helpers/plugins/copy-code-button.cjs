@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+const {withPrefix} = require('../path-prefix.cjs');
+
 /**
  * Renders a copy-code-button component around the original markdown code block
  * if the codeblock is not empty.
@@ -27,7 +29,7 @@ function renderCode(originalRule) {
 
     return `
 <lit-island
-    import="/js/hydration-entrypoints/copy-code-button.js"
+    import="${withPrefix('/js/hydration-entrypoints/copy-code-button.js')}"
     on:interaction="focusin,pointerenter,touchstart">
   <copy-code-button>
     ${originalHTMLContent}

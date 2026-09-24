@@ -18,6 +18,7 @@ const mdMarkdown = require('./eleventy-helpers/filters/md-markdown.cjs');
 const copyCodeButtonPlugin = require('./eleventy-helpers/plugins/copy-code-button.cjs');
 const markdownIt = require('markdown-it');
 const { compress } = require('eleventy-plugin-compress');
+const {pathPrefix} = require('./eleventy-helpers/path-prefix.cjs');
 
 // dev mode build
 const DEV = process.env.NODE_ENV === 'DEV';
@@ -101,9 +102,11 @@ module.exports = function (eleventyConfig) {
 
   // set output folders and use nunjucks for html templating engine. see
   // nunjucks docs and 11ty docs for more info on nunjucks templating
+  const prefix = pathPrefix();
   return {
     htmlTemplateEngine: 'njk',
     markdownTemplateEngine: 'njk',
+    ...(prefix === '/' ? {} : {pathPrefix: prefix}),
     dir: {
       input: 'site',
       output: outputFolder,

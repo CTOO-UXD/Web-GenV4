@@ -16,18 +16,18 @@
     <title>GenV4{% if pageTitle %} - {{ pageTitle }}{% endif %}</title>
     <!-- Set the color of the url bar on mobile to match theme -->
     <meta name="theme-color" content="#251f16" />
-    <link href="/images/favicon.svg" rel="icon" sizes="any" type="image/svg+xml">
+    <link href="{{ '/images/favicon.svg' | url }}" rel="icon" sizes="any" type="image/svg+xml">
     <!-- Inlines the global css in site/css/global.css -->
     {% inlinecss "global.css" %}
     <!-- MUST be loaded before any lit bundle. allows hydration of SSRd components -->
-    <script type="module" src="/js/ssr-utils/lit-hydrate-support.js"></script>
+    <script type="module" src="{{ '/js/ssr-utils/lit-hydrate-support.js' | url }}"></script>
     <!-- Loads definition for <lit-island>. See docs for @11ty/is-land for usage -->
-    <script type="module" src="/js/ssr-utils/lit-island.js"></script>
+    <script type="module" src="{{ '/js/ssr-utils/lit-island.js' | url }}"></script>
     <!-- Inlines the material theming logic since we want to prevent FOUC -->
     {% inlinejs "inline/apply-saved-theme.js" %}
-    <script type="module" src="/js/pages/global.js"></script>
+    <script type="module" src="{{ '/js/pages/global.js' | url }}"></script>
     <noscript>
-      <link rel="stylesheet" href="/css/no-js.css" />
+      <link rel="stylesheet" href="{{ '/css/no-js.css' | url }}" />
     </noscript>
     <link
       rel="stylesheet"
@@ -53,9 +53,9 @@
   <body dsd-pending>
     <!-- Inlines the declarative shadow dom polyfill for FF since it's performance sensitive -->
     {% inlinejs "ssr-utils/dsd-polyfill.js" %}
-    <lit-island on:idle import="/js/hydration-entrypoints/navigation.js">
+    <lit-island on:idle import="{{ '/js/hydration-entrypoints/navigation.js' | url }}">
       <nav-drawer page-title="{{label or name}}" {% if hasToc %}has-toc{% endif %}>
-        <top-app-bar slot="top-app-bar" baseURI="/">
+        <top-app-bar slot="top-app-bar" home-href="{{ '/' | url }}" asset-base="{{ '/' | url }}">
           {% block topappbar %}{{ topappbar | safe }}{% endblock %}
         </top-app-bar>
 
@@ -76,7 +76,7 @@
           <md-item><div slot="headline">开发指南</div></md-item>
           {% for file in collections.about|filtersort('data.order') %}
             <md-list-item
-              href="{{ file.url }}"
+              href="{{ file.url | url }}"
               role="menuitem"
               {% if file.url == page.url %}selected{% endif %}
               type="link"
@@ -89,7 +89,7 @@
             <md-item><div slot="headline">Theming</div></md-item>
             {% for file in collections.theming|filtersort('data.order') %}
               <md-list-item
-                href="{{ file.url }}"
+                href="{{ file.url | url }}"
                 type="menuitem"
                 {% if file.url == page.url %}selected{% endif %}
                 type="link"
@@ -102,7 +102,7 @@
           <md-item><div slot="headline">Components</div></md-item>
           {% for file in collections.component|filtersort('data.name') %}
             <md-list-item
-              href="{{ file.url }}"
+              href="{{ file.url | url }}"
               role="menuitem"
               {% if file.url == page.url %}selected{% endif %}
               type="link"

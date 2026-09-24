@@ -30,7 +30,7 @@
     <!-- Set the color of the url bar on mobile to match theme -->
     <meta name="theme-color" content="#251f16" />
     <link
-      href="/images/favicon.svg"
+      href="{{ '/images/favicon.svg' | url }}"
       rel="icon"
       sizes="any"
       type="image/svg+xml"
@@ -38,13 +38,13 @@
     <!-- Inlines the global css in site/css/global.css -->
     {% inlinecss "global.css" %}
     <!-- MUST be loaded before any lit bundle. allows hydration of SSRd components -->
-    <script type="module" src="/js/ssr-utils/lit-hydrate-support.js"></script>
+    <script type="module" src="{{ '/js/ssr-utils/lit-hydrate-support.js' | url }}"></script>
     <!-- Inlines the material theming logic since we want to prevent FOUC -->
     {% inlinejs "inline/apply-saved-theme.js" %}
     <!-- Needed for intializing theme if this is the first page they ever visit -->
-    <script type="module" src="/js/pages/global.js"></script>
+    <script type="module" src="{{ '/js/pages/global.js' | url }}"></script>
     <noscript>
-      <link rel="stylesheet" href="/css/no-js.css" />
+      <link rel="stylesheet" href="{{ '/css/no-js.css' | url }}" />
     </noscript>
     <link
       rel="stylesheet"
@@ -59,14 +59,14 @@
       </style>
     </noscript>
     <!-- Syncs theme with playground -->
-    <script type="module" src="/js/pages/components.js"></script>
-    <script type="module" src="/js/pages/stories.js"></script>
+    <script type="module" src="{{ '/js/pages/components.js' | url }}"></script>
+    <script type="module" src="{{ '/js/pages/stories.js' | url }}"></script>
     <script
       type="module"
-      src="/js/hydration-entrypoints/playground-elements.js"
+      src="{{ '/js/hydration-entrypoints/playground-elements.js' | url }}"
     ></script>
-    <link rel="stylesheet" href="/css/syntax-highlight.css" />
-    <link rel="stylesheet" href="/css/stories.css" />
+    <link rel="stylesheet" href="{{ '/css/syntax-highlight.css' | url }}" />
+    <link rel="stylesheet" href="{{ '/css/stories.css' | url }}" />
   </head>
   <!-- dsd-pending hides body until the polyfill has run on browsers that do not support DSD -->
   <body dsd-pending>
@@ -74,7 +74,7 @@
     {% inlinejs "ssr-utils/dsd-polyfill.js" %}
     <playground-project
       id="project"
-      project-src="/assets/stories/{{dirname}}/project.json"
+      project-src="{{ ('/assets/stories/' ~ dirname ~ '/project.json') | url }}"
     >
     </playground-project>
     <drag-playground id="dragbar">

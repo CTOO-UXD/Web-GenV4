@@ -5,6 +5,7 @@
  */
 
 const fsSync = require('fs');
+const {withPrefix} = require('../path-prefix.cjs');
 
 /**
  * Inline the Rollup-bundled version of a JavaScript module. Path is relative
@@ -38,7 +39,7 @@ function inlineJS(eleventyConfig, isDev, {jsDir}) {
   eleventyConfig.addShortcode('inlinejs', (path) => {
     // script type module
     if (isDev) {
-      return `<script type="module" src="/js/${path}"></script>`;
+      return `<script type="module" src="${withPrefix(`/js/${path}`)}"></script>`;
     }
     const script = fsSync.readFileSync(`${jsDir}/${path}`, 'utf8').trim();
     return `<script>${script}</script>`;

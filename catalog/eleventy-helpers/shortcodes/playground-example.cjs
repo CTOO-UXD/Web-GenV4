@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+const {withPrefix} = require('../path-prefix.cjs');
+
 /**
  * Will render a playground example with a project.json in the
  * `/catalog/stories/${dirname}/` directory.
@@ -53,9 +55,9 @@ function playgroundExample(eleventyConfig) {
           </md-outlined-icon-button>
           View interactive demo inline.
         </summary>
-        <lit-island on:visible import="/js/hydration-entrypoints/playground-elements.js" class="example" aria-hidden="true">
+        <lit-island on:visible import="${withPrefix('/js/hydration-entrypoints/playground-elements.js')}" class="example" aria-hidden="true">
           <playground-project
-              id="${id}" project-src="/assets/stories/${dirname}/project.json">
+              id="${id}" project-src="${withPrefix(`/assets/stories/${dirname}/project.json`)}">
           <playground-preview
               style="${previewHeight}"
               project="${id}"

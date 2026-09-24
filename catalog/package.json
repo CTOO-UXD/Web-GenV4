@@ -91,7 +91,8 @@
     "build:prod:eleventy": {
       "command": "eleventy",
       "env": {
-        "NODE_ENV": "PROD"
+        "NODE_ENV": "PROD",
+        "PATH_PREFIX": "/Web-GenV4"
       },
       "files": [
         "site",

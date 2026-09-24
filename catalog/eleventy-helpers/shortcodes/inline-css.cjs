@@ -5,6 +5,7 @@
  */
 
 const CleanCSS = require('clean-css');
+const {withPrefix} = require('../path-prefix.cjs');
 
 /**
  * Bundle, minify, and inline a CSS file. Path is relative to ./site/css/.
@@ -33,7 +34,7 @@ const CleanCSS = require('clean-css');
 function inlineCSS(eleventyConfig, isDev) {
   eleventyConfig.addShortcode('inlinecss', (path) => {
     if (isDev) {
-      return `<link rel="stylesheet" href="/css/${path}">`;
+      return `<link rel="stylesheet" href="${withPrefix(`/css/${path}`)}">`;
     }
     const result = new CleanCSS({ inline: ['local'] }).minify([
       `./site/css/${path}`,
@@ -46,7 +47,9 @@ function inlineCSS(eleventyConfig, isDev) {
         ].join('\n')}`
       );
     }
-    return `<style>${result.styles}</style>`;
+    const prefixRoot = withPrefix('/').replace(/\/$/, '');
+    const styles = result.styles.replaceAll('url(/', `url(${prefixRoot}/`);
+    return `<style>${styles}</style>`;
   });
 }
 

@@ -10,7 +10,7 @@ import 'genv4/iconbutton/icon-button.js';
 
 import type {MdIconButton} from 'genv4/iconbutton/icon-button.js';
 import {css, html, LitElement} from 'lit';
-import {customElement, query, state} from 'lit/decorators.js';
+import {customElement, property, query, state} from 'lit/decorators.js';
 import {live} from 'lit/directives/live.js';
 
 import {drawerOpenSignal} from '../signals/drawer-open-state.js';
@@ -23,6 +23,9 @@ import {materialDesign} from '../svg/material-design-logo.js';
  */
 @customElement('top-app-bar')
 export class TopAppBar extends SignalElement(LitElement) {
+  @property({type: String, attribute: 'home-href'}) homeHref = '/';
+  @property({type: String, attribute: 'asset-base'}) assetBase = '/';
+
   /**
    * Whether or not the color picker menu is open.
    */
@@ -49,7 +52,7 @@ export class TopAppBar extends SignalElement(LitElement) {
               <md-icon>menu_open</md-icon>
             </md-icon-button>
             <md-icon-button
-              href="/"
+              href=${this.homeHref}
               class="home-button"
               title="Home"
               aria-label="Home">
@@ -57,7 +60,7 @@ export class TopAppBar extends SignalElement(LitElement) {
             </md-icon-button>
           </section>
 
-          <a href="/" id="home-link">
+          <a href=${this.homeHref} id="home-link">
             GenV4
             <md-focus-ring for="home-link"></md-focus-ring>
           </a>
@@ -69,12 +72,12 @@ export class TopAppBar extends SignalElement(LitElement) {
           <section class="end">
             <lit-island
               on:interaction="pointerenter,focusin,pointerdown"
-              import="/js/hydration-entrypoints/menu.js"
+              import=${this.assetBase + 'js/hydration-entrypoints/menu.js'}
               id="menu-island">
               <md-icon-button
                 title="GitHub repository"
                 aria-label="GitHub repository"
-                href="https://github.com/material-components/material-web"
+                href="https://github.com/CTOO-UXD/Web-GenV4"
                 target="_blank">
                 <md-icon>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 96">

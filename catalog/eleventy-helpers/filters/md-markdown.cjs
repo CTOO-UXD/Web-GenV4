@@ -5,6 +5,7 @@
  */
 
 const cheerio = require('cheerio');
+const {withPrefix} = require('../path-prefix.cjs');
 
 /**
  * Fixes links and applies redirects to markdown files filtered by this filter.
@@ -43,6 +44,10 @@ function fixLinks($, redirects) {
     const endsWithSlash = path.endsWith('/');
     if (!endsWithSlash) {
       path += '/';
+    }
+
+    if (path.startsWith('/') && !path.startsWith('//')) {
+      path = withPrefix(path);
     }
 
     const newHref = path + (hash ? `#${hash}` : '');
