@@ -32,7 +32,7 @@ git config --global user.name "你的名字"
 git config --global user.email "你的邮箱"
 ```
 
-**换行符配置（Windows 重要）**：本仓库上游在 mac/linux 开发，无 `.gitattributes`。保持 LF 可避免整文件假差异（diff 噪音）：
+**换行符配置（Windows 重要）**：仓库没有 `.gitattributes`，源码用 LF。保持 LF 可避免整文件假差异（diff 噪音）：
 
 ```powershell
 git config --global core.autocrlf input
@@ -72,7 +72,7 @@ npm -v
 winget install Microsoft.VisualStudioCode
 ```
 
-VSCode 打开仓库根目录即可，仓库自带的 `.vscode/settings.json` 已关闭保存时自动格式化（保持上游代码风格、避免 diff 噪音）。推荐安装 Lit 插件（`lit.lit-plugin`）获得组件开发的类型提示。
+VSCode 打开仓库根目录即可，仓库自带的 `.vscode/settings.json` 已关闭保存时自动格式化（保持现有代码风格、避免 diff 噪音）。推荐安装 Lit 插件（`lit.lit-plugin`）获得组件开发的类型提示。
 
 ## 搭建步骤
 
@@ -80,10 +80,6 @@ VSCode 打开仓库根目录即可，仓库自带的 `.vscode/settings.json` 已
 # 1. 克隆（私有仓库，需 GitHub 访问权限）
 git clone https://github.com/CTOO-UXD/Web-GenV4.git
 cd Web-GenV4
-
-# 1b. 添加上游 remote（用于同步 Google 官方修复；remote 配置不随仓库走，clone 后必须手动补）
-git remote add upstream https://github.com/material-components/material-web.git
-git remote -v   # 应看到 origin(你的仓库)和 upstream(Google 官方)各两行
 
 # 2. 安装依赖（根包 + catalog workspace 一次装齐）
 npm install
@@ -106,7 +102,7 @@ npm test
 | `docs/` | 面向使用方的文档（Markdown） |
 | `labs/` | 实验性组件（会随包发布） |
 | `scripts/` | 构建脚本（css-to-ts、manifest 生成等） |
-| `migrations/` | 上游遗留的迁移 codemod |
+| `migrations/` | 遗留的迁移 codemod |
 
 **产物识别**：`*.js`、`*.js.map`、`*.d.ts`、`*.css`、`*.cssresult.ts`、`custom-elements.json`、`*-meta.scss` 均为生成物（见 `.gitignore`），可随时删除后 `npm run build` 重建。
 
@@ -141,16 +137,6 @@ npm test          # Playwright + jasmine，92 个文件 1700+ 用例
 - **CI**：推送 `v*` 标签触发 `.github/workflows/publish.yml`。
   前置配置：npmjs.com 生成 **Automation** 类型 token → 仓库 Settings → Secrets → Actions → `NPM_TOKEN`；仓库 Actions 需为开启状态
 - 版本号手动管理（`npm version patch` 或手改 `package.json`），同一版本号不可重复发布
-
-## 与上游（Google material-web）同步
-
-```bash
-git fetch upstream                    # 只下载，不动本地代码
-git log --oneline main..upstream/main # 看上游新增了什么
-git cherry-pick <commit>              # 按需摘取修复（推荐只挑安全/bug修复）
-```
-
-`company-baseline` 标签 = fork 起点，`git diff company-baseline..main --stat` 可随时回答"我们改了什么"。
 
 ## 遗留决策（待定）
 

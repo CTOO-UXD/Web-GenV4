@@ -39,7 +39,9 @@ md-filled-button.brand {
 }
 ```
 
-系统 token 的默认值和使用方式见 [主题](./docs/theme.md)。某个组件具体有哪些变量，见该组件文档的主题表。
+默认色阶在 `tokens/genv4/_ref-palette.scss`，系统颜色和档位的对应在 `tokens/genv4/_sys-color-scheme.scss`。浅色和暗色共用这一套色阶，只是各角色取的档不同。
+
+系统 token 的浅色默认值和使用方式见 [主题](./docs/theme.md)。某个组件具体有哪些变量，见该组件文档的主题表。
 
 ## 本地开发
 
@@ -58,16 +60,6 @@ npm run build:dev      # 终端 B：改完组件源码后重新构建，浏览�
 ```
 
 详细环境搭建见 [SETUP.md](./SETUP.md)。
-
-## 与上游的关系
-
-本仓库 fork 自 `material-components/material-web`，`company-baseline` 标签标记了 fork 起点。上游的修复可通过以下方式同步：
-
-```bash
-git fetch upstream
-git log --oneline main..upstream/main   # 查看上游新提交
-git cherry-pick <commit>                # 按需摘取
-```
 
 ## License
 

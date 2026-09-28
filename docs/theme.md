@@ -32,29 +32,29 @@ md-filled-button.danger {
 
 ## 颜色 token
 
-下面是浅色主题的默认值。写在这些颜色上的文字，用对应的 `--md-sys-color-on-*`。表面用 `--md-sys-color-on-surface` 或 `--md-sys-color-on-surface-variant`。
+下面是浅色主题的默认值。暗色用同一套色阶，角色取的档不同。写在这些颜色上的文字，用对应的 `--md-sys-color-on-*`。表面用 `--md-sys-color-on-surface` 或 `--md-sys-color-on-surface-variant`。
 
 | 变量 | 默认值 |
 | --- | --- |
-| `--md-sys-color-primary` | `#6750a4` |
-| `--md-sys-color-primary-container` | `#eaddff` |
-| `--md-sys-color-secondary` | `#625b71` |
-| `--md-sys-color-secondary-container` | `#e8def8` |
-| `--md-sys-color-tertiary` | `#7d5260` |
-| `--md-sys-color-tertiary-container` | `#ffd8e4` |
-| `--md-sys-color-error` | `#b3261e` |
-| `--md-sys-color-error-container` | `#f9dedc` |
-| `--md-sys-color-background` | `#fef7ff` |
-| `--md-sys-color-surface` | `#fef7ff` |
-| `--md-sys-color-surface-bright` | `#fef7ff` |
+| `--md-sys-color-primary` | `#6c43c6` |
+| `--md-sys-color-primary-container` | `#e9ddff` |
+| `--md-sys-color-secondary` | `#0156cf` |
+| `--md-sys-color-secondary-container` | `#dae2ff` |
+| `--md-sys-color-tertiary` | `#b52332` |
+| `--md-sys-color-tertiary-container` | `#ffdad8` |
+| `--md-sys-color-error` | `#ba1a1a` |
+| `--md-sys-color-error-container` | `#ffdad6` |
+| `--md-sys-color-background` | `#fbf9f7` |
+| `--md-sys-color-surface` | `#fbf9f7` |
+| `--md-sys-color-surface-bright` | `#fbf9f7` |
 | `--md-sys-color-surface-dim` | `#ded8e1` |
 | `--md-sys-color-surface-container` | `#f3edf7` |
 | `--md-sys-color-surface-container-lowest` | `#ffffff` |
 | `--md-sys-color-surface-container-low` | `#f7f2fa` |
 | `--md-sys-color-surface-container-high` | `#ece6f0` |
-| `--md-sys-color-surface-container-highest` | `#e6e0e9` |
-| `--md-sys-color-outline` | `#79747e` |
-| `--md-sys-color-outline-variant` | `#cac4d0` |
+| `--md-sys-color-surface-container-highest` | `#e7e2dd` |
+| `--md-sys-color-outline` | `#7a757f` |
+| `--md-sys-color-outline-variant` | `#cac4cf` |
 
 在全站设一次主色和它上面的文字色，自己的元素直接用：
 
@@ -72,7 +72,7 @@ md-filled-button.danger {
 
 这些变量要先在 `:root` 上生成出来，做法见「问题与支持」里的「怎么在自己的样式里使用 `--md-sys-*`？」。
 
-全部变量：`tokens/_md-sys-color.scss`
+全部变量：[系统颜色对应表](https://github.com/CTOO-UXD/Web-GenV4/blob/main/tokens/genv4/_sys-color-scheme.scss)、[色阶表](https://github.com/CTOO-UXD/Web-GenV4/blob/main/tokens/genv4/_ref-palette.scss)
 
 ## 文字 token
 
@@ -135,7 +135,7 @@ p {
 
 只换标题用的字体时，改 `--md-sys-typescale-headline-medium-font`，不要改上面那两个全局字体名。
 
-全部变量：`tokens/_md-ref-typeface.scss`、`tokens/_md-sys-typescale.scss`
+全部变量：[字体](https://github.com/CTOO-UXD/Web-GenV4/blob/main/tokens/_md-ref-typeface.scss)、[文字规格](https://github.com/CTOO-UXD/Web-GenV4/blob/main/tokens/_md-sys-typescale.scss)
 
 ## 圆角 token
 
@@ -159,4 +159,4 @@ p {
 
 按钮默认用的是 `--md-sys-shape-corner-full`，改 `corner-medium` 不会让按钮变方。要改按钮圆角，设 `--md-filled-button-container-shape`。具体见对应组件的主题。
 
-全部变量：`tokens/_md-sys-shape.scss`
+全部变量：[圆角](https://github.com/CTOO-UXD/Web-GenV4/blob/main/tokens/_md-sys-shape.scss)
