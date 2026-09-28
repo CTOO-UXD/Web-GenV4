@@ -1,0 +1,38 @@
+name: Tests
+
+# 手动触发(Actions 页面 Run workflow);发版前的全量测试在 publish.yml 中执行
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: google/wireit@setup-github-actions-caching/v2
+
+      - run: npm ci
+      - run: npm run build
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: google/wireit@setup-github-actions-caching/v2
+
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - run: npm test

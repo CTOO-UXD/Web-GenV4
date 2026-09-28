@@ -1,0 +1,127 @@
+//
+// Copyright 2023 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use '../../../elevation/elevation';
+// go/keep-sorted end
+
+@mixin styles() {
+  :host {
+    border-radius: var(--_container-shape);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    // Reset z-index for background elements.
+    z-index: 0;
+  }
+
+  md-elevation,
+  .background,
+  .outline {
+    border-radius: inherit;
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  // Separate element will be needed for disabled opacities (b/307361748)
+  .surface {
+    border-radius: inherit;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+  }
+
+  .background {
+    background: var(--_container-color);
+    // Place behind content.
+    z-index: -1;
+  }
+
+  // Separate element needed to overlay on top of content as opposed to
+  // background, which is behind content. All cards have an outline for HCM.
+  .outline {
+    // A default transparent border that is visible in HCM
+    border: 1px solid transparent;
+    // Outline should be placed on top of content, such as images.
+    z-index: 1;
+  }
+
+  md-elevation {
+    // Place behind content.
+    z-index: -1;
+
+    @include elevation.theme(
+      (
+        'level': var(--_container-elevation),
+        'shadow-color': var(--_container-shadow-color),
+      )
+    );
+  }
+
+  slot {
+    // Allow content to inherit card's border radius
+    border-radius: inherit;
+  }
+
+  slot[name='content']::slotted(*) {
+    box-sizing: border-box;
+    padding-inline: 16px;
+    text-align: start;
+  }
+
+  .primary {
+    border-radius: inherit;
+    color: inherit;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    outline: none;
+    text-decoration: none;
+  }
+
+  .state-layer {
+    background: var(--_hover-state-layer-color);
+    border-radius: inherit;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  :host([href][disabled]) {
+    pointer-events: none;
+  }
+
+  :host([href]:hover) {
+    --_container-elevation: var(--_hover-container-elevation);
+  }
+
+  :host([href]:hover) .state-layer {
+    opacity: var(--_hover-state-layer-opacity);
+  }
+
+  :host([href]:focus-within) {
+    --_container-elevation: var(--_focus-container-elevation);
+  }
+
+  :host([href]:focus-within) .state-layer {
+    background: var(--_focus-state-layer-color);
+    opacity: var(--_focus-state-layer-opacity);
+  }
+
+  :host([href]:active) {
+    --_container-elevation: var(--_pressed-container-elevation);
+  }
+
+  :host([href]:active) .state-layer {
+    background: var(--_pressed-state-layer-color);
+    opacity: var(--_pressed-state-layer-opacity);
+  }
+}

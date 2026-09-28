@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GenV4 Badge 验收</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet" />
+    <script type="module">
+      import '../../icon/icon.js';
+      import '../../labs/badge/badge.js';
+      import '../../labs/navigationbar/navigation-bar.js';
+      import '../../labs/navigationtab/navigation-tab.js';
+    </script>
+    <style>
+      body {
+        margin: 0;
+        background: #f5f5f5;
+        color: #1d1b20;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        width: min(880px, calc(100% - 32px));
+        margin: 32px auto;
+      }
+
+      h1 {
+        margin-block-end: 8px;
+      }
+
+      p {
+        margin-block: 0 24px;
+      }
+
+      section {
+        margin-block-end: 28px;
+        padding: 20px;
+        border: 1px dashed #79747e;
+        border-radius: 12px;
+        background: #fff;
+      }
+
+      h2 {
+        margin: 0 0 16px;
+        font-size: 18px;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 28px;
+        align-items: end;
+      }
+
+      figure {
+        margin: 0;
+        text-align: center;
+      }
+
+      figcaption {
+        margin-top: 8px;
+        color: #49454f;
+        font-size: 13px;
+      }
+
+      md-badge:not(:defined),
+      md-navigation-bar:not(:defined) {
+        display: none;
+      }
+
+      md-navigation-bar {
+        width: min(100%, 420px);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Badge 验收</h1>
+      <p>对照 Small、Large、四字符截断，以及导航图标上的偏移。</p>
+
+      <section>
+        <h2>独立 Badge</h2>
+        <div class="row">
+          <figure>
+            <md-badge value=""></md-badge>
+            <figcaption>空值，6×6</figcaption>
+          </figure>
+          <figure>
+            <md-badge value="3"></md-badge>
+            <figcaption>3，16×16</figcaption>
+          </figure>
+          <figure>
+            <md-badge value="999"></md-badge>
+            <figcaption>999，不超过 34px</figcaption>
+          </figure>
+          <figure>
+            <md-badge value="1000"></md-badge>
+            <figcaption>1000 显示为 999+</figcaption>
+          </figure>
+          <figure>
+            <md-badge value="abcde"></md-badge>
+            <figcaption>abcde 显示为 abc+</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section>
+        <h2>Navigation Tab 定位</h2>
+        <md-navigation-bar active-index="0">
+          <md-navigation-tab label="圆点" show-badge badge-value="">
+            <md-icon slot="inactive-icon">star</md-icon>
+            <md-icon slot="active-icon">star</md-icon>
+          </md-navigation-tab>
+          <md-navigation-tab label="个位" show-badge badge-value="3">
+            <md-icon slot="inactive-icon">star</md-icon>
+            <md-icon slot="active-icon">star</md-icon>
+          </md-navigation-tab>
+          <md-navigation-tab label="上限" show-badge badge-value="1000">
+            <md-icon slot="inactive-icon">star</md-icon>
+            <md-icon slot="active-icon">star</md-icon>
+          </md-navigation-tab>
+        </md-navigation-bar>
+        <p>圆点贴在图标 trailing 上角；数字 Badge 比圆点更靠外，并显示 3 和 999+。</p>
+      </section>
+
+      <section dir="rtl">
+        <h2>从右到左</h2>
+        <md-navigation-bar active-index="0">
+          <md-navigation-tab label="圆点" show-badge badge-value="">
+            <md-icon slot="inactive-icon">star</md-icon>
+            <md-icon slot="active-icon">star</md-icon>
+          </md-navigation-tab>
+          <md-navigation-tab label="上限" show-badge badge-value="1000">
+            <md-icon slot="inactive-icon">star</md-icon>
+            <md-icon slot="active-icon">star</md-icon>
+          </md-navigation-tab>
+        </md-navigation-bar>
+      </section>
+    </main>
+  </body>
+</html>
