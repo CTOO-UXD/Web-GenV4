@@ -14,11 +14,11 @@
 
 import {
   changeColor,
-  changeColorAndMode,
+  // changeColorAndMode,
   changeColorMode,
   getCurrentMode,
   getCurrentSeedColor,
-  getCurrentThemeString,
+  // getCurrentThemeString,
   getLastSavedAutoColorMode,
   isModeDark,
 } from '../utils/theme.js';
@@ -55,10 +55,11 @@ function applyColorThemeListeners() {
  * to the catalog.
  */
 function initializeTheme() {
-  if (!getCurrentThemeString()) {
-    // Generates a primary color close to GM3 baseline primary color.
-    changeColorAndMode('#ECAA2E', 'auto');
-  }
+  // 默认使用 site/css/system-colors.css 里的系统色，不再用种子色生成。
+  // if (!getCurrentThemeString()) {
+  //   // Generates a primary color close to GM3 baseline primary color.
+  //   changeColorAndMode('#ECAA2E', 'auto');
+  // }
 }
 
 /**
