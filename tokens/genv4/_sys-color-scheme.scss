@@ -13,7 +13,7 @@
 
 @function values-dark($deps) {
   @return (
-    'background': map.get($deps, 'md-ref-palette', 'neutral6'),
+    'background': map.get($deps, 'md-ref-palette', 'neutral10'),
     'error': map.get($deps, 'md-ref-palette', 'error80'),
     'error-container': map.get($deps, 'md-ref-palette', 'error30'),
     'inverse-on-surface': map.get($deps, 'md-ref-palette', 'neutral20'),
@@ -68,7 +68,7 @@
 
 @function values-light($deps) {
   @return (
-    'background': map.get($deps, 'md-ref-palette', 'neutral98'),
+    'background': map.get($deps, 'md-ref-palette', 'neutral99'),
     'error': map.get($deps, 'md-ref-palette', 'error40'),
     'error-container': map.get($deps, 'md-ref-palette', 'error90'),
     'inverse-on-surface': map.get($deps, 'md-ref-palette', 'neutral95'),
