@@ -32,7 +32,7 @@ md-filled-button.danger {
 
 ## 颜色 token
 
-下面是浅色主题的默认值。暗色用同一套色阶，角色取的档不同。写在这些颜色上的文字，用对应的 `--md-sys-color-on-*`。表面用 `--md-sys-color-on-surface` 或 `--md-sys-color-on-surface-variant`。
+下面是浅色主题的默认值。暗色里，示意图上的角色与浅色同一档；Background、Surface Dim、Surface Container High、Surface Variant、Surface Tint 仍用各自的暗色档。写在这些颜色上的文字，用对应的 `--md-sys-color-on-*`。表面用 `--md-sys-color-on-surface` 或 `--md-sys-color-on-surface-variant`。
 
 | 变量 | 默认值 |
 | --- | --- |
@@ -45,14 +45,14 @@ md-filled-button.danger {
 | `--md-sys-color-error` | `#ba1a1a` |
 | `--md-sys-color-error-container` | `#ffdad6` |
 | `--md-sys-color-background` | `#fefcfa` |
-| `--md-sys-color-surface` | `#fbf9f7` |
-| `--md-sys-color-surface-bright` | `#fbf9f7` |
+| `--md-sys-color-surface` | `#ffffff` |
+| `--md-sys-color-surface-bright` | `#ffffff` |
 | `--md-sys-color-surface-dim` | `#e7e2dd` |
-| `--md-sys-color-surface-container` | `#f3f0ee` |
+| `--md-sys-color-surface-container` | `#fbf9f7` |
 | `--md-sys-color-surface-container-lowest` | `#ffffff` |
-| `--md-sys-color-surface-container-low` | `#fbf9f7` |
+| `--md-sys-color-surface-container-low` | `#fefcfa` |
 | `--md-sys-color-surface-container-high` | `#e7e2dd` |
-| `--md-sys-color-surface-container-highest` | `#e7e2dd` |
+| `--md-sys-color-surface-container-highest` | `#f3f0ee` |
 | `--md-sys-color-outline` | `#7a757f` |
 | `--md-sys-color-outline-variant` | `#cac4cf` |
 
