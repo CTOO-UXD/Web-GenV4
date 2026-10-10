@@ -247,6 +247,7 @@
       "files": [
         "docs/components/*.md",
         "scripts/update-button-theme-docs.mjs",
+        "tokens/_md-comp-icon.scss",
         "tokens/_md-comp-*-button.scss",
         "tokens/versions/v0_192/_md-comp-*-button.scss",
         "**/*.ts",

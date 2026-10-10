@@ -2,6 +2,24 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-10
+
+* 展示站改用 GenV4 图标字体，并补上图标和图标按钮页
+  * `tokens/_md-comp-icon.scss`
+  * `catalog/site/_includes/default.html`
+  * `catalog/site/stories/stories.html`
+  * `catalog/src/components/top-app-bar.ts`
+  * `docs/components/icon.md`
+  * `docs/components/icon-button.md`
+  * `catalog/src/hydration-entrypoints/components/icon.ts`
+  * `catalog/src/hydration-entrypoints/components/icon-button.ts`
+  * `iconbutton/internal/icon-button.ts`
+  * `iconbutton/demo/stories.ts`
+  * `scripts/analyzer/element-docs-map.ts`
+  * `scripts/analyzer/update-docs.ts`
+  * `scripts/update-button-theme-docs.mjs`
+  * `package.json`
+
 ## 2026-10-09
 
 * 增加新会话约定，CHANGELOG 改为按 GenV4 自己的提交记录

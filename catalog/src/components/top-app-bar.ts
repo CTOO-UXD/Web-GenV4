@@ -49,7 +49,7 @@ export class TopAppBar extends SignalElement(LitElement) {
               .selected=${live(!drawerOpenSignal.value)}
               @input=${this.onMenuIconToggle}>
               <md-icon slot="selected">menu</md-icon>
-              <md-icon>menu_open</md-icon>
+              <md-icon>menu</md-icon>
             </md-icon-button>
             <md-icon-button
               href=${this.homeHref}

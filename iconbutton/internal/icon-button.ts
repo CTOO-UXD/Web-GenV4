@@ -46,7 +46,9 @@ export class IconButton extends iconButtonBaseClass {
   };
 
   /**
-   * "Soft-disables" the icon button (disabled but still focusable).
+   * 禁用后仍可聚焦。需要让不可用的按钮仍能被键盘发现时使用。
+   *
+   * @en "Soft-disables" the icon button (disabled but still focusable).
    *
    * Use this when an icon button needs increased visibility when disabled. See
    * https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_disabled_controls
@@ -56,53 +58,71 @@ export class IconButton extends iconButtonBaseClass {
   softDisabled = false;
 
   /**
-   * Flips the icon if it is in an RTL context at startup.
+   * 从右向左排版时翻转图标。
+   *
+   * @en Flips the icon if it is in an RTL context at startup.
    */
   @property({type: Boolean, attribute: 'flip-icon-in-rtl'})
   flipIconInRtl = false;
 
   /**
-   * Sets the underlying `HTMLAnchorElement`'s `href` resource attribute.
+   * 设置后按钮变成链接，指向该 URL。
+   *
+   * @en Sets the underlying `HTMLAnchorElement`'s `href` resource attribute.
    */
   @property() href = '';
 
   /**
-   * The filename to use when downloading the linked resource.
+   * 作为链接时，下载文件使用的文件名。不设置则由浏览器决定。
+   *
+   * @en The filename to use when downloading the linked resource.
    * If not specified, the browser will determine a filename.
    * This is only applicable when the icon button is used as a link (`href` is set).
    */
   @property() download = '';
 
   /**
-   * Sets the underlying `HTMLAnchorElement`'s `target` attribute.
+   * 作为链接时，在何处打开 href。常用 `_blank` 在新标签页打开。
+   *
+   * @en Sets the underlying `HTMLAnchorElement`'s `target` attribute.
    */
   @property() target: LinkTarget | '' = '';
 
   /**
-   * Sets the underlying `HTMLAnchorElement`'s `rel` attribute when `href` is
+   * 作为链接时，写到内部 a 元素的 rel。
+   *
+   * @en Sets the underlying `HTMLAnchorElement`'s `rel` attribute when `href` is
    * set.
    */
   @property() rel = '';
 
   /**
-   * Sets the underlying `HTMLAnchorElement`'s `referrerpolicy` attribute when
+   * 作为链接时，写到内部 a 元素的 referrerpolicy。
+   *
+   * @en Sets the underlying `HTMLAnchorElement`'s `referrerpolicy` attribute when
    * `href` is set.
    */
   @property() referrerPolicy = '';
 
   /**
-   * The `aria-label` of the button when the button is toggleable and selected.
+   * 可切换且已选中时使用的无障碍名称。
+   *
+   * @en The `aria-label` of the button when the button is toggleable and selected.
    */
   @property({attribute: 'aria-label-selected'}) ariaLabelSelected = '';
 
   /**
-   * When true, the button will toggle between selected and unselected
+   * 开启后可以在选中和未选中之间切换。
+   *
+   * @en When true, the button will toggle between selected and unselected
    * states
    */
   @property({type: Boolean}) toggle = false;
 
   /**
-   * Sets the selected state. When false, displays the default icon. When true,
+   * 是否选中。未选中显示默认图标，选中显示 `slot="selected"` 里的图标。没有选中图标时继续显示默认图标。
+   *
+   * @en Sets the selected state. When false, displays the default icon. When true,
    * displays the selected icon, or the default icon If no `slot="selected"`
    * icon is provided.
    */

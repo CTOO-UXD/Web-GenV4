@@ -83,7 +83,13 @@ async function updateDocFileApiSection(
   // and it's associated Property, Methods, and Events tables.
   const elementTableSections: ElementTableSection[] = [];
 
-  const zhHeaders = docFileName === 'button.md';
+  const zhIntro: {[key: string]: string} = {
+    'button.md':
+      '五种按钮的属性相同，下表适用于 `<md-filled-button>`、`<md-filled-tonal-button>`、`<md-elevated-button>`、`<md-outlined-button>`、`<md-text-button>`。',
+    'icon-button.md':
+      '四种图标按钮的属性相同，下表适用于 `<md-icon-button>`、`<md-filled-icon-button>`、`<md-filled-tonal-icon-button>`、`<md-outlined-icon-button>`。',
+  };
+  const zhHeaders = docFileName in zhIntro;
 
   for (const elementEntrypoint of elementEntrypoints) {
     elementTableSections.push(
@@ -98,9 +104,7 @@ async function updateDocFileApiSection(
   const updatedFileContents = insertMarkdownTables(
     documentationFileContents.toString(),
     elementTableSections,
-    zhHeaders
-      ? '五种按钮的属性相同，下表适用于 `<md-filled-button>`、`<md-filled-tonal-button>`、`<md-elevated-button>`、`<md-outlined-button>`、`<md-text-button>`。'
-      : undefined,
+    zhHeaders ? zhIntro[docFileName] : undefined,
   );
 
   await fs.writeFile(
@@ -146,7 +150,7 @@ function generateTableSection(
   }
 
   if (eventsTable.rows.length > 0) {
-    tables.push({name: 'Events', table: eventsTable});
+    tables.push({name: zhHeaders ? '事件' : 'Events', table: eventsTable});
   }
 
   return {
@@ -505,22 +509,20 @@ function stringifyMarkdownTableSections(elements: ElementTableSection[]) {
   for (const element of elements) {
     const {className, tables, customElementName} = element;
     const heading = className
-      ? `
-### ${className}${
+      ? `\n### ${className}${
           customElementName ? ` <code>&lt;${customElementName}&gt;</code>` : ''
         }`
       : '';
     const headingLevel = className ? '####' : '###';
-    tablesStrings += `${heading}
-${tables
-  .map(
-    ({name, table}) => `
+    tablesStrings += `${heading}${tables
+      .map(
+        ({name, table}) => `
 ${headingLevel} ${name}
 
 ${table.toString()}
 `,
-  )
-  .join('')}`;
+      )
+      .join('')}`;
   }
 
   return tablesStrings;

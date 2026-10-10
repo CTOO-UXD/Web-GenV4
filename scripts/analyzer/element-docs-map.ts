@@ -21,7 +21,9 @@ export const docsToElementMapping: {[key: string]: readonly string[]} = {
   'elevation.md': COMPONENT_CUSTOM_ELEMENTS.elevation,
   'fab.md': COMPONENT_CUSTOM_ELEMENTS.fab,
   'focus-ring.md': COMPONENT_CUSTOM_ELEMENTS.focus,
-  'icon-button.md': COMPONENT_CUSTOM_ELEMENTS.iconButton,
+  // Four icon buttons share one property table, so only the standard entry is registered.
+  // 'icon-button.md': COMPONENT_CUSTOM_ELEMENTS.iconButton,
+  'icon-button.md': ['iconbutton/icon-button.ts'],
   'icon.md': COMPONENT_CUSTOM_ELEMENTS.icon,
   'list.md': COMPONENT_CUSTOM_ELEMENTS.list,
   'menu.md': COMPONENT_CUSTOM_ELEMENTS.menu,

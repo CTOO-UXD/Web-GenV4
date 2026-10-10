@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/icon/icon.js';
-import '@material/web/iconbutton/filled-icon-button.js';
-import '@material/web/iconbutton/filled-tonal-icon-button.js';
-import '@material/web/iconbutton/icon-button.js';
-import '@material/web/iconbutton/outlined-icon-button.js';
+import 'genv4/icon/icon.js';
+import 'genv4/iconbutton/filled-icon-button.js';
+import 'genv4/iconbutton/filled-tonal-icon-button.js';
+import 'genv4/iconbutton/icon-button.js';
+import 'genv4/iconbutton/outlined-icon-button.js';
 
 import {MaterialStoryInit} from './material-collection.js';
-import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.cssresult.js';
+import {styles as typescaleStyles} from 'genv4/typography/md-typescale-styles.cssresult.js';
 import {css, html} from 'lit';
 
 /** Knob types for icon button stories. */
