@@ -49,7 +49,7 @@ export class ThemeChanger extends LitElement {
    * NOTE: Hex colors are in the srgb color space and HCT has a much larger, so
    * this value is a clipped value of HCT.
    */
-  @state() hexColor = '';
+  @state() hexColor = '#6c43c6';
 
   /**
    * The current hue value of the hue slider.
@@ -190,14 +190,11 @@ export class ThemeChanger extends LitElement {
   }
 
   async firstUpdated() {
-    if (!this.selectedColorMode) {
-      // localStorage is not available on server so must do this here.
-      this.selectedColorMode = getCurrentMode();
-    }
-
-    if (!this.hexColor) {
-      // localStorage is not available on server so must do this here.
-      this.hexColor = getCurrentSeedColor()!;
+    // localStorage is not available on server so must do this here.
+    this.selectedColorMode = getCurrentMode() ?? 'auto';
+    const seed = getCurrentSeedColor();
+    if (seed) {
+      this.hexColor = seed;
     }
 
     this.updateHctFromHex(this.hexColor);

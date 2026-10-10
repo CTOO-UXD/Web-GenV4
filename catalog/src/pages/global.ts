@@ -41,11 +41,16 @@ function applyColorThemeListeners() {
   window
     .matchMedia('(prefers-color-scheme: dark)')
     .addEventListener('change', () => {
-      if (getCurrentMode() !== 'auto') {
+      const mode = getCurrentMode();
+      if (mode && mode !== 'auto') {
+        return;
+      }
+      const seed = getCurrentSeedColor();
+      if (!seed) {
         return;
       }
 
-      changeColor(getCurrentSeedColor()!);
+      changeColor(seed);
     });
 }
 
@@ -73,7 +78,7 @@ function initializeTheme() {
  * of B.
  */
 function determinePageNavigationAutoMode() {
-  if (getCurrentMode() !== 'auto') {
+  if (getCurrentMode() !== 'auto' || !getCurrentSeedColor()) {
     return;
   }
 

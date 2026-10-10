@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+const fs = require('fs');
+const path = require('path');
 const litPlugin = require('@lit-labs/eleventy-plugin-lit');
 const inlineCss = require('./eleventy-helpers/shortcodes/inline-css.cjs');
 const inlineJS = require('./eleventy-helpers/shortcodes/inline-js.cjs');
@@ -41,6 +43,15 @@ module.exports = function (eleventyConfig) {
     .addPassthroughCopy('site/components/images')
     .addPassthroughCopy('site/theming/images')
     .addPassthroughCopy('site/about/images');
+
+  // node_modules is gitignored, so 11ty passthrough skips it.
+  eleventyConfig.on('eleventy.after', () => {
+    fs.cpSync(
+      path.dirname(require.resolve('genv4-icon/genv4-icon.css')),
+      path.join(__dirname, outputFolder, 'assets/genv4-icon'),
+      {recursive: true},
+    );
+  });
 
   // add the lit-ssr plugin
   eleventyConfig.addPlugin(litPlugin, {

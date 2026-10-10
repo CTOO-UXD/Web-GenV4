@@ -28,6 +28,24 @@ function applyThemeFromColor(color: string, isDark: boolean) {
   window.dispatchEvent(new Event('theme-changed'));
 }
 
+/** Designed colors in system-colors.css. A seed theme must not use these rules. */
+function useDesignedTheme(mode: ColorMode) {
+  const root = document.documentElement;
+  root.removeAttribute('data-theme');
+  if (mode === 'auto') {
+    root.removeAttribute('data-color-mode');
+  } else {
+    root.setAttribute('data-color-mode', mode);
+  }
+}
+
+/** Generated colors override the designed light and dark rules. */
+function useSeedTheme() {
+  const root = document.documentElement;
+  root.setAttribute('data-theme', 'seed');
+  root.removeAttribute('data-color-mode');
+}
+
 /**
  * Determines whether or not the mode should be Dark. This also means
  * calculating whether it should be dark if the current mode is 'auto'.
@@ -128,9 +146,13 @@ export function saveLastSavedAutoColorMode(mode: 'light' | 'dark') {
  * @param color The new source color from which to generate the new theme.
  */
 export function changeColor(color: string) {
-  const lastColorMode = getCurrentMode()!;
-  const isDark = isModeDark(lastColorMode);
+  const mode = getCurrentMode() ?? 'auto';
+  if (!getCurrentMode()) {
+    saveColorMode(mode);
+  }
+  const isDark = isModeDark(mode);
 
+  useSeedTheme();
   applyThemeFromColor(color, isDark);
   saveSeedColor(color);
 }
@@ -141,11 +163,15 @@ export function changeColor(color: string) {
  * @param mode The new color mode from which to generate the new theme.
  */
 export function changeColorMode(mode: ColorMode) {
-  const color = getCurrentSeedColor()!;
-  const isDark = isModeDark(mode);
-
-  applyThemeFromColor(color, isDark);
   saveColorMode(mode);
+  const color = getCurrentSeedColor();
+  if (!color) {
+    useDesignedTheme(mode);
+    return;
+  }
+
+  useSeedTheme();
+  applyThemeFromColor(color, isModeDark(mode));
 }
 
 /**
@@ -158,6 +184,7 @@ export function changeColorMode(mode: ColorMode) {
 export function changeColorAndMode(color: string, mode: ColorMode) {
   const isDark = isModeDark(mode);
 
+  useSeedTheme();
   applyThemeFromColor(color, isDark);
   saveSeedColor(color);
   saveColorMode(mode);

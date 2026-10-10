@@ -5,3 +5,4 @@
  */
 
 import 'genv4/icon/icon.js';
+import '../../components/icon-gallery.js';

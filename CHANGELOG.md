@@ -4,6 +4,22 @@
 
 ## 2026-10-10
 
+* 展示站把设计色和种子色分开，图标页加上全量画廊，字体改走 genv4-icon 包
+  * `catalog/site/css/system-colors.css`
+  * `catalog/src/utils/theme.ts`
+  * `catalog/src/inline/apply-saved-theme.ts`
+  * `catalog/src/pages/global.ts`
+  * `catalog/src/components/theme-changer.ts`
+  * `catalog/src/components/icon-gallery.ts`
+  * `catalog/src/types/genv4-icon-json.d.ts`
+  * `docs/components/icon.md`
+  * `catalog/src/hydration-entrypoints/components/icon.ts`
+  * `catalog/eleventy.config.cjs`
+  * `catalog/package.json`
+  * `catalog/site/_includes/default.html`
+  * `catalog/site/stories/stories.html`
+  * `package-lock.json`
+
 * 展示站改用 GenV4 图标字体，并补上图标和图标按钮页
   * `tokens/_md-comp-icon.scss`
   * `catalog/site/_includes/default.html`

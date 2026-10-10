@@ -66,3 +66,9 @@ Standard 和 AI 都有这个名字时，AI 加 `-ai`。填充再加 `-fill`。
 | `--md-icon-size` | `24px` |
 
 <!-- auto-generated theme docs end -->
+
+## 全部图标
+
+点格子复制 `<md-icon>…</md-icon>`。默认只显示描边。
+
+<icon-gallery></icon-gallery>
