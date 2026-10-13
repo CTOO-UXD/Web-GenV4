@@ -2,6 +2,16 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-13
+
+* 新增 AI 输入组件，并把 genv4-icon 升到 0.0.4
+  * `ai-input/`
+  * `tokens/_md-comp-ai-input.scss`
+  * `tokens/_index.scss`
+  * `testing/genv4/ai-input.html`
+  * `catalog/package.json`
+  * `package-lock.json`
+
 ## 2026-10-10
 
 * 展示站把设计色和种子色分开，图标页加上全量画廊，字体改走 genv4-icon 包

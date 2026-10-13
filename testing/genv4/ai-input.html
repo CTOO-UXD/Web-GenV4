@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GenV4 AI Input 验收</title>
+    <link rel="stylesheet" href="../../node_modules/genv4-icon/dist/genv4-icon.css" />
+    <script type="module">
+      import '../../ai-input/ai-input.js';
+
+      const input = document.querySelector('md-ai-input');
+      const size = document.querySelector('#size');
+      const show = () => {
+        const width = Math.round(input.getBoundingClientRect().width);
+        size.textContent = `${width}px · ${width >= 560 ? '宽' : '窄'}`;
+      };
+      new ResizeObserver(show).observe(input);
+    </script>
+    <style>
+      :root {
+        --md-sys-color-primary: #6c43c6;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-on-surface: #1c1b1b;
+        --md-sys-color-surface: #ffffff;
+        --md-sys-color-secondary-container: #dae2ff;
+        --md-sys-color-on-secondary-container: #001947;
+        --md-sys-color-surface-container: #fbf9f7;
+      }
+
+      body {
+        margin: 0;
+        background: #f3f0ee;
+        color: #1c1b1b;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        width: calc(100% - 32px);
+        margin: 32px auto;
+      }
+
+      #size {
+        margin: 0 0 12px;
+        color: #1c1b1b;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>AI Input</h1>
+      <p id="size"></p>
+      <md-ai-input></md-ai-input>
+    </main>
+  </body>
+</html>

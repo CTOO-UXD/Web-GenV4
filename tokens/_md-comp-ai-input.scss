@@ -1,0 +1,131 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+@use 'sass:string';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'empty-send-color',
+  'empty-send-icon-color',
+  'field-color',
+  'field-height',
+  'field-shape',
+  'file-container-color',
+  'file-height',
+  'file-icon-background-color',
+  'file-label-color',
+  'file-shape',
+  'file-width',
+  'focus-outline-color',
+  'frame-shape',
+  'image-shape',
+  'image-size',
+  'input-text-color',
+  'input-text-font',
+  'input-text-line-height',
+  'input-text-size',
+  'input-text-weight',
+  'listening-field-color',
+  'listening-outline',
+  'max-width',
+  'menu-container-color',
+  'mic-background',
+  'mic-icon-color',
+  'min-width',
+  'narrow-frame-height',
+  'narrow-send-size',
+  'send-container-color',
+  'send-icon-color',
+  'send-size',
+  'supporting-text-color',
+  'supporting-text-font',
+  'supporting-text-line-height',
+  'supporting-text-size',
+  'supporting-text-weight',
+  'text-max-height',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $supporting-text-color: string.unquote(
+    'hsl(from var(--md-sys-color-on-surface, #1c1b1b) h s l / 38%)'
+  );
+  $empty-send-color: string.unquote(
+    'hsl(from var(--md-sys-color-on-surface, #1c1b1b) h s l / 10%)'
+  );
+  $listening-outline: string.unquote(
+    'linear-gradient(90deg, #5c8dff, #a079ff, #d06ad6, #eb6296, #ff7257, #eb6296, #d06ad6, #a079ff, #5c8dff)'
+  );
+  $mic-background: string.unquote(
+    'linear-gradient(90deg, #5c8dff, #a079ff, #d06ad6)'
+  );
+
+  $tokens: (
+    'empty-send-color': $empty-send-color,
+    'empty-send-icon-color': var(--md-sys-color-on-surface, #1c1b1b),
+    'field-color': var(--md-sys-color-surface, #ffffff),
+    'field-height': 48px,
+    'field-shape': 24px,
+    'file-container-color': var(--md-sys-color-secondary-container, #dae2ff),
+    'file-height': 48px,
+    'file-icon-background-color': var(--md-sys-color-surface, #ffffff),
+    'file-label-color': var(--md-sys-color-on-secondary-container, #001947),
+    'file-shape': 24px,
+    'file-width': 162px,
+    'focus-outline-color': var(--md-sys-color-primary, #6c43c6),
+    'frame-shape': var(--md-sys-shape-corner-medium, 12px),
+    'image-shape': var(--md-sys-shape-corner-medium, 12px),
+    'image-size': 96px,
+    'input-text-color': var(--md-sys-color-on-surface, #1c1b1b),
+    'input-text-font': var(--md-sys-typescale-body-medium-font, Roboto),
+    'input-text-line-height':
+      var(--md-sys-typescale-body-medium-line-height, 1.25rem),
+    'input-text-size': var(--md-sys-typescale-body-medium-size, 0.875rem),
+    'input-text-weight': var(--md-sys-typescale-body-medium-weight, 400),
+    'listening-field-color': var(--md-sys-color-primary-container, #e9ddff),
+    'listening-outline': $listening-outline,
+    'max-width': 832px,
+    'menu-container-color': var(--md-sys-color-surface-container, #fbf9f7),
+    'mic-background': $mic-background,
+    'mic-icon-color': var(--md-sys-color-surface, #ffffff),
+    'min-width': 374px,
+    'narrow-frame-height': 112px,
+    'narrow-send-size': 40px,
+    'send-container-color': var(--md-sys-color-primary, #6c43c6),
+    'send-icon-color': var(--md-sys-color-on-primary, #ffffff),
+    'send-size': 48px,
+    'supporting-text-color': $supporting-text-color,
+    'supporting-text-font': var(--md-sys-typescale-body-small-font, Roboto),
+    'supporting-text-line-height':
+      var(--md-sys-typescale-body-small-line-height, 1rem),
+    'supporting-text-size': var(--md-sys-typescale-body-small-size, 0.75rem),
+    'supporting-text-weight': var(--md-sys-typescale-body-small-weight, 400),
+    'text-max-height': 108px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-ai-input-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}

@@ -1,0 +1,271 @@
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import {html, LitElement, nothing} from 'lit';
+import {property, query, state} from 'lit/decorators.js';
+
+interface Attachment {
+  file: File;
+  url: string;
+}
+
+/**
+ * AI composer. The text control is a native textarea so a future text input
+ * can replace that node without rebuilding the shell.
+ */
+export class AiInput extends LitElement {
+  @property() value = '';
+
+  @property() placeholder = 'Ask anything or search...';
+
+  @property() disclaimer =
+    'AI can make mistakes and may not be suitable for some minors.';
+
+  @property({type: Boolean, reflect: true}) thinking = false;
+
+  /** Toggled by the microphone. Pages can read it; they do not start speech. */
+  @property({type: Boolean, reflect: true}) listening = false;
+
+  @state() private menuOpen = false;
+
+  @state() private attachments: Attachment[] = [];
+
+  @query('textarea') private textArea!: HTMLTextAreaElement;
+
+  get files(): readonly File[] {
+    return this.attachments.map((item) => item.file);
+  }
+
+  private get hasText() {
+    return this.value.trim().length > 0;
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    for (const item of this.attachments) {
+      URL.revokeObjectURL(item.url);
+    }
+  }
+
+  protected override updated() {
+    const field = this.textArea;
+    if (!field) {
+      return;
+    }
+    field.style.height = '40px';
+    const full = field.scrollHeight;
+    const multiline = full > field.clientHeight;
+    if (multiline) {
+      field.style.height = `${full}px`;
+    }
+    field.closest('.entry')?.classList.toggle('multiline', multiline);
+  }
+
+  protected override render() {
+    const images = this.attachments.filter((item) =>
+      item.file.type.startsWith('image/'),
+    );
+    const files = this.attachments.filter(
+      (item) => !item.file.type.startsWith('image/'),
+    );
+
+    return html`
+      <div class="main">
+        <div class="frame">
+          <div class="field" part="field">
+          ${images.length
+            ? html`<div class="images" role="list" aria-label="图片">
+                ${images.map((item) => this.renderImage(item))}
+              </div>`
+            : nothing}
+          ${files.length
+            ? html`<div class="files" role="list" aria-label="文件">
+                ${files.map((item) => this.renderFile(item))}
+              </div>`
+            : nothing}
+          <div class="entry">
+            <div class="add">
+              <md-icon-button
+                aria-label="添加"
+                aria-expanded=${this.menuOpen ? 'true' : 'false'}
+                @click=${this.toggleMenu}
+              >
+                <md-icon>add</md-icon>
+              </md-icon-button>
+              ${this.menuOpen
+                ? html`<div class="menu">
+                    <md-text-button @click=${this.openPicker}>上传文件</md-text-button>
+                  </div>`
+                : nothing}
+            </div>
+            <div class="text">
+              <textarea
+                .value=${this.value}
+                placeholder=${this.listening ? "i'm listening..." : this.placeholder}
+                rows="1"
+                ?readonly=${this.thinking}
+                @input=${this.onInput}
+              ></textarea>
+            </div>
+            <div class="cluster">
+              ${this.hasText
+                ? html`<md-filled-tonal-icon-button
+                    class="clear"
+                    aria-label="清除"
+                    ?disabled=${this.thinking}
+                    @click=${this.clearText}
+                  >
+                    <md-icon>close</md-icon>
+                  </md-filled-tonal-icon-button>`
+                : nothing}
+              <md-icon-button
+                class="mic"
+                aria-label="听写"
+                @click=${this.toggleListening}
+              >
+                <md-icon>mic-ai</md-icon>
+              </md-icon-button>
+              <md-filled-icon-button
+                class="send ${this.hasText ? 'has-text' : ''}"
+                aria-label=${this.thinking ? '停止' : '发送'}
+                ?disabled=${!this.thinking && (this.listening || !this.hasText)}
+                @click=${this.onSend}
+              >
+                <md-icon>${this.thinking ? 'stop' : 'arrow_forward'}</md-icon>
+              </md-filled-icon-button>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <p class="disclaimer" part="disclaimer">${this.disclaimer}</p>
+      <input
+        type="file"
+        multiple
+        hidden
+        @change=${this.onFiles}
+      />
+    `;
+  }
+
+  private renderImage(item: Attachment) {
+    return html`<div role="listitem" class="image">
+      <img alt=${item.file.name} src=${item.url} />
+      <md-filled-tonal-icon-button
+        aria-label="移除 ${item.file.name}"
+        @click=${() => this.removeAttachment(item)}
+      >
+        <md-icon>close</md-icon>
+      </md-filled-tonal-icon-button>
+    </div>`;
+  }
+
+  private renderFile(item: Attachment) {
+    return html`<div role="listitem" class="chip">
+      <span class="file-icon"><md-icon>file</md-icon></span>
+      <span class="file-text">
+        <span>${item.file.name}</span>
+        <span>${this.fileKind(item.file)}</span>
+      </span>
+      <md-icon-button
+        aria-label="移除 ${item.file.name}"
+        @click=${() => this.removeAttachment(item)}
+      >
+        <md-icon>close</md-icon>
+      </md-icon-button>
+    </div>`;
+  }
+
+  private fileKind(file: File) {
+    const extension = file.name.includes('.')
+      ? file.name.split('.').pop()
+      : '';
+    return extension || file.type || 'file';
+  }
+
+  private onInput(event: Event) {
+    const field = event.target as HTMLTextAreaElement;
+    if (this.thinking) {
+      field.value = this.value;
+      return;
+    }
+    this.value = field.value;
+  }
+
+  private toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  private openPicker() {
+    this.menuOpen = false;
+    this.renderRoot.querySelector<HTMLInputElement>('input[type="file"]')?.click();
+  }
+
+  private onFiles(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const selected = Array.from(input.files ?? []);
+    input.value = '';
+    if (!selected.length) {
+      return;
+    }
+    this.attachments = [
+      ...this.attachments,
+      ...selected.map((file) => ({
+        file,
+        url: URL.createObjectURL(file),
+      })),
+    ];
+    this.emitFiles();
+  }
+
+  private removeAttachment(item: Attachment) {
+    URL.revokeObjectURL(item.url);
+    this.attachments = this.attachments.filter((current) => current !== item);
+    this.emitFiles();
+  }
+
+  private emitFiles() {
+    this.dispatchEvent(
+      new CustomEvent('files-change', {
+        detail: {files: this.files},
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
+  private clearText() {
+    if (this.thinking) {
+      return;
+    }
+    this.value = '';
+  }
+
+  private toggleListening() {
+    this.listening = !this.listening;
+  }
+
+  private onSend() {
+    if (this.thinking) {
+      this.thinking = false;
+      this.dispatchEvent(
+        new CustomEvent('interrupt', {bubbles: true, composed: true}),
+      );
+      return;
+    }
+    if (this.listening || !this.hasText) {
+      return;
+    }
+    this.thinking = true;
+    this.dispatchEvent(
+      new CustomEvent('send', {
+        detail: {value: this.value, files: this.files},
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+}
