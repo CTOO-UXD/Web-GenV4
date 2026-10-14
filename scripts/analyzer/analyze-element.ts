@@ -356,13 +356,27 @@ export function analyzeFields(
     propertyArray.push({
       name: field.name,
       attribute,
-      description: makeMarkdownFriendly(field.description),
+      description: makeMarkdownFriendly(descriptionFor(field)),
       type: makeMarkdownFriendly(field.type.text),
       privacy: field.privacy,
       default: makeMarkdownFriendly(defaultVal),
     });
   }
   return {properties, reactiveProperties};
+}
+
+function descriptionFor(field: {description?: string; node: ts.Node}) {
+  if (field.description) {
+    return field.description;
+  }
+  if (!ts.isGetAccessor(field.node)) {
+    return field.description;
+  }
+  return ts
+    .getJSDocCommentsAndTags(field.node)
+    .filter(ts.isJSDoc)
+    .map((doc) => (typeof doc.comment === 'string' ? doc.comment : ''))
+    .join('\n');
 }
 
 /**

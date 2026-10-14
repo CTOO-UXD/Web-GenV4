@@ -13,20 +13,49 @@ interface Attachment {
 }
 
 /**
- * AI composer. The text control is a native textarea so a future text input
- * can replace that node without rebuilding the shell.
+ * AI 输入框。文字用原生 textarea。
+ *
+ * @en AI composer. The text control is a native textarea.
+ *
+ * @fires send {CustomEvent} 点击发送。detail 含 value 和 files --bubbles --composed
+ * @fires interrupt {CustomEvent} 发送中点击停止 --bubbles --composed
+ * @fires files-change {CustomEvent} 已选文件变化。detail 含 files --bubbles --composed
  */
 export class AiInput extends LitElement {
+  /**
+   * 输入框里的文字。只有空格时视为没有文字。
+   *
+   * @en Text in the field. Whitespace alone counts as empty.
+   */
   @property() value = '';
 
+  /**
+   * 没有文字时的占位内容。听写中改为 i'm listening...。
+   *
+   * @en Placeholder when the field is empty. Listening shows i'm listening...
+   */
   @property() placeholder = 'Ask anything or search...';
 
+  /**
+   * 输入框下方的说明。
+   *
+   * @en Disclaimer under the field.
+   */
   @property() disclaimer =
     'AI can make mistakes and may not be suitable for some minors.';
 
+  /**
+   * 发送进行中。按钮变为停止，文字不可改，清除禁用。回复结束时由页面设回 false。
+   *
+   * @en Sending. The button becomes stop, text is read-only, and clear is disabled. The page sets this to false when the reply ends.
+   */
   @property({type: Boolean, reflect: true}) thinking = false;
 
-  /** Toggled by the microphone. Pages can read it; they do not start speech. */
+  /**
+   * 听写外观。页面可以设置，麦克风点击也会切换。组件不调用语音接口。
+   *
+   * @en Listening appearance. The page may set it, and the microphone toggles it. The component does not call speech APIs.
+   */
   @property({type: Boolean, reflect: true}) listening = false;
 
   @state() private menuOpen = false;
@@ -35,6 +64,11 @@ export class AiInput extends LitElement {
 
   @query('textarea') private textArea!: HTMLTextAreaElement;
 
+  /**
+   * 已选择的文件。只读，选择或移除文件时更新。
+   *
+   * @en Selected files. Read-only. Updated when files are chosen or removed.
+   */
   get files(): readonly File[] {
     return this.attachments.map((item) => item.file);
   }

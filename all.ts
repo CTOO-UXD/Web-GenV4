@@ -13,6 +13,7 @@
 
 // LINT.IfChange(imports)
 // go/keep-sorted start
+import './ai-input/ai-input.js';
 import './button/elevated-button.js';
 import './button/filled-button.js';
 import './button/filled-tonal-button.js';
@@ -61,6 +62,7 @@ import './textfield/outlined-text-field.js';
 
 // LINT.IfChange(exports)
 // go/keep-sorted start
+export * from './ai-input/ai-input.js';
 export * from './button/elevated-button.js';
 export * from './button/filled-button.js';
 export * from './button/filled-tonal-button.js';

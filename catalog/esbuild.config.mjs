@@ -7,9 +7,42 @@
 import gzipPlugin from '@luncheon/esbuild-plugin-gzip';
 import esbuild from 'esbuild';
 import {copyFileSync} from 'fs';
+import {readFile} from 'fs/promises';
 import {createRequire} from 'node:module';
 import {join} from 'path';
 import tinyGlob from 'tiny-glob';
+
+const require = createRequire(import.meta.url);
+
+// esbuild cannot parse `with { type: 'css' }`. Turn that font sheet into a
+// CSSStyleSheet module so the catalog bundle can load md-icon.
+const cssModulePlugin = {
+  name: 'css-module',
+  setup(build) {
+    build.onLoad({filter: /[\\/]icon[\\/]icon\.js$/}, async (args) => {
+      const source = await readFile(args.path, 'utf8');
+      if (!source.includes("type: 'css'")) {
+        return null;
+      }
+      const sheetPath = require.resolve('genv4-icon/genv4-icon.css');
+      const contents = source.replace(
+        /import\s+(\w+)\s+from\s+(['"])[^'"]+\.css\2\s+with\s+\{[^}]*\}\s*;/,
+        `import $1 from ${JSON.stringify(sheetPath)};`,
+      );
+      return {contents, loader: 'js'};
+    });
+    build.onLoad({filter: /genv4-icon\.css$/}, async (args) => {
+      const css = await readFile(args.path, 'utf8');
+      return {
+        contents: `const sheet = typeof CSSStyleSheet === 'undefined' ? undefined : new CSSStyleSheet();
+if (sheet) sheet.replaceSync(${JSON.stringify(css)});
+export default sheet;
+`,
+        loader: 'js',
+      };
+    });
+  },
+};
 
 // dev mode build
 const DEV = process.env.NODE_ENV === 'DEV';
@@ -41,6 +74,7 @@ let config = {
   write: true,
   sourcemap: true,
   splitting: true,
+  plugins: [cssModulePlugin],
 };
 
 let componentsBuild = Promise.resolve();
@@ -66,6 +100,7 @@ if (DEV) {
     treeShaking: true,
     legalComments: 'external',
     plugins: [
+      cssModulePlugin,
       // This plugin currently breaks certain css props for SVGs
       // (circularprogress) minifyHTMLLiteralsPlugin({
       //   shouldMinify: (template) => {
@@ -130,7 +165,6 @@ const inlineBuild = esbuild
 await Promise.all([componentsBuild, ssrBuild, inlineBuild]);
 
 // Copy the playground-elements worker to the build folder
-const require = createRequire(import.meta.url);
 copyFileSync(
     require.resolve('playground-elements/playground-typescript-worker.js'),
     join(jsFolder, 'hydration-entrypoints/playground-typescript-worker.js'));

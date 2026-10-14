@@ -63,6 +63,37 @@ function hardcoded(source) {
   return defaults;
 }
 
+function assignedDefaults(source) {
+  const unquotes = new Map();
+  for (const match of source.matchAll(
+    /\$([A-Za-z0-9_-]+):\s*string\.unquote\(\s*'([^']*)'/g,
+  )) {
+    unquotes.set(match[1], match[2]);
+  }
+  const defaults = new Map();
+  const start = source.indexOf('$tokens: (');
+  if (start < 0) {
+    return defaults;
+  }
+  const end = source.indexOf('validate.values', start);
+  const body = source.slice(start, end);
+  for (const match of body.matchAll(
+    /'([a-z0-9-]+)'\s*:\s*([\s\S]*?)(?=,\s*\n\s*'|\n\s*\))/g,
+  )) {
+    let value = match[2].trim().replace(/\s+/g, ' ');
+    if (value.endsWith(',')) {
+      value = value.slice(0, -1).trim();
+    }
+    if (value.startsWith('var(')) {
+      value = value.slice(4, value.lastIndexOf(')')).split(',')[0].trim();
+    } else if (value.startsWith('$')) {
+      value = unquotes.get(value.slice(1)) ?? value;
+    }
+    defaults.set(match[1], value);
+  }
+  return defaults;
+}
+
 function renames(source) {
   const renamed = new Map();
   const body = source.includes('$renamed-tokens:')
@@ -78,6 +109,11 @@ function tableFromSources(wrapper, version, prefix, title, tag) {
   const values = version ? defaultsFromVersion(version) : new Map();
   for (const [name, value] of hardcoded(wrapper)) {
     values.set(name, value);
+  }
+  for (const [name, value] of assignedDefaults(wrapper)) {
+    if (!values.has(name)) {
+      values.set(name, value);
+    }
   }
   const renamedFrom = renames(wrapper);
   const rows = supportedTokens(wrapper).map((token) => {
@@ -159,4 +195,12 @@ await writeTheme('icon-button.md', iconButtonSections);
 const iconWrapper = await readFile(join(root, 'tokens', '_md-comp-icon.scss'), 'utf8');
 await writeTheme('icon.md', [
   tableFromSources(iconWrapper, '', '--md-icon-', '图标', 'md-icon'),
+]);
+
+const aiInputWrapper = await readFile(
+  join(root, 'tokens', '_md-comp-ai-input.scss'),
+  'utf8',
+);
+await writeTheme('ai-input.md', [
+  tableFromSources(aiInputWrapper, '', '--md-ai-input-', 'Ai Input', 'md-ai-input'),
 ]);

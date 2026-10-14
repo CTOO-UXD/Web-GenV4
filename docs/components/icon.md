@@ -9,10 +9,9 @@ label: 图标 Icon
 
 ## 引入
 
-先安装 `genv4-icon`，再引入字体和组件。字体族是 `GenV4 Icons`，也是 `--md-icon-font` 的默认值。
+安装 `genv4` 后引入组件即可。字形随组件加载。字体族是 `GenV4 Icons`，也是 `--md-icon-font` 的默认值。
 
 ```js
-import 'genv4-icon/genv4-icon.css';
 import 'genv4/icon/icon.js';
 ```
 

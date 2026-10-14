@@ -4,11 +4,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/// <reference path="./genv4-icon.d.ts" />
+
 import {CSSResultOrNative} from 'lit';
 import {customElement} from 'lit/decorators.js';
 
+import iconFont from 'genv4-icon/genv4-icon.css' with {type: 'css'};
+
 import {Icon} from './internal/icon.js';
 import {styles} from './internal/icon-styles.cssresult.js';
+
+if (
+  typeof document !== 'undefined' &&
+  !document.adoptedStyleSheets.includes(iconFont)
+) {
+  document.adoptedStyleSheets = [...document.adoptedStyleSheets, iconFont];
+}
 
 declare global {
   interface HTMLElementTagNameMap {

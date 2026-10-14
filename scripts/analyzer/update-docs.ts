@@ -84,6 +84,7 @@ async function updateDocFileApiSection(
   const elementTableSections: ElementTableSection[] = [];
 
   const zhIntro: {[key: string]: string} = {
+    'ai-input.md': '下表适用于 `<md-ai-input>`。',
     'button.md':
       '五种按钮的属性相同，下表适用于 `<md-filled-button>`、`<md-filled-tonal-button>`、`<md-elevated-button>`、`<md-outlined-button>`、`<md-text-button>`。',
     'icon-button.md':

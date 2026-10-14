@@ -21,6 +21,12 @@ describe('<md-icon>', () => {
     createTokenTests(MdIcon.styles);
   });
 
+  it('loads the icon font with the component', async () => {
+    await document.fonts.load('24px "GenV4 Icons"');
+
+    expect(document.fonts.check('24px "GenV4 Icons"')).toBeTrue();
+  });
+
   describe('accessiblity', () => {
     it('sets aria-hidden to true by default', async () => {
       const root = env.render(html` <md-icon>check</md-icon>`);

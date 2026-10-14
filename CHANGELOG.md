@@ -2,6 +2,19 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-14
+
+* 给 AI 输入补上展示页，并让图标组件自己带上字体
+  * `docs/components/ai-input.md`
+  * `catalog/src/hydration-entrypoints/components/ai-input.ts`
+  * `all.ts`
+  * `icon/icon.ts`
+  * `icon/genv4-icon.d.ts`
+  * `docs/components/icon.md`
+  * `scripts/update-button-theme-docs.mjs`
+  * `scripts/analyzer/analyze-element.ts`
+  * `catalog/esbuild.config.mjs`
+
 ## 2026-10-13
 
 * 新增 AI 输入组件，并把 genv4-icon 升到 0.0.4
