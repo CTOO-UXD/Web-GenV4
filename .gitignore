@@ -8,7 +8,6 @@ tokens/versions/**/*-meta.scss
 *.map
 *.d.ts
 !types/*.d.ts
-!icon/genv4-icon.d.ts
 .wireit/
 *.tsbuildinfo
 custom-elements.json

@@ -4,6 +4,11 @@
 
 ## 2026-10-14
 
+* 图标字体的类型改用已有的 CSS 模块声明，避免构建把声明文件清掉
+  * `icon/icon.ts`
+  * `types/css-imports.d.ts`
+  * `.gitignore`
+
 * 给 AI 输入补上展示页，并让图标组件自己带上字体
   * `docs/components/ai-input.md`
   * `catalog/src/hydration-entrypoints/components/ai-input.ts`

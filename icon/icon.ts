@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/// <reference path="./genv4-icon.d.ts" />
+/// <reference path="../types/css-imports.d.ts" />
 
 import {CSSResultOrNative} from 'lit';
 import {customElement} from 'lit/decorators.js';
