@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GenV4 Action Input 验收</title>
+    <link rel="stylesheet" href="../../node_modules/genv4-icon/dist/genv4-icon.css" />
+    <script type="module">
+      import '../../text-input/action-input.js';
+
+      document.querySelector('md-action-input').addEventListener('send', (event) => {
+        document.querySelector('#sent').textContent = event.detail.value;
+      });
+    </script>
+    <style>
+      body {
+        margin: 0;
+        background: #e7e0ec;
+        color: #1c1b1b;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        width: min(332px, calc(100% - 32px));
+        margin: 32px auto;
+        display: grid;
+        gap: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Action Input</h1>
+      <p id="sent"></p>
+      <md-action-input label="Label"></md-action-input>
+      <md-action-input label="Label" placeholder="Placeholder text"></md-action-input>
+      <md-action-input label="Label" value="Input text"></md-action-input>
+      <md-action-input label="Label" value="Input text" error error-text="Error text"></md-action-input>
+      <md-action-input label="Label" disabled></md-action-input>
+    </main>
+  </body>
+</html>

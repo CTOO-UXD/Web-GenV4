@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GenV4 Text Area 验收</title>
+    <link rel="stylesheet" href="../../node_modules/genv4-icon/dist/genv4-icon.css" />
+    <script type="module">
+      import '../../text-input/text-area.js';
+    </script>
+    <style>
+      body {
+        margin: 0;
+        background: #e7e0ec;
+        color: #1c1b1b;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        width: min(332px, calc(100% - 32px));
+        margin: 32px auto;
+        display: grid;
+        gap: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Text Area</h1>
+      <md-text-area label="Label"></md-text-area>
+      <md-text-area label="Label" placeholder="Placeholder text"></md-text-area>
+      <md-text-area label="Label" value="One line"></md-text-area>
+      <md-text-area label="Label" value="Line one&#10;Line two&#10;Line three"></md-text-area>
+      <md-text-area
+        label="Label"
+        value="Line one&#10;Line two&#10;Line three&#10;Line four"></md-text-area>
+      <md-text-area label="Label" error error-text="Error text"></md-text-area>
+      <md-text-area label="Label" disabled></md-text-area>
+    </main>
+  </body>
+</html>

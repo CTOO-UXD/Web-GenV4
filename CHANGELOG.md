@@ -2,6 +2,23 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-15
+
+* 新增文本输入、发送输入和多行输入，并补上展示页。清除文字时仍发出 input
+  * `text-input/`
+  * `tokens/_md-comp-text-input.scss`
+  * `tokens/_index.scss`
+  * `all.ts`
+  * `testing/genv4/text-input.html`
+  * `testing/genv4/action-input.html`
+  * `testing/genv4/text-area.html`
+  * `docs/components/text-input.md`
+  * `catalog/src/hydration-entrypoints/components/text-input.ts`
+  * `scripts/component-custom-elements.ts`
+  * `scripts/analyzer/element-docs-map.ts`
+  * `scripts/analyzer/update-docs.ts`
+  * `scripts/update-button-theme-docs.mjs`
+
 ## 2026-10-14
 
 * 图标字体的类型改用已有的 CSS 模块声明，避免构建把声明文件清掉

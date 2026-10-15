@@ -54,4 +54,9 @@ export const COMPONENT_CUSTOM_ELEMENTS = {
     'textfield/filled-text-field.ts',
     'textfield/outlined-text-field.ts',
   ],
+  textInput: [
+    'text-input/text-input.ts',
+    'text-input/action-input.ts',
+    'text-input/text-area.ts',
+  ],
 } as const;

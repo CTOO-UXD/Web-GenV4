@@ -149,7 +149,7 @@ function variantTable(fileBase, title, tag) {
   );
 }
 
-async function writeTheme(docFile, sections) {
+async function writeTheme(docFile, sections, example = '') {
   const path = join(root, 'docs', 'components', docFile);
   const doc = await readFile(path, 'utf8');
   const pattern =
@@ -165,7 +165,7 @@ async function writeTheme(docFile, sections) {
 
 用组件 CSS 变量覆盖。下面只列出 Sass 里标记为支持的变量。
 
-${sections.join('\n')}
+${example}${sections.join('\n')}
 <!-- auto-generated theme docs end -->`,
   );
   if (next !== doc) {
@@ -204,3 +204,43 @@ const aiInputWrapper = await readFile(
 await writeTheme('ai-input.md', [
   tableFromSources(aiInputWrapper, '', '--md-ai-input-', 'Ai Input', 'md-ai-input'),
 ]);
+
+const textInputWrapper = await readFile(
+  join(root, 'tokens', '_md-comp-text-input.scss'),
+  'utf8',
+);
+const textInputExample = `### 示例
+
+<div class="figure-wrapper">
+  <figure style="display:grid;width:min(360px,100%);padding:28px">
+    <style>
+      .text-input-theme {
+        --md-text-input-container-shape: 4px;
+        --md-text-input-container-color: #e5f4f3;
+        --md-text-input-label-text-color: #006a6a;
+        --md-text-input-active-outline-color: #006a6a;
+      }
+    </style>
+    <md-text-input class="text-input-theme" label="Label" value="Input text"></md-text-input>
+  </figure>
+</div>
+
+\`\`\`html
+<style>
+  .text-input-theme {
+    --md-text-input-container-shape: 4px;
+    --md-text-input-container-color: #e5f4f3;
+    --md-text-input-label-text-color: #006a6a;
+    --md-text-input-active-outline-color: #006a6a;
+  }
+</style>
+
+<md-text-input class="text-input-theme" label="Label" value="Input text"></md-text-input>
+\`\`\`
+
+`;
+await writeTheme(
+  'text-input.md',
+  [tableFromSources(textInputWrapper, '', '--md-text-input-', '文本输入', 'md-text-input')],
+  textInputExample,
+);

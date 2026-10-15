@@ -55,6 +55,9 @@ import './switch/switch.js';
 import './tabs/primary-tab.js';
 import './tabs/secondary-tab.js';
 import './tabs/tabs.js';
+import './text-input/action-input.js';
+import './text-input/text-area.js';
+import './text-input/text-input.js';
 import './textfield/filled-text-field.js';
 import './textfield/outlined-text-field.js';
 // go/keep-sorted end
@@ -104,6 +107,9 @@ export * from './switch/switch.js';
 export * from './tabs/primary-tab.js';
 export * from './tabs/secondary-tab.js';
 export * from './tabs/tabs.js';
+export * from './text-input/action-input.js';
+export * from './text-input/text-area.js';
+export * from './text-input/text-input.js';
 export * from './textfield/filled-text-field.js';
 export * from './textfield/outlined-text-field.js';
 // go/keep-sorted end

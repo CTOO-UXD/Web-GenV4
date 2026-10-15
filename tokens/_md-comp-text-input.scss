@@ -1,0 +1,126 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+@use 'sass:string';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'active-outline-color',
+  'caret-color',
+  'clear-icon-color',
+  'container-color',
+  'container-height',
+  'container-shape',
+  'disabled-content-color',
+  'disabled-layer-color',
+  'error-caret-color',
+  'error-hover-layer-color',
+  'error-icon-size',
+  'error-label-color',
+  'error-outline-color',
+  'error-pressed-layer-color',
+  'error-supporting-text-color',
+  'hover-layer-color',
+  'input-text-color',
+  'input-text-font',
+  'input-text-line-height',
+  'input-text-size',
+  'input-text-weight',
+  'label-text-color',
+  'label-text-font',
+  'label-text-line-height',
+  'label-text-size',
+  'label-text-weight',
+  'outline-color',
+  'placeholder-color',
+  'pressed-layer-color',
+  'supporting-text-color',
+  'supporting-text-font',
+  'supporting-text-line-height',
+  'supporting-text-size',
+  'supporting-text-weight',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $hover-layer-color: string.unquote(
+    'color-mix(in srgb, var(--md-sys-color-primary-container, #d0bcff) 12%, transparent)'
+  );
+  $pressed-layer-color: string.unquote(
+    'color-mix(in srgb, var(--md-sys-color-primary-container, #d0bcff) 18%, transparent)'
+  );
+  $error-hover-layer-color: string.unquote(
+    'color-mix(in srgb, var(--md-sys-color-error-container, #ffb4ab) 12%, transparent)'
+  );
+  $error-pressed-layer-color: string.unquote(
+    'color-mix(in srgb, var(--md-sys-color-error-container, #ffb4ab) 18%, transparent)'
+  );
+  $disabled-content-color: string.unquote('rgba(0, 0, 0, 0.38)');
+  $disabled-layer-color: string.unquote('rgba(0, 0, 0, 0.12)');
+
+  $tokens: (
+    'active-outline-color': var(--md-sys-color-primary, #6c43c6),
+    'caret-color': var(--md-sys-color-primary, #6c43c6),
+    'clear-icon-color': var(--md-sys-color-on-surface-variant, #5f5e60),
+    'container-color': var(--md-sys-color-surface-bright, #ffffff),
+    'container-height': 56px,
+    'container-shape': var(--md-sys-shape-corner-medium, 12px),
+    'disabled-content-color': $disabled-content-color,
+    'disabled-layer-color': $disabled-layer-color,
+    'error-caret-color': var(--md-sys-color-error, #ba1a1a),
+    'error-hover-layer-color': $error-hover-layer-color,
+    'error-icon-size': 16px,
+    'error-label-color': var(--md-sys-color-error, #ba1a1a),
+    'error-outline-color': var(--md-sys-color-error, #ba1a1a),
+    'error-pressed-layer-color': $error-pressed-layer-color,
+    'error-supporting-text-color': var(--md-sys-color-error, #ba1a1a),
+    'hover-layer-color': $hover-layer-color,
+    'input-text-color': var(--md-sys-color-on-surface, #161c27),
+    'input-text-font': var(--md-sys-typescale-body-large-font, Roboto),
+    'input-text-line-height':
+      var(--md-sys-typescale-body-large-line-height, 24px),
+    'input-text-size': var(--md-sys-typescale-body-large-size, 16px),
+    'input-text-weight': var(--md-sys-typescale-body-large-weight, 400),
+    'label-text-color': var(--md-sys-color-primary, #6c43c6),
+    'label-text-font': var(--md-sys-typescale-body-small-font, Roboto),
+    'label-text-line-height':
+      var(--md-sys-typescale-body-small-line-height, 16px),
+    'label-text-size': var(--md-sys-typescale-body-small-size, 12px),
+    'label-text-weight': var(--md-sys-typescale-body-small-weight, 400),
+    'outline-color': var(--md-sys-color-outline-variant, #ded9d4),
+    'placeholder-color': var(--md-sys-color-on-surface-variant, #5f5e60),
+    'pressed-layer-color': $pressed-layer-color,
+    'supporting-text-color': var(--md-sys-color-on-surface-variant, #5f5e60),
+    'supporting-text-font': var(--md-sys-typescale-body-small-font, Roboto),
+    'supporting-text-line-height':
+      var(--md-sys-typescale-body-small-line-height, 16px),
+    'supporting-text-size': var(--md-sys-typescale-body-small-size, 12px),
+    'supporting-text-weight': var(--md-sys-typescale-body-small-weight, 400),
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-text-input-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}

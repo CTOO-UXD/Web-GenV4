@@ -35,5 +35,8 @@ export const docsToElementMapping: {[key: string]: readonly string[]} = {
   'switch.md': COMPONENT_CUSTOM_ELEMENTS.switch,
   'tabs.md': COMPONENT_CUSTOM_ELEMENTS.tabs,
   'text-field.md': COMPONENT_CUSTOM_ELEMENTS.textField,
+  // Three inputs share one property table, so only the text input entry is registered.
+  // 'text-input.md': COMPONENT_CUSTOM_ELEMENTS.textInput,
+  'text-input.md': ['text-input/text-input.ts'],
   'select.md': COMPONENT_CUSTOM_ELEMENTS.select,
 };

@@ -1,0 +1,251 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:list';
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../tokens';
+// go/keep-sorted end
+
+@mixin theme($tokens) {
+  $supported-tokens: tokens.$md-comp-text-input-supported-tokens;
+
+  @each $token, $value in $tokens {
+    @if list.index($supported-tokens, $token) == null {
+      @error 'Token `#{$token}` is not a supported token.';
+    }
+
+    @if $value {
+      --md-text-input-#{$token}: #{$value};
+    }
+  }
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-text-input-values();
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    display: inline-flex;
+    outline: none;
+    min-width: 0;
+    color: var(--_input-text-color);
+    font-family: var(--_input-text-font);
+    font-size: var(--_input-text-size);
+    font-weight: var(--_input-text-weight);
+    line-height: var(--_input-text-line-height);
+    caret-color: var(--_caret-color);
+  }
+
+  .root,
+  .field {
+    width: 100%;
+  }
+
+  .root {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: var(--_container-height);
+    padding-inline: 16px 8px;
+    border: 1px solid var(--_outline-color);
+    border-radius: var(--_container-shape);
+    background: var(--_container-color);
+  }
+
+  .field::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: calc(var(--_container-shape) - 1px);
+    pointer-events: none;
+    background: transparent;
+  }
+
+  .text,
+  .clear {
+    position: relative;
+  }
+
+  .text {
+    display: grid;
+    flex: 1;
+    align-content: center;
+    min-width: 0;
+    padding-block: 8px;
+    cursor: text;
+  }
+
+  .label,
+  input {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  .label {
+    color: var(--_label-text-color);
+    font-family: var(--_input-text-font);
+    font-size: var(--_input-text-size);
+    font-weight: var(--_input-text-weight);
+    line-height: var(--_input-text-line-height);
+    pointer-events: none;
+  }
+
+  .stacked .label {
+    grid-area: auto;
+    font-family: var(--_label-text-font);
+    font-size: var(--_label-text-size);
+    font-weight: var(--_label-text-weight);
+    line-height: var(--_label-text-line-height);
+  }
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: transparent;
+    font: inherit;
+    caret-color: var(--_caret-color);
+  }
+
+  .stacked input {
+    grid-area: auto;
+    color: var(--_input-text-color);
+  }
+
+  input::placeholder {
+    color: var(--_placeholder-color);
+    opacity: 1;
+  }
+
+  .root:hover .field {
+    border-color: var(--_active-outline-color);
+  }
+
+  .root:hover .field::before {
+    background: var(--_hover-layer-color);
+  }
+
+  .root:active .field,
+  .root:focus-within .field {
+    border-color: var(--_active-outline-color);
+  }
+
+  .root:active .field::before,
+  .root:focus-within .field::before {
+    background: var(--_pressed-layer-color);
+  }
+
+  .invalid .field,
+  .invalid:hover .field,
+  .invalid:active .field,
+  .invalid:focus-within .field {
+    border-color: var(--_error-outline-color);
+  }
+
+  .invalid .label {
+    color: var(--_error-label-color);
+  }
+
+  .invalid input {
+    caret-color: var(--_error-caret-color);
+  }
+
+  .invalid:hover .field::before {
+    background: var(--_error-hover-layer-color);
+  }
+
+  .invalid:active .field::before,
+  .invalid:focus-within .field::before {
+    background: var(--_error-pressed-layer-color);
+  }
+
+  .clear {
+    display: none;
+    flex: none;
+    --md-icon-button-icon-color: var(--_clear-icon-color);
+    --md-icon-button-icon-size: 24px;
+    --md-icon-button-state-layer-height: 48px;
+    --md-icon-button-state-layer-width: 48px;
+  }
+
+  :host(:focus-within) .clear {
+    display: inline-flex;
+  }
+
+  .supporting {
+    display: flex;
+    gap: 4px;
+    align-items: flex-start;
+    margin: 0;
+    padding: 2px 16px;
+    color: var(--_supporting-text-color);
+    font-family: var(--_supporting-text-font);
+    font-size: var(--_supporting-text-size);
+    font-weight: var(--_supporting-text-weight);
+    line-height: var(--_supporting-text-line-height);
+  }
+
+  .supporting.error {
+    padding-inline: 8px 16px;
+    color: var(--_error-supporting-text-color);
+  }
+
+  .supporting md-icon {
+    flex: none;
+    width: var(--_error-icon-size);
+    height: var(--_error-icon-size);
+    font-size: var(--_error-icon-size);
+    color: var(--_error-supporting-text-color);
+  }
+
+  .disabled .field,
+  .disabled:hover .field,
+  .disabled:active .field,
+  .disabled:focus-within .field,
+  .disabled.invalid .field {
+    border-color: var(--_outline-color);
+  }
+
+  .disabled .field::before,
+  .disabled:hover .field::before,
+  .disabled:active .field::before,
+  .disabled:focus-within .field::before,
+  .disabled.invalid .field::before {
+    background: var(--_disabled-layer-color);
+  }
+
+  .disabled .label,
+  .disabled input,
+  .disabled.invalid .label,
+  .disabled .supporting,
+  .disabled .supporting.error,
+  .disabled .supporting md-icon {
+    color: var(--_disabled-content-color);
+  }
+
+  .disabled input::placeholder {
+    color: var(--_disabled-content-color);
+  }
+
+  .disabled .text {
+    cursor: default;
+  }
+}

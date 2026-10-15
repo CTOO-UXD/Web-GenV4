@@ -1,0 +1,45 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+@mixin styles() {
+  .send {
+    flex: none;
+    --_send-icon-color: var(--_clear-icon-color);
+    --md-icon-button-icon-color: var(--_send-icon-color);
+    --md-icon-button-hover-icon-color: var(--_send-icon-color);
+    --md-icon-button-focus-icon-color: var(--_send-icon-color);
+    --md-icon-button-pressed-icon-color: var(--_send-icon-color);
+    --md-icon-button-icon-size: 24px;
+    --md-icon-button-state-layer-height: 48px;
+    --md-icon-button-state-layer-width: 48px;
+  }
+
+  .root:not(.can-send) .send {
+    --_send-icon-color: var(--_disabled-content-color);
+    pointer-events: none;
+  }
+
+  .root:hover .send,
+  .root:active .send,
+  .root:focus-within .send {
+    --_send-icon-color: var(--_active-outline-color);
+  }
+
+  .root.invalid .send,
+  .root.invalid:hover .send,
+  .root.invalid:active .send,
+  .root.invalid:focus-within .send {
+    --_send-icon-color: var(--_error-outline-color);
+  }
+
+  .disabled .send,
+  .disabled:hover .send,
+  .disabled:active .send,
+  .disabled:focus-within .send,
+  .disabled.invalid .send {
+    --_send-icon-color: var(--_disabled-content-color);
+    pointer-events: none;
+  }
+}

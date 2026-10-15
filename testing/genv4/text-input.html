@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GenV4 Text Input 验收</title>
+    <link rel="stylesheet" href="../../node_modules/genv4-icon/dist/genv4-icon.css" />
+    <script type="module">
+      import '../../text-input/text-input.js';
+    </script>
+    <style>
+      body {
+        margin: 0;
+        background: #e7e0ec;
+        color: #1c1b1b;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        width: min(332px, calc(100% - 32px));
+        margin: 32px auto;
+        display: grid;
+        gap: 16px;
+      }
+
+      section {
+        display: grid;
+        gap: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Text Input</h1>
+      <section>
+        <md-text-input label="Label"></md-text-input>
+        <md-text-input label="Label" placeholder="Placeholder text"></md-text-input>
+        <md-text-input label="Label" value="Input text"></md-text-input>
+        <md-text-input
+          label="Label"
+          value="Input text"
+          error
+          error-text="Error text"></md-text-input>
+        <md-text-input
+          label="Label"
+          value="Input text"
+          supporting-text="Helper text"></md-text-input>
+        <md-text-input label="Label" value="Input text" disabled></md-text-input>
+      </section>
+    </main>
+  </body>
+</html>

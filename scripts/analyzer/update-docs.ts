@@ -89,6 +89,8 @@ async function updateDocFileApiSection(
       '五种按钮的属性相同，下表适用于 `<md-filled-button>`、`<md-filled-tonal-button>`、`<md-elevated-button>`、`<md-outlined-button>`、`<md-text-button>`。',
     'icon-button.md':
       '四种图标按钮的属性相同，下表适用于 `<md-icon-button>`、`<md-filled-icon-button>`、`<md-filled-tonal-icon-button>`、`<md-outlined-icon-button>`。',
+    'text-input.md':
+      '三种输入的属性相同，下表适用于 `<md-text-input>`、`<md-action-input>`、`<md-text-area>`。',
   };
   const zhHeaders = docFileName in zhIntro;
 
