@@ -89,13 +89,16 @@ export class AiInput extends LitElement {
     if (!field) {
       return;
     }
-    field.style.height = '40px';
+    const max = parseFloat(getComputedStyle(field).maxHeight);
+    const line = parseFloat(getComputedStyle(field).lineHeight) || 20;
+    field.style.height = 'auto';
     const full = field.scrollHeight;
-    const multiline = full > field.clientHeight;
-    if (multiline) {
-      field.style.height = `${full}px`;
-    }
-    field.closest('.entry')?.classList.toggle('multiline', multiline);
+    const capped = Number.isFinite(max)
+      ? Math.min(Math.max(full, line), max)
+      : Math.max(full, line);
+    field.style.height = `${capped}px`;
+    field.style.overflowY = Number.isFinite(max) && full > max ? 'auto' : 'hidden';
+    field.closest('.entry')?.classList.toggle('multiline', full > line + 1);
   }
 
   protected override render() {

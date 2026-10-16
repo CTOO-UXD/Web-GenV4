@@ -4,6 +4,11 @@
 
 ## 2026-10-16
 
+* 修正 AI 输入多行时文字把内边距顶开，窄宽度下文件改成每行两个
+  * `ai-input/internal/_ai-input.scss`
+  * `ai-input/internal/ai-input.ts`
+  * `ai-input/ai-input_test.ts`
+
 * 新增默认弹窗，并把正文字体换成 Montserrat
   * `modal/`
   * `tokens/_md-comp-modal.scss`

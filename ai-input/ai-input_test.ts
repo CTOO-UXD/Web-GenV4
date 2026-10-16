@@ -76,7 +76,7 @@ describe('<md-ai-input>', () => {
     await input.updateComplete;
 
     expect(input.value).toBe('hello');
-    expect(getComputedStyle(field.parentElement!).maxHeight).toBe('108px');
+    expect(getComputedStyle(field).maxHeight).toBe('88px');
   });
 
   it('grows the text by one line and scrolls after 108px', async () => {
@@ -100,13 +100,14 @@ describe('<md-ai-input>', () => {
     await input.updateComplete;
     const text = field.parentElement!;
     expect(text.getBoundingClientRect().height).toBe(108);
-    expect(text.scrollHeight).toBeGreaterThan(text.clientHeight);
-    expect(field.getBoundingClientRect().bottom).toBeGreaterThan(
+    expect(field.getBoundingClientRect().height).toBe(88);
+    expect(field.scrollHeight).toBeGreaterThan(field.clientHeight);
+    expect(field.getBoundingClientRect().bottom).toBeLessThanOrEqual(
       text.getBoundingClientRect().bottom,
     );
     const add = input.renderRoot.querySelector('.add')!.getBoundingClientRect();
     expect(Math.abs(add.bottom - text.getBoundingClientRect().bottom)).toBeLessThan(2);
-    expect(getComputedStyle(text, '::-webkit-scrollbar-thumb').backgroundColor).not.toBe(
+    expect(getComputedStyle(field, '::-webkit-scrollbar-thumb').backgroundColor).not.toBe(
       'rgba(0, 0, 0, 0)',
     );
   });
@@ -333,6 +334,12 @@ describe('<md-ai-input>', () => {
     );
     input.style.width = '374px';
     await input.updateComplete;
+    expect(fileItems[1].getBoundingClientRect().top).toBe(
+      fileItems[0].getBoundingClientRect().top,
+    );
+    expect(fileItems[2].getBoundingClientRect().top).toBeGreaterThan(
+      fileItems[0].getBoundingClientRect().top,
+    );
     expect(imageItems[2].getBoundingClientRect().top).toBe(
       imageItems[0].getBoundingClientRect().top,
     );

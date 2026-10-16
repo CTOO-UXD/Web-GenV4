@@ -150,10 +150,27 @@ $wide-breakpoint: 560px;
     grid-column: 2;
     grid-row: 1;
     min-width: 0;
-    max-height: var(--_text-max-height);
-    overflow: auto;
-    scrollbar-width: 4px;
-    scrollbar-color: var(--_supporting-text-color) transparent;
+    box-sizing: border-box;
+    padding-block: 10px;
+  }
+
+  textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: var(--_input-text-line-height);
+    max-height: calc(var(--_text-max-height) - 20px);
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    resize: none;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    scrollbar-color: auto;
+    scrollbar-width: auto;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -169,22 +186,6 @@ $wide-breakpoint: 560px;
       border-radius: 4px;
       background: var(--_supporting-text-color);
     }
-  }
-
-  textarea {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    height: 40px;
-    margin: 0;
-    padding-block: 10px;
-    overflow: hidden;
-    resize: none;
-    border: 0;
-    outline: none;
-    background: transparent;
-    color: inherit;
-    font: inherit;
 
     &:focus {
       outline: none;
@@ -257,18 +258,21 @@ $wide-breakpoint: 560px;
   .files {
     display: grid;
     gap: 8px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-left: 12px;
+  }
+
+  .images + .files {
+    margin-top: 0;
   }
 
   .images {
     grid-template-columns: repeat(4, var(--_image-size));
-    margin-top: 12px;
-    margin-left: 12px;
   }
 
   .files {
     grid-template-columns: repeat(3, var(--_file-width));
-    margin-top: 12px;
-    margin-left: 12px;
   }
 
   .image {
@@ -362,13 +366,7 @@ $wide-breakpoint: 560px;
       grid-column: 1 / -1;
       grid-row: 1;
       align-self: start;
-    }
-
-    textarea {
-      padding-top: 8px;
-      padding-bottom: 8px;
-      padding-left: 16px;
-      padding-right: 4px;
+      padding: 8px 4px 12px 16px;
     }
 
     .add {
@@ -387,6 +385,10 @@ $wide-breakpoint: 560px;
 
     .images {
       grid-template-columns: repeat(3, var(--_image-size));
+    }
+
+    .files {
+      grid-template-columns: repeat(2, var(--_file-width));
     }
   }
 }
