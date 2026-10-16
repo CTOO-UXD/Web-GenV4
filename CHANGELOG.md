@@ -2,6 +2,19 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-16
+
+* 新增默认弹窗，并把正文字体换成 Montserrat
+  * `modal/`
+  * `tokens/_md-comp-modal.scss`
+  * `tokens/_index.scss`
+  * `tokens/genv4/_ref-typeface.scss`
+  * `tokens/_md-ref-typeface.scss`
+  * `all.ts`
+  * `testing/genv4/modal.html`
+  * `catalog/site/css/global.css`
+  * `catalog/site/fonts/montserrat/`
+
 ## 2026-10-15
 
 * 新增文本输入、发送输入和多行输入，并补上展示页。清除文字时仍发出 input

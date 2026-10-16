@@ -1,0 +1,43 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'narrow-max-width',
+  'wide-max-width',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $tokens: (
+    'narrow-max-width': 448px,
+    'wide-max-width': 640px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-modal-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}

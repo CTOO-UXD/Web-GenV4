@@ -6,9 +6,10 @@
 // go/keep-sorted start
 @use 'sass:map';
 // go/keep-sorted end
+// 原来的上游字族留在 versions 里：@use 'versions/v0_192/md-ref-typeface';
 // go/keep-sorted start
+@use 'genv4/ref-typeface' as md-ref-typeface;
 @use 'internal/validate';
-@use 'versions/v0_192/md-ref-typeface';
 // go/keep-sorted end
 
 $supported-tokens: (

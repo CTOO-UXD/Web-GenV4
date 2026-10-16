@@ -1,0 +1,254 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:list';
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../elevation/elevation';
+@use '../../tokens';
+// go/keep-sorted end
+
+$on-surface: var(--md-sys-color-on-surface, #1c1b1b);
+$on-error: var(--md-sys-color-on-error, #fff);
+
+@mixin button-color($name, $part, $color) {
+  --md-#{$name}-#{$part}-color: #{$color};
+  --md-#{$name}-hover-#{$part}-color: #{$color};
+  --md-#{$name}-focus-#{$part}-color: #{$color};
+  --md-#{$name}-pressed-#{$part}-color: #{$color};
+}
+
+@mixin theme($tokens) {
+  $supported-tokens: tokens.$md-comp-modal-supported-tokens;
+
+  @each $token, $value in $tokens {
+    @if list.index($supported-tokens, $token) == null {
+      @error 'Token `#{$token}` is not a supported token.';
+    }
+
+    @if $value {
+      --md-modal-#{$token}: #{$value};
+    }
+  }
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-modal-values();
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    display: contents;
+  }
+
+  dialog {
+    background: transparent;
+    border: none;
+    margin: auto;
+    max-width: min(var(--_narrow-max-width), calc(100% - 40px));
+    outline: none;
+    overflow: visible;
+    padding: 0;
+    width: 100%;
+  }
+
+  :host([size='wide']) dialog {
+    max-width: min(var(--_wide-max-width), calc(100% - 40px));
+  }
+
+  dialog[open] {
+    display: flex;
+  }
+
+  ::backdrop {
+    background: none;
+  }
+
+  .scrim {
+    background: var(--md-sys-color-scrim, #000);
+    display: none;
+    inset: 0;
+    opacity: 32%;
+    pointer-events: none;
+    position: fixed;
+    z-index: 1;
+  }
+
+  :host([open]) .scrim {
+    display: block;
+  }
+
+  .container {
+    border-radius: 24px;
+    color: var(--md-sys-color-on-surface, #1c1b1b);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    transform-origin: top;
+    width: 100%;
+  }
+
+  .container::before {
+    background: var(--md-sys-color-surface, #fff);
+    border-radius: inherit;
+    content: '';
+    inset: 0;
+    position: absolute;
+  }
+
+  md-elevation {
+    @include elevation.theme(
+      (
+        'level': 3,
+      )
+    );
+  }
+
+  header,
+  .body,
+  .actions,
+  .titles,
+  h2,
+  .subtitle {
+    position: relative;
+  }
+
+  header {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  :host([show-subtitle]) .leading {
+    align-self: flex-start;
+  }
+
+  .leading {
+    color: var(--md-sys-color-on-surface, #1c1b1b);
+    flex: none;
+    font-size: 24px;
+    height: 24px;
+    width: 24px;
+  }
+
+  :host([variant='informational']) .leading {
+    color: var(--md-sys-color-secondary, #0156cf);
+  }
+
+  :host([variant='success']) .leading {
+    color: #3e8643;
+  }
+
+  :host([variant='error']) .leading,
+  :host([variant='destructive']) .leading {
+    color: var(--md-sys-color-error, #ba1a1a);
+  }
+
+  .titles {
+    flex: 1;
+    min-width: 0;
+  }
+
+  h2 {
+    font-size: var(--md-sys-typescale-title-medium-size, 1rem);
+    font-weight: var(--md-sys-typescale-title-medium-weight, 500);
+    line-height: var(--md-sys-typescale-title-medium-line-height, 1.5rem);
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .subtitle {
+    -webkit-box-orient: vertical;
+    color: var(--md-sys-color-on-surface-variant, #49454e);
+    display: -webkit-box;
+    font-size: var(--md-sys-typescale-body-medium-size, 0.875rem);
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    line-height: var(--md-sys-typescale-body-medium-line-height, 1.25rem);
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .body {
+    padding: 0 20px;
+  }
+
+  :host(:not([content-margin])) .body {
+    padding-inline: 0;
+  }
+
+  .actions {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .end,
+  .check {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+  }
+
+  .end {
+    margin-inline-start: auto;
+  }
+
+  .check {
+    margin-inline-start: 12px;
+  }
+
+  .check ::slotted(*) {
+    color: var(--md-sys-color-on-surface, #1c1b1b);
+    font-size: var(--md-sys-typescale-body-medium-size, 0.875rem);
+    line-height: var(--md-sys-typescale-body-medium-line-height, 1.25rem);
+  }
+
+  md-text-button {
+    @include button-color('text-button', 'label-text', $on-surface);
+  }
+
+  md-outlined-button {
+    @include button-color('outlined-button', 'label-text', $on-surface);
+    @include button-color('outlined-button', 'outline', $on-surface);
+  }
+
+  :host([variant='destructive']) md-filled-button {
+    --md-filled-button-container-color: var(--md-sys-color-error, #ba1a1a);
+    @include button-color('filled-button', 'label-text', $on-error);
+  }
+
+  :host([layout='vertical']) .actions,
+  :host([layout='vertical']) .end {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  :host([layout='vertical']) .end {
+    margin-inline-start: 0;
+  }
+
+  :host([layout='vertical']) .start,
+  :host([layout='vertical']) .end > *,
+  :host([layout='horizontal-fill']) .end,
+  :host([layout='horizontal-fill']) .end > * {
+    flex: 1;
+  }
+
+  :host([layout='vertical']) md-text-button,
+  :host([layout='vertical']) md-outlined-button,
+  :host([layout='vertical']) md-filled-button {
+    width: 100%;
+  }
+}

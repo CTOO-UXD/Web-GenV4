@@ -1,0 +1,16 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// GenV4 typeface. Weights stay on the existing scale.
+
+@function values($exclude-hardcoded-values: false) {
+  @return (
+    'brand': if($exclude-hardcoded-values, null, (Montserrat)),
+    'plain': if($exclude-hardcoded-values, null, (Montserrat)),
+    'weight-bold': if($exclude-hardcoded-values, null, 700),
+    'weight-medium': if($exclude-hardcoded-values, null, 500),
+    'weight-regular': if($exclude-hardcoded-values, null, 400)
+  );
+}
