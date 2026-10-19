@@ -4,6 +4,15 @@
 
 ## 2026-10-19
 
+* 新增功能引导卡片，用来在页面旁边分步说明；内容边距不再带动标题
+  * `feature-tour-modal/`
+  * `tokens/_md-comp-feature-tour-modal.scss`
+  * `tokens/_index.scss`
+  * `all.ts`
+  * `testing/genv4/feature-tour-modal.html`
+  * `hero-modal/internal/_hero-modal.scss`
+  * `hero-modal/hero-modal_test.ts`
+
 * 主图弹窗在平板和电脑上把底栏改成横排，并加上可选复选框
   * `hero-modal/internal/hero-modal.ts`
   * `hero-modal/internal/_hero-modal.scss`

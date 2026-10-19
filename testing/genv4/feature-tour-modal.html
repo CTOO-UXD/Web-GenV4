@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Feature tour modal</title>
+    <style>
+      body {
+        margin: 24px;
+        font-family: system-ui, sans-serif;
+      }
+
+      fieldset {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 16px;
+        margin: 0 0 16px;
+      }
+
+      label {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .stage {
+        min-height: 720px;
+        padding: 48px;
+      }
+
+      .hero {
+        background: #d8c7f5;
+        height: 100%;
+      }
+
+      .tall {
+        height: 280px;
+        background: #f3eefb;
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset>
+      <label>caret <select id="caret"></select></label>
+      <label>position <select id="caretPosition"></select></label>
+      <label>type <select id="type"></select></label>
+      <label>tertiary <select id="tertiary"></select></label>
+      <label>width <input id="width" type="number" placeholder="默认" /></label>
+      <label><input id="margin" type="checkbox" checked /> content margin</label>
+      <label><input id="scroll" type="checkbox" /> scroll bar</label>
+      <label><input id="cancel" type="checkbox" /> cancel</label>
+      <label><input id="secondary" type="checkbox" /> secondary</label>
+      <label><input id="tertiaryAction" type="checkbox" /> tertiary</label>
+      <label><input id="close" type="checkbox" checked /> close</label>
+      <button id="open" type="button">打开</button>
+      <button id="outside" type="button">外面</button>
+    </fieldset>
+    <p id="result"></p>
+    <div class="stage">
+      <md-feature-tour-modal>
+        <div class="hero" slot="hero"></div>
+        <section>
+          <h2>第一页</h2>
+          <p>主图留在上面，翻页不换。</p>
+          <div class="tall"></div>
+        </section>
+        <section>
+          <h2>第二页</h2>
+          <p>中间页同时有上一页和下一页。</p>
+        </section>
+        <section>
+          <h2>第三页</h2>
+          <p>再翻一页到最后。</p>
+        </section>
+        <section>
+          <h2>第四页</h2>
+          <p>最后一页的下一页会关掉卡片。</p>
+        </section>
+        <span slot="primary">主要</span>
+        <span slot="cancel">取消</span>
+        <span slot="secondary">次要</span>
+        <span slot="tertiary">第三操作</span>
+        <md-outlined-icon-button slot="previous" aria-label="上一页">
+          <md-icon>arrow_back</md-icon>
+        </md-outlined-icon-button>
+        <md-filled-icon-button slot="next" aria-label="下一页">
+          <md-icon>arrow_forward</md-icon>
+        </md-filled-icon-button>
+      </md-feature-tour-modal>
+    </div>
+    <script type="module">
+      import '../../feature-tour-modal/feature-tour-modal.js';
+      import '../../iconbutton/outlined-icon-button.js';
+      import '../../iconbutton/filled-icon-button.js';
+
+      const modal = document.querySelector('md-feature-tour-modal');
+      const result = document.querySelector('#result');
+      const selects = {
+        caret: ['bottom', 'left', 'top', 'right'],
+        caretPosition: ['center', 'start', 'end'],
+        type: ['default', 'walkthrough'],
+        tertiary: ['button', 'checkbox'],
+      };
+      for (const [id, values] of Object.entries(selects)) {
+        const select = document.querySelector('#' + id);
+        for (const value of values) {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = value;
+          select.append(option);
+        }
+        select.addEventListener('change', () => {
+          modal[id] = select.value;
+        });
+      }
+      const flags = [
+        ['margin', 'contentMargin'],
+        ['scroll', 'scrollBar'],
+        ['cancel', 'showCancel'],
+        ['secondary', 'showSecondaryAction'],
+        ['tertiaryAction', 'showTertiaryAction'],
+        ['close', 'closeButton'],
+      ];
+      for (const [id, prop] of flags) {
+        const input = document.querySelector('#' + id);
+        input.addEventListener('change', () => {
+          modal[prop] = input.checked;
+        });
+      }
+      document.querySelector('#width').addEventListener('input', (event) => {
+        const value = event.target.value;
+        if (value) {
+          modal.style.setProperty('--md-feature-tour-modal-width', value + 'px');
+        } else {
+          modal.style.removeProperty('--md-feature-tour-modal-width');
+        }
+      });
+      document.querySelector('#open').addEventListener('click', () => {
+        modal.show();
+      });
+      document.querySelector('#outside').addEventListener('click', () => {
+        result.textContent = '外面仍能点';
+      });
+      modal.addEventListener('cancel', () => {
+        result.textContent = 'cancel';
+      });
+      modal.addEventListener('closed', () => {
+        result.textContent = modal.returnValue || result.textContent;
+      });
+    </script>
+  </body>
+</html>

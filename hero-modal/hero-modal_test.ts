@@ -290,7 +290,8 @@ describe('<md-hero-modal>', () => {
 
     modal.contentMargin = false;
     await modal.updateComplete;
-    expect(getComputedStyle(title).marginLeft).toBe('0px');
+    expect(getComputedStyle(title).marginLeft).toBe('16px');
+    expect(getComputedStyle(body).marginLeft).toBe('16px');
     expect(getComputedStyle(extra).marginRight).toBe('0px');
     expect(getComputedStyle(title).marginTop).toBe('16px');
   });

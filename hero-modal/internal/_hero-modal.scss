@@ -74,7 +74,6 @@ $primary: var(--md-sys-color-primary, #6c43c6);
     margin-inline: var(--_inline-wide);
   }
 
-  md-hero-modal:not([content-margin]) > :not([slot]) :is(h1, h2, h3, p),
   md-hero-modal:not([content-margin]) > :not([slot]) > #{$content} {
     margin-inline: 0;
   }

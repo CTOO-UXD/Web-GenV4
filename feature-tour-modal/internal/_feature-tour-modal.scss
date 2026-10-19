@@ -1,0 +1,370 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:list';
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../elevation/elevation';
+@use '../../tokens';
+// go/keep-sorted end
+
+$on-surface: var(--md-sys-color-on-surface, #1c1b1b);
+$primary: var(--md-sys-color-primary, #6c43c6);
+$surface: var(--md-sys-color-surface, #fff);
+
+@mixin button-color($name, $part, $color) {
+  --md-#{$name}-#{$part}-color: #{$color};
+  --md-#{$name}-hover-#{$part}-color: #{$color};
+  --md-#{$name}-focus-#{$part}-color: #{$color};
+  --md-#{$name}-pressed-#{$part}-color: #{$color};
+}
+
+@mixin theme($tokens) {
+  $supported-tokens: tokens.$md-comp-feature-tour-modal-supported-tokens;
+
+  @each $token, $value in $tokens {
+    @if list.index($supported-tokens, $token) == null {
+      @error 'Token `#{$token}` is not a supported token.';
+    }
+
+    @if $value {
+      --md-feature-tour-modal-#{$token}: #{$value};
+    }
+  }
+}
+
+// Adopted on the host's root, because ::slotted cannot reach into a page.
+@mixin page-styles() {
+  $page: 'md-feature-tour-modal > :not([slot])';
+  $content: ':not(h1, h2, h3, p)';
+
+  #{$page} :is(h1, h2, h3) {
+    font-size: var(--md-sys-typescale-headline-medium-size, 1.75rem);
+    font-weight: 700;
+    line-height: var(--md-sys-typescale-headline-medium-line-height, 2.25rem);
+    margin: var(--_inset);
+  }
+
+  #{$page} :is(h1, h2, h3):has(+ p) {
+    margin-bottom: 0;
+  }
+
+  #{$page} p {
+    font-size: var(--md-sys-typescale-body-large-size, 1rem);
+    line-height: var(--md-sys-typescale-body-large-line-height, 1.5rem);
+    margin: var(--_title-gap) var(--_inset) var(--_inset);
+  }
+
+  #{$page} > #{$content} {
+    margin: 0 var(--_inline);
+  }
+
+  md-feature-tour-modal:not([content-margin]) > :not([slot]) > #{$content} {
+    margin-inline: 0;
+  }
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-feature-tour-modal-values();
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    color: $on-surface;
+    display: none;
+    max-width: min(var(--_max-width), calc(100vw - 40px));
+    position: relative;
+    width: min(
+      clamp(var(--_min-width), var(--_width), var(--_max-width)),
+      calc(100vw - 40px)
+    );
+  }
+
+  :host([open]) {
+    display: block;
+  }
+
+  dialog {
+    background: transparent;
+    border: none;
+    color: inherit;
+    height: auto;
+    inset: auto;
+    margin: 0;
+    max-height: none;
+    max-width: none;
+    outline: none;
+    overflow: visible;
+    padding: 0;
+    position: static;
+    width: 100%;
+  }
+
+  dialog[open] {
+    display: block;
+  }
+
+  .container {
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    max-height: var(--_max-height);
+    min-height: var(--_min-height);
+    overflow: visible;
+    position: relative;
+    touch-action: pan-y;
+    transform-origin: top;
+    width: 100%;
+  }
+
+  .container::before {
+    background: $surface;
+    border-radius: inherit;
+    content: '';
+    inset: 0;
+    position: absolute;
+  }
+
+  md-elevation {
+    @include elevation.theme(
+      (
+        'level': 3,
+      )
+    );
+  }
+
+  .caret {
+    background: $surface;
+    position: absolute;
+    z-index: 2;
+  }
+
+  :host([caret='top']) .caret,
+  :host([caret='bottom']) .caret,
+  :host(:not([caret])) .caret {
+    height: var(--_caret-outset);
+    width: var(--_caret-length);
+  }
+
+  :host([caret='left']) .caret,
+  :host([caret='right']) .caret {
+    height: var(--_caret-length);
+    width: var(--_caret-outset);
+  }
+
+  :host([caret='top']) .caret {
+    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    inset-block-start: calc(var(--_caret-outset) * -1);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+
+  :host([caret='bottom']) .caret,
+  :host(:not([caret])) .caret {
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    inset-block-end: calc(var(--_caret-outset) * -1);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+
+  :host([caret='left']) .caret {
+    clip-path: polygon(100% 0, 0 50%, 100% 100%);
+    inset-block-start: 50%;
+    inset-inline-start: calc(var(--_caret-outset) * -1);
+    transform: translateY(-50%);
+  }
+
+  :host([caret='right']) .caret {
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    inset-block-start: 50%;
+    inset-inline-end: calc(var(--_caret-outset) * -1);
+    transform: translateY(-50%);
+  }
+
+  :host([caret='left'][caret-position='start']) .caret,
+  :host([caret='right'][caret-position='start']) .caret {
+    inset-block-start: var(--_caret-inset);
+    transform: none;
+  }
+
+  :host([caret='left'][caret-position='end']) .caret,
+  :host([caret='right'][caret-position='end']) .caret {
+    inset-block-end: var(--_caret-inset);
+    inset-block-start: auto;
+    transform: none;
+  }
+
+  :host([caret='top'][caret-position='start']) .caret,
+  :host([caret='bottom'][caret-position='start']) .caret {
+    inset-inline-start: var(--_caret-inset);
+    transform: none;
+  }
+
+  :host([caret='top'][caret-position='end']) .caret,
+  :host([caret='bottom'][caret-position='end']) .caret {
+    inset-inline-end: var(--_caret-inset);
+    inset-inline-start: auto;
+    transform: none;
+  }
+
+  .clip {
+    border-radius: inherit;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .visual {
+    padding: var(--_inset) var(--_inset) 0;
+  }
+
+  .hero {
+    border-radius: var(--_hero-radius);
+    height: var(--_hero-height);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero ::slotted(*) {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .close {
+    --md-icon-button-state-layer-height: 48px;
+    --md-icon-button-state-layer-width: 48px;
+    inset-block-start: var(--_close-inset);
+    inset-inline-end: var(--_close-inset);
+    position: absolute;
+  }
+
+  .main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .pages {
+    max-height: var(--_content-max-height);
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  :host([scroll-bar]) .pages {
+    overflow: auto;
+  }
+
+  slot:not([name])::slotted(*) {
+    display: none;
+  }
+
+  slot:not([name])::slotted([data-current]) {
+    box-sizing: border-box;
+    color: $on-surface;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .default-actions,
+  .walk {
+    padding-block: var(--_footer-inline);
+    padding-inline: var(--_inline) var(--_footer-inline);
+  }
+
+  .default-actions,
+  .end,
+  .start,
+  .dots,
+  .navs {
+    align-items: center;
+    display: flex;
+  }
+
+  .default-actions {
+    justify-content: flex-end;
+  }
+
+  .start {
+    gap: var(--_title-gap);
+    margin-inline-end: auto;
+  }
+
+  .end,
+  .dots {
+    gap: var(--_title-gap);
+  }
+
+  .start ::slotted(*) {
+    color: $on-surface;
+    font-size: var(--md-sys-typescale-body-medium-size, 0.875rem);
+    line-height: var(--md-sys-typescale-body-medium-line-height, 1.25rem);
+  }
+
+  .default-actions md-text-button {
+    @include button-color('text-button', 'label-text', $on-surface);
+  }
+
+  .default-actions md-outlined-button {
+    @include button-color('outlined-button', 'label-text', $on-surface);
+    @include button-color('outlined-button', 'outline', $on-surface);
+  }
+
+  .default-actions md-filled-button {
+    --md-filled-button-container-color: #{$primary};
+  }
+
+  .walk {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .navs {
+    gap: 12px;
+  }
+
+  .nav[hidden] {
+    display: none;
+  }
+
+  .nav ::slotted(*) {
+    --_nav-size: 48px;
+    --md-filled-icon-button-container-height: var(--_nav-size);
+    --md-filled-icon-button-container-width: var(--_nav-size);
+    --md-icon-button-state-layer-height: var(--_nav-size);
+    --md-icon-button-state-layer-width: var(--_nav-size);
+    --md-outlined-icon-button-container-height: var(--_nav-size);
+    --md-outlined-icon-button-container-width: var(--_nav-size);
+    --md-outlined-icon-button-outline-color: #{$primary};
+  }
+
+  .dot {
+    appearance: none;
+    background: rgb(0 0 0 / 40%);
+    border: 0;
+    border-radius: 4px;
+    height: 8px;
+    padding: 0;
+    width: 8px;
+  }
+
+  .dot[current] {
+    background: $on-surface;
+    width: 24px;
+  }
+}
