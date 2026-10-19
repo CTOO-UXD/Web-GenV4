@@ -1,0 +1,330 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:list';
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../elevation/elevation';
+@use '../../tokens';
+// go/keep-sorted end
+
+$on-surface: var(--md-sys-color-on-surface, #1c1b1b);
+$primary: var(--md-sys-color-primary, #6c43c6);
+
+@mixin button-color($name, $part, $color) {
+  --md-#{$name}-#{$part}-color: #{$color};
+  --md-#{$name}-hover-#{$part}-color: #{$color};
+  --md-#{$name}-focus-#{$part}-color: #{$color};
+  --md-#{$name}-pressed-#{$part}-color: #{$color};
+}
+
+@mixin theme($tokens) {
+  $supported-tokens: tokens.$md-comp-hero-modal-supported-tokens;
+
+  @each $token, $value in $tokens {
+    @if list.index($supported-tokens, $token) == null {
+      @error 'Token `#{$token}` is not a supported token.';
+    }
+
+    @if $value {
+      --md-hero-modal-#{$token}: #{$value};
+    }
+  }
+}
+
+@mixin size-width($min, $preferred, $max) {
+  width: min(
+    clamp(#{$min}, var(--md-hero-modal-width, #{$preferred}), #{$max}),
+    calc(100% - 40px)
+  );
+  max-width: min(#{$max}, calc(100% - 40px));
+}
+
+// Adopted on the host's root, because ::slotted cannot reach into a page.
+@mixin page-styles() {
+  $page: 'md-hero-modal > :not([slot])';
+  $content: ':not(h1, h2, h3, p)';
+
+  #{$page} :is(h1, h2, h3) {
+    font-size: var(--md-sys-typescale-headline-medium-size, 1.75rem);
+    font-weight: 700;
+    line-height: var(--md-sys-typescale-headline-medium-line-height, 2.25rem);
+    margin: var(--_title-padding);
+  }
+
+  #{$page} :is(h1, h2, h3):has(+ p) {
+    margin-bottom: 0;
+  }
+
+  #{$page} p {
+    font-size: var(--md-sys-typescale-body-large-size, 1rem);
+    line-height: var(--md-sys-typescale-body-large-line-height, 1.5rem);
+    margin: var(--_title-gap) var(--_title-padding) var(--_title-padding);
+  }
+
+  #{$page} > #{$content} {
+    margin: 0 var(--_inline);
+  }
+
+  md-hero-modal:is([size='tablet'], [size='pc']) > :not([slot]) > #{$content} {
+    margin-inline: var(--_inline-wide);
+  }
+
+  md-hero-modal:not([content-margin]) > :not([slot]) :is(h1, h2, h3, p),
+  md-hero-modal:not([content-margin]) > :not([slot]) > #{$content} {
+    margin-inline: 0;
+  }
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-hero-modal-values();
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    display: contents;
+    color: $on-surface;
+  }
+
+  dialog {
+    background: transparent;
+    border: none;
+    margin: auto;
+    max-width: min(var(--_mobile-width), calc(100% - 40px));
+    outline: none;
+    overflow: visible;
+    padding: 0;
+    width: min(var(--_mobile-width), calc(100% - 40px));
+  }
+
+  :host([size='tablet']) dialog {
+    @include size-width(
+      var(--_tablet-min-width),
+      var(--_tablet-width),
+      var(--_tablet-max-width)
+    );
+  }
+
+  :host([size='pc']) dialog {
+    @include size-width(
+      var(--_pc-min-width),
+      var(--_pc-width),
+      var(--_pc-max-width)
+    );
+  }
+
+  dialog[open] {
+    display: flex;
+  }
+
+  ::backdrop {
+    background: none;
+  }
+
+  .scrim {
+    background: var(--md-sys-color-scrim, #000);
+    display: none;
+    inset: 0;
+    opacity: 32%;
+    pointer-events: none;
+    position: fixed;
+    z-index: 1;
+  }
+
+  :host([open]) .scrim {
+    display: block;
+  }
+
+  .container {
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    max-height: var(--_max-height);
+    min-height: var(--_min-height);
+    overflow: visible;
+    position: relative;
+    touch-action: pan-y;
+    transform-origin: top;
+    width: 100%;
+  }
+
+  .container::before {
+    background: var(--md-sys-color-surface, #fff);
+    border-radius: inherit;
+    content: '';
+    inset: 0;
+    position: absolute;
+  }
+
+  md-elevation {
+    @include elevation.theme(
+      (
+        'level': 3,
+      )
+    );
+  }
+
+  .clip {
+    border-radius: inherit;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .hero,
+  .main,
+  .close {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero {
+    flex: none;
+    height: var(--_mobile-hero-height);
+    overflow: hidden;
+  }
+
+  :host([size='tablet']) .hero {
+    height: var(--_tablet-hero-height);
+  }
+
+  :host([size='pc']) {
+    .clip {
+      flex-direction: row;
+    }
+
+    .hero {
+      flex: 1;
+      height: auto;
+      min-width: 0;
+    }
+
+    .main {
+      flex: none;
+      width: var(--_content-width);
+    }
+  }
+
+  .hero ::slotted(*) {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .pages {
+    max-height: var(--_content-max-height);
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  :host([scroll-bar]) .pages {
+    overflow: auto;
+  }
+
+  slot:not([name])::slotted(*) {
+    display: none;
+  }
+
+  slot:not([name])::slotted([data-current]) {
+    box-sizing: border-box;
+    color: $on-surface;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .close {
+    inset-block-start: var(--_title-padding);
+    inset-inline-end: var(--_title-padding);
+    position: absolute;
+  }
+
+  .default-actions,
+  .walk {
+    padding: var(--_inline) var(--_inline) var(--_inline) var(--_inline-wide);
+  }
+
+  .default-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_title-gap);
+  }
+
+  .default-actions md-filled-button {
+    --md-filled-button-container-color: #{$primary};
+    width: 100%;
+  }
+
+  .default-actions md-text-button {
+    align-self: center;
+    @include button-color('text-button', 'label-text', $on-surface);
+  }
+
+  .walk {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .dots,
+  .navs {
+    align-items: center;
+    display: flex;
+  }
+
+  .dots {
+    gap: var(--_title-gap);
+  }
+
+  .navs {
+    gap: 12px;
+  }
+
+  .nav[hidden] {
+    display: none;
+  }
+
+  .nav ::slotted(*) {
+    --_nav-size: 48px;
+    --md-filled-icon-button-container-height: var(--_nav-size);
+    --md-filled-icon-button-container-width: var(--_nav-size);
+    --md-icon-button-state-layer-height: var(--_nav-size);
+    --md-icon-button-state-layer-width: var(--_nav-size);
+    --md-outlined-icon-button-container-height: var(--_nav-size);
+    --md-outlined-icon-button-container-width: var(--_nav-size);
+    --md-outlined-icon-button-outline-color: #{$primary};
+  }
+
+  .dot {
+    appearance: none;
+    background: rgb(0 0 0 / 40%);
+    border: 0;
+    border-radius: 4px;
+    height: 8px;
+    padding: 0;
+    width: 8px;
+  }
+
+  .dot[current] {
+    background: $on-surface;
+    width: 24px;
+  }
+}

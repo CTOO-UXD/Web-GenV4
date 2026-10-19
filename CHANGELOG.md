@@ -2,6 +2,15 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-19
+
+* 新增主图弹窗，用来放带图的说明和分步引导
+  * `hero-modal/`
+  * `tokens/_md-comp-hero-modal.scss`
+  * `tokens/_index.scss`
+  * `all.ts`
+  * `testing/genv4/hero-modal.html`
+
 ## 2026-10-16
 
 * 修正 AI 输入多行时文字把内边距顶开，窄宽度下文件改成每行两个

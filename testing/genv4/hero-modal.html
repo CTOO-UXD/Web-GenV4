@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Hero modal</title>
+    <style>
+      body {
+        margin: 24px;
+        font-family: system-ui, sans-serif;
+      }
+
+      fieldset {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 16px;
+        margin: 0 0 16px;
+      }
+
+      label {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .hero {
+        background: #d8c7f5;
+        height: 100%;
+      }
+
+      .tall {
+        height: 280px;
+        background: #f3eefb;
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset>
+      <label>size <select id="size"></select></label>
+      <label>type <select id="type"></select></label>
+      <label>width <input id="width" type="number" placeholder="默认" /></label>
+      <label><input id="margin" type="checkbox" checked /> content margin</label>
+      <label><input id="scroll" type="checkbox" /> scroll bar</label>
+      <label><input id="cancel" type="checkbox" checked /> cancel</label>
+      <label><input id="close" type="checkbox" checked /> close</label>
+      <button id="open" type="button">打开</button>
+    </fieldset>
+    <p id="result"></p>
+    <md-hero-modal type="default">
+      <div class="hero" slot="hero"></div>
+      <section>
+        <h2>第一页</h2>
+        <p>主图留在上面，翻页不换。</p>
+        <div class="tall"></div>
+      </section>
+      <section>
+        <h2>第二页</h2>
+        <p>中间页同时有上一页和下一页。</p>
+      </section>
+      <section>
+        <h2>第三页</h2>
+        <p>再翻一页到最后。</p>
+      </section>
+      <section>
+        <h2>第四页</h2>
+        <p>最后一页的下一页会关掉弹窗。</p>
+      </section>
+      <span slot="primary">主要</span>
+      <span slot="cancel">取消</span>
+      <md-outlined-icon-button slot="previous" aria-label="上一页">
+        <md-icon>arrow_back</md-icon>
+      </md-outlined-icon-button>
+      <md-filled-icon-button slot="next" aria-label="下一页">
+        <md-icon>arrow_forward</md-icon>
+      </md-filled-icon-button>
+    </md-hero-modal>
+    <script type="module">
+      import '../../hero-modal/hero-modal.js';
+      import '../../iconbutton/outlined-icon-button.js';
+      import '../../iconbutton/filled-icon-button.js';
+
+      const modal = document.querySelector('md-hero-modal');
+      const result = document.querySelector('#result');
+      const selects = {
+        size: ['mobile', 'tablet', 'pc'],
+        type: ['default', 'walkthrough'],
+      };
+      for (const [id, values] of Object.entries(selects)) {
+        const select = document.querySelector('#' + id);
+        for (const value of values) {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = value;
+          select.append(option);
+        }
+        select.addEventListener('change', () => {
+          modal[id] = select.value;
+        });
+      }
+      const flags = [
+        ['margin', 'contentMargin'],
+        ['scroll', 'scrollBar'],
+        ['cancel', 'showCancel'],
+        ['close', 'closeButton'],
+      ];
+      for (const [id, prop] of flags) {
+        const input = document.querySelector('#' + id);
+        input.addEventListener('change', () => {
+          modal[prop] = input.checked;
+        });
+      }
+      document.querySelector('#width').addEventListener('input', (event) => {
+        const value = event.target.value;
+        if (value) {
+          modal.style.setProperty('--md-hero-modal-width', value + 'px');
+        } else {
+          modal.style.removeProperty('--md-hero-modal-width');
+        }
+      });
+      document.querySelector('#open').addEventListener('click', () => {
+        modal.show();
+      });
+      modal.addEventListener('cancel', () => {
+        result.textContent = 'cancel';
+      });
+      modal.addEventListener('closed', () => {
+        result.textContent = modal.returnValue || result.textContent;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'content-max-height',
+  'content-width',
+  'inline',
+  'inline-wide',
+  'max-height',
+  'min-height',
+  'mobile-hero-height',
+  'mobile-width',
+  'pc-max-width',
+  'pc-min-width',
+  'pc-width',
+  'tablet-hero-height',
+  'tablet-max-width',
+  'tablet-min-width',
+  'tablet-width',
+  'title-gap',
+  'title-padding',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $tokens: (
+    'content-max-height': 496px,
+    'content-width': 416px,
+    'inline': 20px,
+    'inline-wide': 32px,
+    'max-height': 640px,
+    'min-height': 416px,
+    'mobile-hero-height': 240px,
+    'mobile-width': 316px,
+    'pc-max-width': 832px,
+    'pc-min-width': 632px,
+    'pc-width': 832px,
+    'tablet-hero-height': 264px,
+    'tablet-max-width': 560px,
+    'tablet-min-width': 316px,
+    'tablet-width': 500px,
+    'title-gap': 8px,
+    'title-padding': 16px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-hero-modal-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}
