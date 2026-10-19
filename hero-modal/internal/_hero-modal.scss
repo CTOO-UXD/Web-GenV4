@@ -268,9 +268,51 @@ $primary: var(--md-sys-color-primary, #6c43c6);
     gap: var(--_title-gap);
   }
 
+  .end {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_title-gap);
+    width: 100%;
+  }
+
+  .check {
+    align-items: center;
+    display: flex;
+    gap: var(--_title-gap);
+  }
+
+  .check ::slotted(*) {
+    color: $on-surface;
+    font-size: var(--md-sys-typescale-body-medium-size, 0.875rem);
+    line-height: var(--md-sys-typescale-body-medium-line-height, 1.25rem);
+  }
+
   .default-actions md-filled-button {
     --md-filled-button-container-color: #{$primary};
     width: 100%;
+  }
+
+  :host([size='tablet']),
+  :host([size='pc']) {
+    .default-actions {
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
+    .check {
+      margin-inline-end: auto;
+    }
+
+    .end {
+      flex-direction: row;
+      width: auto;
+    }
+
+    .default-actions md-filled-button {
+      order: 1;
+      width: auto;
+    }
   }
 
   .default-actions md-text-button {

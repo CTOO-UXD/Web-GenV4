@@ -41,6 +41,7 @@
       <label><input id="margin" type="checkbox" checked /> content margin</label>
       <label><input id="scroll" type="checkbox" /> scroll bar</label>
       <label><input id="cancel" type="checkbox" checked /> cancel</label>
+      <label><input id="checkbox" type="checkbox" /> checkbox</label>
       <label><input id="close" type="checkbox" checked /> close</label>
       <button id="open" type="button">打开</button>
     </fieldset>
@@ -66,6 +67,7 @@
       </section>
       <span slot="primary">主要</span>
       <span slot="cancel">取消</span>
+      <span slot="checkbox">记住这个选择</span>
       <md-outlined-icon-button slot="previous" aria-label="上一页">
         <md-icon>arrow_back</md-icon>
       </md-outlined-icon-button>
@@ -100,6 +102,7 @@
         ['margin', 'contentMargin'],
         ['scroll', 'scrollBar'],
         ['cancel', 'showCancel'],
+        ['checkbox', 'showCheckbox'],
         ['close', 'closeButton'],
       ];
       for (const [id, prop] of flags) {

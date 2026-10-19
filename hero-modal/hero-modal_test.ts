@@ -195,9 +195,50 @@ describe('<md-hero-modal>', () => {
     const cancel = buttonWith(modal, 'md-text-button', 'Cancel');
     expect(primary.getBoundingClientRect().top).toBeLessThan(cancel.getBoundingClientRect().top);
     expect(modal.shadowRoot!.querySelector('md-outlined-button')).toBeNull();
+
+    for (const size of ['tablet', 'pc'] as const) {
+      modal.size = size;
+      await modal.updateComplete;
+      const primaryBox = primary.getBoundingClientRect();
+      const cancelBox = cancel.getBoundingClientRect();
+      expect(cancelBox.right).toBeLessThanOrEqual(primaryBox.left);
+      expect(Math.abs(primaryBox.top - cancelBox.top)).toBeLessThan(2);
+    }
     primary.click();
     await env.waitForStability();
     expect(modal.returnValue).toBe('primary');
+  });
+
+  it('keeps an optional checkbox from closing the modal', async () => {
+    const modal = await setup(html`<md-hero-modal show-checkbox>
+      <div slot="hero"></div>
+      <section>Short</section>
+      <span slot="primary">Primary</span>
+      <span slot="cancel">Cancel</span>
+      <span slot="checkbox">Remember</span>
+    </md-hero-modal>`);
+    expect(modal.showCheckbox).toBeTrue();
+    await modal.show();
+    expect(modal.shadowRoot!.querySelector('md-checkbox')).not.toBeNull();
+
+    modal.showCheckbox = false;
+    await modal.updateComplete;
+    expect(modal.shadowRoot!.querySelector('md-checkbox')).toBeNull();
+
+    modal.showCheckbox = true;
+    modal.size = 'tablet';
+    await modal.updateComplete;
+    const box = modal.shadowRoot!.querySelector('md-checkbox') as HTMLElement & {
+      checked: boolean;
+    };
+    const label = modal.querySelector<HTMLElement>('[slot="checkbox"]')!;
+    const cancel = buttonWith(modal, 'md-text-button', 'Cancel');
+    label.click();
+    expect(box.checked).toBeTrue();
+    expect(modal.open).toBeTrue();
+    expect(box.getBoundingClientRect().right).toBeLessThanOrEqual(
+      cancel.getBoundingClientRect().left,
+    );
   });
 
   it('uses surface, on-surface, and primary', async () => {

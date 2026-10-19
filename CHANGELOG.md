@@ -4,6 +4,13 @@
 
 ## 2026-10-19
 
+* 主图弹窗在平板和电脑上把底栏改成横排，并加上可选复选框
+  * `hero-modal/internal/hero-modal.ts`
+  * `hero-modal/internal/_hero-modal.scss`
+  * `hero-modal/hero-modal.ts`
+  * `hero-modal/hero-modal_test.ts`
+  * `testing/genv4/hero-modal.html`
+
 * 新增主图弹窗，用来放带图的说明和分步引导
   * `hero-modal/`
   * `tokens/_md-comp-hero-modal.scss`

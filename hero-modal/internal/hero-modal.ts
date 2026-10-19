@@ -78,6 +78,10 @@ export class HeroModal extends LitElement {
   @property({type: Boolean, reflect: true, attribute: 'show-cancel'})
   showCancel = true;
 
+  /** Shows the footer checkbox. It does not close the modal. */
+  @property({type: Boolean, reflect: true, attribute: 'show-checkbox'})
+  showCheckbox = false;
+
   /** Shows the corner close button. The attribute is `close`. */
   @property({type: Boolean, reflect: true, attribute: 'close'})
   closeButton = true;
@@ -98,6 +102,9 @@ export class HeroModal extends LitElement {
   @query('.close') private readonly closeElement!: HTMLElement | null;
   @query('.pages') private readonly pages!: HTMLElement | null;
   @query('.default-actions, .walk') private readonly actions!: HTMLElement | null;
+  @query('md-checkbox') private readonly checkbox!: HTMLElement & {
+    checked: boolean;
+  };
   @query('.focus-trap') private readonly firstFocusTrap!: HTMLElement | null;
   private nextClickIsFromContent = false;
   private cancelAnimations?: AbortController;
@@ -235,14 +242,22 @@ export class HeroModal extends LitElement {
 
   private renderDefaultActions() {
     return html`<div class="default-actions">
-      <md-filled-button @click=${() => this.close('primary')}>
-        <slot name="primary"></slot>
-      </md-filled-button>
-      ${this.showCancel
-        ? html`<md-text-button @click=${this.cancelFromControl}>
-            <slot name="cancel"></slot>
-          </md-text-button>`
+      ${this.showCheckbox
+        ? html`<div class="check">
+            <md-checkbox touch-target="none"></md-checkbox>
+            <slot name="checkbox" @click=${this.toggleCheckbox}></slot>
+          </div>`
         : nothing}
+      <div class="end">
+        <md-filled-button @click=${() => this.close('primary')}>
+          <slot name="primary"></slot>
+        </md-filled-button>
+        ${this.showCancel
+          ? html`<md-text-button @click=${this.cancelFromControl}>
+              <slot name="cancel"></slot>
+            </md-text-button>`
+          : nothing}
+      </div>
     </div>`;
   }
 
@@ -405,6 +420,13 @@ export class HeroModal extends LitElement {
       );
     });
   }
+
+  private toggleCheckbox = () => {
+    if (!this.checkbox) {
+      return;
+    }
+    this.checkbox.checked = !this.checkbox.checked;
+  };
 
   private cancelFromControl = () => {
     const proceed = this.dispatchEvent(
