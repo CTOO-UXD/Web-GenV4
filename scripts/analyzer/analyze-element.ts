@@ -315,7 +315,7 @@ export function analyzeFields(
       continue;
     }
 
-    let defaultVal = field.default;
+    let defaultVal = field.default || defaultForAccessor(field.node);
     let reactiveProp: ReactiveProperty | null = null;
     if (classDeclaration.isLitElementDeclaration()) {
       reactiveProp = classDeclaration.reactiveProperties.get(field.name);
@@ -369,14 +369,64 @@ function descriptionFor(field: {description?: string; node: ts.Node}) {
   if (field.description) {
     return field.description;
   }
-  if (!ts.isGetAccessor(field.node)) {
-    return field.description;
-  }
+  const documented = ts.isSetAccessor(field.node)
+    ? pairedGetter(field.node) ?? field.node
+    : field.node;
   return ts
-    .getJSDocCommentsAndTags(field.node)
+    .getJSDocCommentsAndTags(documented)
     .filter(ts.isJSDoc)
     .map((doc) => (typeof doc.comment === 'string' ? doc.comment : ''))
     .join('\n');
+}
+
+function pairedGetter(setter: ts.SetAccessorDeclaration) {
+  const parent = setter.parent;
+  if (!ts.isClassLike(parent)) {
+    return undefined;
+  }
+  const name = setter.name.getText();
+  return parent.members.find(
+    (member): member is ts.GetAccessorDeclaration =>
+      ts.isGetAccessor(member) && member.name.getText() === name,
+  );
+}
+
+function defaultForAccessor(node: ts.Node) {
+  const getter = ts.isGetAccessor(node)
+    ? node
+    : ts.isSetAccessor(node)
+      ? pairedGetter(node)
+      : undefined;
+  const returned = getter ? returnedFieldName(getter) : undefined;
+  if (!returned || !getter || !ts.isClassLike(getter.parent)) {
+    return undefined;
+  }
+  for (const member of getter.parent.members) {
+    if (
+      ts.isPropertyDeclaration(member) &&
+      member.name.getText() === returned &&
+      member.initializer
+    ) {
+      return member.initializer.getText();
+    }
+  }
+  return undefined;
+}
+
+function returnedFieldName(getter: ts.GetAccessorDeclaration) {
+  for (const statement of getter.body?.statements ?? []) {
+    if (
+      !ts.isReturnStatement(statement) ||
+      !statement.expression ||
+      !ts.isPropertyAccessExpression(statement.expression) ||
+      statement.expression.expression.kind !== ts.SyntaxKind.ThisKeyword ||
+      !ts.isIdentifier(statement.expression.name)
+    ) {
+      continue;
+    }
+    return statement.expression.name.text;
+  }
+  return undefined;
 }
 
 /**

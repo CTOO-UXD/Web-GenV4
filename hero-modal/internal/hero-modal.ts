@@ -43,7 +43,7 @@ function ensurePageStyles(host: HTMLElement) {
  */
 export class HeroModal extends LitElement {
   /**
-   * 是否打开。
+   * 是否打开。默认关。
    * @en Whether the modal is open.
    */
   @property({type: Boolean})

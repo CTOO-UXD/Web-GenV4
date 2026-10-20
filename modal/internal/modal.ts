@@ -35,7 +35,7 @@ const ICONS = {
  */
 export class Modal extends LitElement {
   /**
-   * 是否打开。
+   * 是否打开。默认关。
    * @en Whether the modal is open.
    */
   @property({type: Boolean})

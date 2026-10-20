@@ -4,6 +4,13 @@
 
 ## 2026-10-20
 
+* 弹窗文档里的 open 补上说明和默认值，再生成也不会丢掉
+  * `scripts/analyzer/analyze-element.ts`
+  * `modal/internal/modal.ts`
+  * `hero-modal/internal/hero-modal.ts`
+  * `feature-tour-modal/internal/feature-tour-modal.ts`
+  * `loading-modal/internal/loading-modal.ts`
+
 * 新增弹窗展示页，把四类弹窗和各自的样子放在同一页
   * `docs/components/modal.md`
   * `docs/components/images/modal-dialog.png`

@@ -42,7 +42,7 @@ function ensurePageStyles(host: HTMLElement) {
  */
 export class FeatureTourModal extends LitElement {
   /**
-   * 是否打开。
+   * 是否打开。默认关。
    * @en Whether the card is open.
    */
   @property({type: Boolean})

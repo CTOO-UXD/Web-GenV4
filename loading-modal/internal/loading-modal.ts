@@ -25,7 +25,7 @@ import {
  */
 export class LoadingModal extends LitElement {
   /**
-   * 是否打开。container 为 inline 时不看这个属性。
+   * 是否打开。默认关。container 为 inline 时不看这个属性。
    * @en Whether the modal is open. Ignored when container is inline.
    */
   @property({type: Boolean})
