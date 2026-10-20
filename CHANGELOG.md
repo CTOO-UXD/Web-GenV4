@@ -4,6 +4,21 @@
 
 ## 2026-10-20
 
+* 新增弹窗展示页，把四类弹窗和各自的样子放在同一页
+  * `docs/components/modal.md`
+  * `docs/components/images/modal-dialog.png`
+  * `docs/components/images/modal-hero.png`
+  * `docs/components/images/modal-feature-tour.png`
+  * `docs/components/images/modal-loading.png`
+  * `catalog/src/hydration-entrypoints/components/modal.ts`
+  * `scripts/analyzer/element-docs-map.ts`
+  * `scripts/analyzer/update-docs.ts`
+  * `scripts/update-button-theme-docs.mjs`
+  * `modal/internal/modal.ts`
+  * `hero-modal/internal/hero-modal.ts`
+  * `feature-tour-modal/internal/feature-tour-modal.ts`
+  * `loading-modal/internal/loading-modal.ts`
+
 * 新增加载弹窗，用来在处理时显示转圈，完成后停在勾上，等页面自己关闭
   * `loading-modal/`
   * `tokens/_md-comp-loading-modal.scss`

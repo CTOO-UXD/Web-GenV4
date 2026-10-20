@@ -27,15 +27,17 @@ const ICONS = {
 /**
  * A modal panel. Opening, the scrim, and focus trapping follow dialog.
  *
- * @fires open {Event} Dispatched when the modal is opening.
- * @fires opened {Event} Dispatched when the modal has opened.
- * @fires close {Event} Dispatched when the modal is closing. `returnValue`
- * says which control closed it.
- * @fires closed {Event} Dispatched when the modal has closed.
- * @fires cancel {Event} Dispatched when the scrim, Escape, or the cancel
- * button cancels the modal.
+ * @fires open {Event} 正要打开。调用 preventDefault 可以拦住。 @en Dispatched when the modal is opening.
+ * @fires opened {Event} 打开动画结束后发出。 @en Dispatched when the modal has opened.
+ * @fires close {Event} 正要关闭。调用 preventDefault 可以拦住。returnValue 表示是哪个控件关掉的。 @en Dispatched when the modal is closing.
+ * @fires closed {Event} 关闭动画结束后发出。 @en Dispatched when the modal has closed.
+ * @fires cancel {Event} 点遮罩、按 Esc 或点取消按钮时发出。调用 preventDefault 可以拦住。 @en Dispatched when the scrim, Escape, or the cancel button cancels the modal.
  */
 export class Modal extends LitElement {
+  /**
+   * 是否打开。
+   * @en Whether the modal is open.
+   */
   @property({type: Boolean})
   get open() {
     return this.isOpen;
@@ -56,9 +58,16 @@ export class Modal extends LitElement {
     }
   }
 
-  /** Which control closed the modal. Empty when canceled. */
+  /**
+   * 关掉时写入。主按钮是 primary，次要是 secondary，第三操作是 tertiary，关闭按钮是 close。取消时为空。只能用脚本读写。
+   * @en Which control closed the modal. Empty when canceled.
+   */
   @property({attribute: false}) returnValue = '';
 
+  /**
+   * 外观。取值 neutral、informational、success、error、destructive、system。
+   * @en Visual variant.
+   */
   @property({reflect: true}) variant:
     | 'neutral'
     | 'informational'
@@ -67,38 +76,85 @@ export class Modal extends LitElement {
     | 'destructive'
     | 'system' = 'neutral';
 
+  /**
+   * 宽度。narrow 最宽 448px，wide 最宽 640px。
+   * @en Width. narrow max 448px, wide max 640px.
+   */
   @property({reflect: true}) size: 'narrow' | 'wide' = 'narrow';
 
+  /**
+   * 正文是否留内容边距。默认开。要关掉只能在脚本里设为 false。
+   * @en Whether body content keeps the content margin. Defaults to true.
+   */
   @property({type: Boolean, reflect: true, attribute: 'content-margin'})
   contentMargin = true;
 
+  /**
+   * 底栏排列。取值 horizontal、vertical、horizontal-fill。
+   * @en Footer layout.
+   */
   @property({reflect: true}) layout:
     | 'horizontal'
     | 'vertical'
     | 'horizontal-fill' = 'horizontal';
 
+  /**
+   * 是否显示取消按钮。
+   * @en Whether to show the cancel button.
+   */
   @property({type: Boolean, reflect: true, attribute: 'show-cancel'})
   showCancel = false;
 
+  /**
+   * 是否显示次要按钮。
+   * @en Whether to show the secondary action.
+   */
   @property({type: Boolean, reflect: true, attribute: 'show-secondary-action'})
   showSecondaryAction = false;
 
+  /**
+   * 是否显示第三操作。
+   * @en Whether to show the tertiary action.
+   */
   @property({type: Boolean, reflect: true, attribute: 'show-tertiary-action'})
   showTertiaryAction = false;
 
+  /**
+   * 第三操作的样子。取值 button、checkbox。
+   * @en Tertiary action form.
+   */
   @property({reflect: true}) tertiary: 'button' | 'checkbox' = 'button';
 
+  /**
+   * 标题。
+   * @en Title text.
+   */
   @property() override title = '';
 
+  /**
+   * 标题前是否显示图标。默认开。要关掉只能在脚本里设为 false。
+   * @en Whether to show the icon before the title. Defaults to true.
+   */
   @property({type: Boolean, reflect: true, attribute: 'leading-item'})
   leadingItem = true;
 
+  /**
+   * 副标题。还要打开 show-subtitle 才会显示。
+   * @en Subtitle text. Also requires show-subtitle.
+   */
   @property() subtitle = '';
 
+  /**
+   * 是否显示副标题。
+   * @en Whether to show the subtitle.
+   */
   @property({type: Boolean, reflect: true, attribute: 'show-subtitle'})
   showSubtitle = false;
 
-  /** Shows the corner close button. The attribute is `close`. */
+  /**
+   * 是否显示右上角关闭按钮。HTML 属性是 close。
+   * @en Whether to show the corner close button. The attribute is close.
+   */
   @property({type: Boolean, reflect: true, attribute: 'close'})
   closeButton = false;
 

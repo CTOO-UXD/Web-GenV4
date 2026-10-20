@@ -89,6 +89,7 @@ async function updateDocFileApiSection(
       '五种按钮的属性相同，下表适用于 `<md-filled-button>`、`<md-filled-tonal-button>`、`<md-elevated-button>`、`<md-outlined-button>`、`<md-text-button>`。',
     'icon-button.md':
       '四种图标按钮的属性相同，下表适用于 `<md-icon-button>`、`<md-filled-icon-button>`、`<md-filled-tonal-icon-button>`、`<md-outlined-icon-button>`。',
+    'modal.md': '四类弹窗的属性不同，下面分表列出。',
     'text-input.md':
       '三种输入的属性相同，下表适用于 `<md-text-input>`、`<md-action-input>`、`<md-text-area>`。',
   };
@@ -96,7 +97,13 @@ async function updateDocFileApiSection(
 
   for (const elementEntrypoint of elementEntrypoints) {
     elementTableSections.push(
-      generateTableSection(elementEntrypoint, packagePath, analyzer, zhHeaders),
+      generateTableSection(
+        elementEntrypoint,
+        packagePath,
+        analyzer,
+        zhHeaders,
+        docFileName,
+      ),
     );
   }
 
@@ -133,6 +140,7 @@ function generateTableSection(
   packagePath: string,
   analyzer: Analyzer,
   zhHeaders = false,
+  docFileName = '',
 ): ElementTableSection {
   const elementDoc = analyzeElementApi(
     analyzer,
@@ -140,15 +148,22 @@ function generateTableSection(
   );
   const tables: MarkdownTableSection[] = [];
 
-  const propertiesTable = generateFieldMarkdownTable(elementDoc, zhHeaders);
+  const propertiesTable = generateFieldMarkdownTable(
+    elementDoc,
+    zhHeaders,
+    docFileName === 'modal.md',
+  );
   const methodsTable = generateMethodMarkdownTable(elementDoc);
-  const eventsTable = generateEventsMarkdownTable(elementDoc);
+  const eventsTable = generateEventsMarkdownTable(
+    elementDoc,
+    docFileName === 'modal.md',
+  );
 
   if (propertiesTable.rows.length > 0) {
     tables.push({name: zhHeaders ? '属性' : 'Properties', table: propertiesTable});
   }
 
-  if (methodsTable.rows.length > 0) {
+  if (docFileName !== 'modal.md' && methodsTable.rows.length > 0) {
     tables.push({name: 'Methods', table: methodsTable});
   }
 
@@ -156,9 +171,21 @@ function generateTableSection(
     tables.push({name: zhHeaders ? '事件' : 'Events', table: eventsTable});
   }
 
+  const zhTitles: {[key: string]: string} = {
+    'modal/modal.ts': '对话弹窗',
+    'hero-modal/hero-modal.ts': '主视觉弹窗',
+    'feature-tour-modal/feature-tour-modal.ts': '功能引导',
+    'loading-modal/loading-modal.ts': '加载弹窗',
+  };
+  const zhTitle = zhTitles[elementEntrypoint];
+
   return {
-    className: zhHeaders ? '' : elementDoc.className,
-    customElementName: zhHeaders ? '' : elementDoc.customElementName || '',
+    className: zhTitle ?? (zhHeaders ? '' : elementDoc.className),
+    customElementName: zhTitle
+      ? elementDoc.customElementName || ''
+      : zhHeaders
+        ? ''
+        : elementDoc.customElementName || '',
     summary: elementDoc.summary ?? '',
     description: elementDoc.description ?? '',
     tables,
@@ -204,6 +231,7 @@ function updateRow<T extends {[key: string]: unknown}>(
 function generateFieldMarkdownTable(
   element: MdModuleInfo,
   zhHeaders = false,
+  hideAnimationFields = false,
 ): MarkdownTable {
   const propertiesTable = new MarkdownTable(
     zhHeaders
@@ -229,6 +257,14 @@ function generateFieldMarkdownTable(
    */
   const generateRow = (property: MdPropertyInfo) => {
     if (property.privacy !== 'public') {
+      return;
+    }
+
+    if (
+      hideAnimationFields &&
+      (property.name === 'getOpenAnimation' ||
+        property.name === 'getCloseAnimation')
+    ) {
       return;
     }
 
@@ -371,14 +407,21 @@ function generateMethodMarkdownTable(element: MdModuleInfo): MarkdownTable {
  * generate the events table.
  * @returns A Markdown table where the rows are the events of the element.
  */
-function generateEventsMarkdownTable(element: MdModuleInfo): MarkdownTable {
-  const eventsTable = new MarkdownTable([
-    'Event',
-    'Type',
-    '[Bubbles](https://developer.mozilla.org/en-US/docs/Web/API/Event/bubbles)',
-    '[Composed](https://developer.mozilla.org/en-US/docs/Web/API/Event/composed)',
-    'Description',
-  ]);
+function generateEventsMarkdownTable(
+  element: MdModuleInfo,
+  zhHeaders = false,
+): MarkdownTable {
+  const eventsTable = new MarkdownTable(
+    zhHeaders
+      ? ['事件', '类型', '冒泡', '穿透', '说明']
+      : [
+          'Event',
+          'Type',
+          '[Bubbles](https://developer.mozilla.org/en-US/docs/Web/API/Event/bubbles)',
+          '[Composed](https://developer.mozilla.org/en-US/docs/Web/API/Event/composed)',
+          'Description',
+        ],
+  );
   const eventNameOrder: string[] = [];
   const eventToRow = new Map<
     string,
@@ -400,7 +443,9 @@ function generateEventsMarkdownTable(element: MdModuleInfo): MarkdownTable {
         type: event.type,
         bubbles: event.bubbles,
         composed: event.composed,
-        description: event.description,
+        description: zhHeaders
+          ? event.description?.split(/@en\b/)[0].trim()
+          : event.description,
       };
 
       const isEventInSubclass = eventToRow.has(event.name);
@@ -423,8 +468,8 @@ function generateEventsMarkdownTable(element: MdModuleInfo): MarkdownTable {
     eventsTable.addRow([
       `\`${rowObj.name}\``,
       rowObj.type ? `\`${rowObj.type}\`` : '`Event`',
-      rowObj.bubbles ? 'Yes' : 'No',
-      rowObj.composed ? 'Yes' : 'No',
+      rowObj.bubbles ? (zhHeaders ? '是' : 'Yes') : zhHeaders ? '否' : 'No',
+      rowObj.composed ? (zhHeaders ? '是' : 'Yes') : zhHeaders ? '否' : 'No',
       rowObj.description ?? '',
     ]);
   }

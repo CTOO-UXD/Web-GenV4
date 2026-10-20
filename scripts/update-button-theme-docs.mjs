@@ -105,7 +105,7 @@ function renames(source) {
   return renamed;
 }
 
-function tableFromSources(wrapper, version, prefix, title, tag) {
+function tableFromSources(wrapper, version, prefix, title, tag, stylePath = '') {
   const values = version ? defaultsFromVersion(version) : new Map();
   for (const [name, value] of hardcoded(wrapper)) {
     values.set(name, value);
@@ -127,12 +127,15 @@ function tableFromSources(wrapper, version, prefix, title, tag) {
     }
     return `| \`${prefix}${token}\` | \`${value}\` |`;
   });
+  const styleLink = stylePath
+    ? `\n全部样式：[${stylePath}](https://github.com/CTOO-UXD/Web-GenV4/blob/main/${stylePath})\n`
+    : '';
   return `### ${title} \`<${tag}>\`
 
 | 变量 | 默认值 |
 | --- | --- |
 ${rows.join('\n')}
-`;
+${styleLink}`;
 }
 
 function variantTable(fileBase, title, tag) {
@@ -204,6 +207,33 @@ const aiInputWrapper = await readFile(
 await writeTheme('ai-input.md', [
   tableFromSources(aiInputWrapper, '', '--md-ai-input-', 'Ai Input', 'md-ai-input'),
 ]);
+
+const modalThemes = [
+  ['modal', '对话弹窗', 'md-modal', 'modal/internal/_modal.scss'],
+  ['hero-modal', '主视觉弹窗', 'md-hero-modal', 'hero-modal/internal/_hero-modal.scss'],
+  [
+    'feature-tour-modal',
+    '功能引导',
+    'md-feature-tour-modal',
+    'feature-tour-modal/internal/_feature-tour-modal.scss',
+  ],
+  [
+    'loading-modal',
+    '加载弹窗',
+    'md-loading-modal',
+    'loading-modal/internal/_loading-modal.scss',
+  ],
+];
+const modalSections = await Promise.all(
+  modalThemes.map(async ([fileBase, title, tag, stylePath]) => {
+    const wrapper = await readFile(
+      join(root, 'tokens', `_md-comp-${fileBase}.scss`),
+      'utf8',
+    );
+    return tableFromSources(wrapper, '', `--${tag}-`, title, tag, stylePath);
+  }),
+);
+await writeTheme('modal.md', modalSections);
 
 const textInputWrapper = await readFile(
   join(root, 'tokens', '_md-comp-text-input.scss'),

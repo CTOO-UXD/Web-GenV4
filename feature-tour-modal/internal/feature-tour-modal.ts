@@ -34,13 +34,17 @@ function ensurePageStyles(host: HTMLElement) {
 /**
  * A feature-tour card. It has no scrim and does not trap focus.
  *
- * @fires open {Event} Dispatched when the card is opening.
- * @fires opened {Event} Dispatched when the card has opened.
- * @fires close {Event} Dispatched when the card is closing.
- * @fires closed {Event} Dispatched when the card has closed.
- * @fires cancel {Event} Dispatched when Escape or cancel closes it.
+ * @fires open {Event} 正要打开。调用 preventDefault 可以拦住。 @en Dispatched when the card is opening.
+ * @fires opened {Event} 打开动画结束后发出。 @en Dispatched when the card has opened.
+ * @fires close {Event} 正要关闭。调用 preventDefault 可以拦住。 @en Dispatched when the card is closing.
+ * @fires closed {Event} 关闭动画结束后发出。 @en Dispatched when the card has closed.
+ * @fires cancel {Event} 按 Esc 或点取消按钮时发出。没有遮罩。调用 preventDefault 可以拦住。 @en Dispatched when Escape or cancel closes it.
  */
 export class FeatureTourModal extends LitElement {
+  /**
+   * 是否打开。
+   * @en Whether the card is open.
+   */
   @property({type: Boolean})
   get open() {
     return this.isOpen;
@@ -63,35 +67,77 @@ export class FeatureTourModal extends LitElement {
     }
   }
 
-  /** Which control closed the card. Empty when canceled. */
+  /**
+   * 关掉时写入。主按钮是 primary，次要是 secondary，第三操作是 tertiary，关闭按钮是 close。取消时为空。walkthrough 最后一页的下一步是 done。只能用脚本读写。
+   * @en Which control closed the card. Empty when canceled.
+   */
   @property({attribute: false}) returnValue = '';
 
+  /**
+   * 箭头方向。取值 left、top、right、bottom。
+   * @en Which side the caret sits on.
+   */
   @property({reflect: true}) caret: 'left' | 'top' | 'right' | 'bottom' =
     'bottom';
 
+  /**
+   * 箭头靠起点、居中或靠终点。取值 start、center、end。
+   * @en Where the caret sits along that side.
+   */
   @property({reflect: true, attribute: 'caret-position'})
   caretPosition: 'start' | 'center' | 'end' = 'center';
 
+  /**
+   * default 是说明，walkthrough 是分页。previous 和 next 只在 walkthrough 出现。
+   * @en default is one explanation. walkthrough pages through content.
+   */
   @property({reflect: true}) type: 'default' | 'walkthrough' = 'default';
 
+  /**
+   * 正文是否留内容边距。默认开。要关掉只能在脚本里设为 false。
+   * @en Whether body content keeps the content margin. Defaults to true.
+   */
   @property({type: Boolean, reflect: true, attribute: 'content-margin'})
   contentMargin = true;
 
+  /**
+   * 内容超出时是否可以滚动。默认关，超出部分被裁掉。
+   * @en Whether overflowing content can scroll.
+   */
   @property({type: Boolean, reflect: true, attribute: 'scroll-bar'})
   scrollBar = false;
 
+  /**
+   * 是否显示取消按钮。只在 default 出现。
+   * @en Whether to show the cancel button.
+   */
   @property({type: Boolean, reflect: true, attribute: 'show-cancel'})
   showCancel = false;
 
+  /**
+   * 是否显示次要按钮。只在 default 出现。
+   * @en Whether to show the secondary action.
+   */
   @property({type: Boolean, reflect: true, attribute: 'show-secondary-action'})
   showSecondaryAction = false;
 
+  /**
+   * 是否显示第三操作。只在 default 出现。
+   * @en Whether to show the tertiary action.
+   */
   @property({type: Boolean, reflect: true, attribute: 'show-tertiary-action'})
   showTertiaryAction = false;
 
+  /**
+   * 第三操作的样子。取值 button、checkbox。
+   * @en Tertiary action form.
+   */
   @property({reflect: true}) tertiary: 'button' | 'checkbox' = 'button';
 
-  /** Shows the close button on the hero. The attribute is `close`. */
+  /**
+   * 是否显示主图上的关闭按钮。HTML 属性是 close。默认开。要关掉只能在脚本里设为 false。
+   * @en Whether to show the close button on the hero. The attribute is close.
+   */
   @property({type: Boolean, reflect: true, attribute: 'close'})
   closeButton = true;
 

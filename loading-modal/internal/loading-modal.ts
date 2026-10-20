@@ -17,13 +17,17 @@ import {
 /**
  * A loading panel. `modal` covers the page. `inline` sits in the page.
  *
- * @fires open {Event} Dispatched when a modal is opening.
- * @fires opened {Event} Dispatched when a modal has opened.
- * @fires close {Event} Dispatched when a modal is closing.
- * @fires closed {Event} Dispatched when a modal has closed.
- * @fires cancel {Event} Dispatched when the cancel button is pressed.
+ * @fires open {Event} 正要打开。只在 container 为 modal 时发出。调用 preventDefault 可以拦住。 @en Dispatched when a modal is opening.
+ * @fires opened {Event} 打开动画结束后发出。 @en Dispatched when a modal has opened.
+ * @fires close {Event} 正要关闭。调用 preventDefault 可以拦住。 @en Dispatched when a modal is closing.
+ * @fires closed {Event} 关闭动画结束后发出。 @en Dispatched when a modal has closed.
+ * @fires cancel {Event} 点取消按钮时发出。遮罩和 Esc 不会发出。调用 preventDefault 可以拦住。取消不改 returnValue。 @en Dispatched when the cancel button is pressed.
  */
 export class LoadingModal extends LitElement {
+  /**
+   * 是否打开。container 为 inline 时不看这个属性。
+   * @en Whether the modal is open. Ignored when container is inline.
+   */
   @property({type: Boolean})
   get open() {
     return this.isOpen;
@@ -47,25 +51,47 @@ export class LoadingModal extends LitElement {
     this.close();
   }
 
-  /** Which control closed the modal. Unchanged when canceled. */
+  /**
+   * 关掉时写入。关闭按钮是 close。点取消不改这个值。只能用脚本读写。
+   * @en Which control closed the modal. Unchanged when canceled.
+   */
   @property({attribute: false}) returnValue = '';
 
+  /**
+   * 尺寸。取值 large、medium、small。小号不显示标题、说明、关闭和取消。
+   * @en Size. small hides the title, message, close button, and cancel button.
+   */
   @property({reflect: true}) size: 'large' | 'medium' | 'small' = 'large';
 
+  /**
+   * modal 是带遮罩的卡片。inline 留在页面里，没有卡片底、阴影和遮罩。
+   * @en modal covers the page. inline sits in the page.
+   */
   @property({reflect: true}) container: 'modal' | 'inline' = 'modal';
 
-  /** Shows the corner or row close button. The attribute is `close`. */
+  /**
+   * 是否显示关闭按钮。HTML 属性是 close。只在 modal 且不是小号时出现。
+   * @en Whether to show the close button. The attribute is close.
+   */
   @property({type: Boolean, reflect: true, attribute: 'close'})
   closeButton = false;
 
-  /** Shows the filled cancel button. */
+  /**
+   * 是否显示实心取消按钮。只在 modal 且不是小号时出现。
+   * @en Whether to show the filled cancel button.
+   */
   @property({type: Boolean, reflect: true}) actions = false;
 
   /**
-   * Replaces the spinner with a check. The panel stays open until `close()`.
+   * 打开后转圈换成勾，卡片不自己关。show() 再打开时回到转圈。inline 没有 show()，把 complete 设回 false 即可。
+   * @en Replaces the spinner with a check. The panel stays open until close().
    */
   @property({type: Boolean, reflect: true}) complete = false;
 
+  /**
+   * 标题。小号不显示。
+   * @en Title text. Hidden when size is small.
+   */
   @property() override title = '';
 
   getOpenAnimation = () => DIALOG_DEFAULT_OPEN_ANIMATION;
@@ -82,7 +108,7 @@ export class LoadingModal extends LitElement {
   @query('.panel') private readonly panel!: HTMLElement | null;
   private cancelAnimations?: AbortController;
 
-  get supportsControls() {
+  private get supportsControls() {
     return !this.isInline && this.size !== 'small';
   }
 

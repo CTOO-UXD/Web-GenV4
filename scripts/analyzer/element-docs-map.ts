@@ -28,6 +28,12 @@ export const docsToElementMapping: {[key: string]: readonly string[]} = {
   'icon.md': COMPONENT_CUSTOM_ELEMENTS.icon,
   'list.md': COMPONENT_CUSTOM_ELEMENTS.list,
   'menu.md': COMPONENT_CUSTOM_ELEMENTS.menu,
+  'modal.md': [
+    'modal/modal.ts',
+    'hero-modal/hero-modal.ts',
+    'feature-tour-modal/feature-tour-modal.ts',
+    'loading-modal/loading-modal.ts',
+  ],
   'progress.md': COMPONENT_CUSTOM_ELEMENTS.progress,
   'radio.md': COMPONENT_CUSTOM_ELEMENTS.radio,
   'ripple.md': COMPONENT_CUSTOM_ELEMENTS.ripple,
