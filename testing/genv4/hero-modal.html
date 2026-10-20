@@ -38,10 +38,12 @@
       <label>size <select id="size"></select></label>
       <label>type <select id="type"></select></label>
       <label>width <input id="width" type="number" placeholder="默认" /></label>
+      <label>tertiary <select id="tertiary"></select></label>
       <label><input id="margin" type="checkbox" checked /> content margin</label>
       <label><input id="scroll" type="checkbox" /> scroll bar</label>
-      <label><input id="cancel" type="checkbox" checked /> cancel</label>
-      <label><input id="checkbox" type="checkbox" /> checkbox</label>
+      <label><input id="cancel" type="checkbox" /> cancel</label>
+      <label><input id="secondary" type="checkbox" /> secondary</label>
+      <label><input id="tertiaryAction" type="checkbox" /> tertiary</label>
       <label><input id="close" type="checkbox" checked /> close</label>
       <button id="open" type="button">打开</button>
     </fieldset>
@@ -67,7 +69,8 @@
       </section>
       <span slot="primary">主要</span>
       <span slot="cancel">取消</span>
-      <span slot="checkbox">记住这个选择</span>
+      <span slot="secondary">次要</span>
+      <span slot="tertiary">第三操作</span>
       <md-outlined-icon-button slot="previous" aria-label="上一页">
         <md-icon>arrow_back</md-icon>
       </md-outlined-icon-button>
@@ -85,6 +88,7 @@
       const selects = {
         size: ['mobile', 'tablet', 'pc'],
         type: ['default', 'walkthrough'],
+        tertiary: ['button', 'checkbox'],
       };
       for (const [id, values] of Object.entries(selects)) {
         const select = document.querySelector('#' + id);
@@ -102,7 +106,8 @@
         ['margin', 'contentMargin'],
         ['scroll', 'scrollBar'],
         ['cancel', 'showCancel'],
-        ['checkbox', 'showCheckbox'],
+        ['secondary', 'showSecondaryAction'],
+        ['tertiaryAction', 'showTertiaryAction'],
         ['close', 'closeButton'],
       ];
       for (const [id, prop] of flags) {

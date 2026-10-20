@@ -76,11 +76,15 @@ export class HeroModal extends LitElement {
   scrollBar = false;
 
   @property({type: Boolean, reflect: true, attribute: 'show-cancel'})
-  showCancel = true;
+  showCancel = false;
 
-  /** Shows the footer checkbox. It does not close the modal. */
-  @property({type: Boolean, reflect: true, attribute: 'show-checkbox'})
-  showCheckbox = false;
+  @property({type: Boolean, reflect: true, attribute: 'show-secondary-action'})
+  showSecondaryAction = false;
+
+  @property({type: Boolean, reflect: true, attribute: 'show-tertiary-action'})
+  showTertiaryAction = false;
+
+  @property({reflect: true}) tertiary: 'button' | 'checkbox' = 'button';
 
   /** Shows the corner close button. The attribute is `close`. */
   @property({type: Boolean, reflect: true, attribute: 'close'})
@@ -242,23 +246,40 @@ export class HeroModal extends LitElement {
 
   private renderDefaultActions() {
     return html`<div class="default-actions">
-      ${this.showCheckbox
-        ? html`<div class="check">
-            <md-checkbox touch-target="none"></md-checkbox>
-            <slot name="checkbox" @click=${this.toggleCheckbox}></slot>
-          </div>`
-        : nothing}
+      ${this.renderTertiary()}
       <div class="end">
-        <md-filled-button @click=${() => this.close('primary')}>
-          <slot name="primary"></slot>
-        </md-filled-button>
         ${this.showCancel
           ? html`<md-text-button @click=${this.cancelFromControl}>
               <slot name="cancel"></slot>
             </md-text-button>`
           : nothing}
+        ${this.showSecondaryAction
+          ? html`<md-outlined-button @click=${() => this.close('secondary')}>
+              <slot name="secondary"></slot>
+            </md-outlined-button>`
+          : nothing}
+        <md-filled-button @click=${() => this.close('primary')}>
+          <slot name="primary"></slot>
+        </md-filled-button>
       </div>
     </div>`;
+  }
+
+  private renderTertiary() {
+    if (!this.showTertiaryAction) {
+      return nothing;
+    }
+    if (this.tertiary === 'checkbox') {
+      return html`<div class="start">
+        <md-checkbox touch-target="none"></md-checkbox>
+        <slot name="tertiary" @click=${this.toggleCheckbox}></slot>
+      </div>`;
+    }
+    return html`<md-text-button
+      class="start"
+      @click=${() => this.close('tertiary')}>
+      <slot name="tertiary"></slot>
+    </md-text-button>`;
   }
 
   private renderWalkthrough() {

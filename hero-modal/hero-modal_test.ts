@@ -155,7 +155,9 @@ describe('<md-hero-modal>', () => {
     expect(modal.returnValue).toBe('');
 
     await modal.show();
+    modal.showCancel = true;
     modal.returnValue = 'kept';
+    await modal.updateComplete;
     buttonWith(modal, 'md-text-button', 'Cancel').click();
     await env.waitForStability();
     expect(cancel).toHaveBeenCalledTimes(2);
@@ -191,6 +193,8 @@ describe('<md-hero-modal>', () => {
     expect(modal.returnValue).toBe('close');
 
     await modal.show();
+    modal.showCancel = true;
+    await modal.updateComplete;
     const primary = buttonWith(modal, 'md-filled-button', 'Primary');
     const cancel = buttonWith(modal, 'md-text-button', 'Cancel');
     expect(primary.getBoundingClientRect().top).toBeLessThan(cancel.getBoundingClientRect().top);
@@ -209,36 +213,61 @@ describe('<md-hero-modal>', () => {
     expect(modal.returnValue).toBe('primary');
   });
 
-  it('keeps an optional checkbox from closing the modal', async () => {
-    const modal = await setup(html`<md-hero-modal show-checkbox>
+  it('uses the optional footer actions', async () => {
+    const modal = await setup(html`<md-hero-modal
+      show-cancel
+      show-secondary-action
+      show-tertiary-action>
       <div slot="hero"></div>
       <section>Short</section>
       <span slot="primary">Primary</span>
       <span slot="cancel">Cancel</span>
-      <span slot="checkbox">Remember</span>
+      <span slot="secondary">Secondary</span>
+      <span slot="tertiary">Tertiary</span>
     </md-hero-modal>`);
-    expect(modal.showCheckbox).toBeTrue();
     await modal.show();
-    expect(modal.shadowRoot!.querySelector('md-checkbox')).not.toBeNull();
+    const primary = buttonWith(modal, 'md-filled-button', 'Primary');
+    const secondary = buttonWith(modal, 'md-outlined-button', 'Secondary');
+    const cancel = buttonWith(modal, 'md-text-button', 'Cancel');
+    const tertiary = buttonWith(modal, 'md-text-button', 'Tertiary');
+    expect(tertiary.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      primary.getBoundingClientRect().top,
+    );
+    expect(primary.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      secondary.getBoundingClientRect().top,
+    );
+    expect(secondary.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      cancel.getBoundingClientRect().top,
+    );
 
-    modal.showCheckbox = false;
-    await modal.updateComplete;
-    expect(modal.shadowRoot!.querySelector('md-checkbox')).toBeNull();
-
-    modal.showCheckbox = true;
     modal.size = 'tablet';
+    await modal.updateComplete;
+    expect(tertiary.getBoundingClientRect().right).toBeLessThanOrEqual(
+      cancel.getBoundingClientRect().left,
+    );
+    expect(cancel.getBoundingClientRect().right).toBeLessThanOrEqual(
+      secondary.getBoundingClientRect().left,
+    );
+    expect(secondary.getBoundingClientRect().right).toBeLessThanOrEqual(
+      primary.getBoundingClientRect().left,
+    );
+
+    secondary.click();
+    await env.waitForStability();
+    expect(modal.open).toBeFalse();
+    expect(modal.returnValue).toBe('secondary');
+
+    modal.tertiary = 'checkbox';
+    modal.returnValue = '';
+    await modal.show();
+    const label = modal.querySelector<HTMLElement>('[slot="tertiary"]')!;
+    label.click();
     await modal.updateComplete;
     const box = modal.shadowRoot!.querySelector('md-checkbox') as HTMLElement & {
       checked: boolean;
     };
-    const label = modal.querySelector<HTMLElement>('[slot="checkbox"]')!;
-    const cancel = buttonWith(modal, 'md-text-button', 'Cancel');
-    label.click();
     expect(box.checked).toBeTrue();
     expect(modal.open).toBeTrue();
-    expect(box.getBoundingClientRect().right).toBeLessThanOrEqual(
-      cancel.getBoundingClientRect().left,
-    );
   });
 
   it('uses surface, on-surface, and primary', async () => {
@@ -273,25 +302,25 @@ describe('<md-hero-modal>', () => {
     const body = modal.querySelector('p')!;
     const extra = modal.querySelector('div')!;
     expect(getComputedStyle(title).marginTop).toBe('16px');
-    expect(getComputedStyle(title).marginLeft).toBe('16px');
-    expect(getComputedStyle(title).marginRight).toBe('16px');
+    expect(getComputedStyle(title).marginLeft).toBe('20px');
+    expect(getComputedStyle(title).marginRight).toBe('20px');
     expect(getComputedStyle(title).marginBottom).toBe('0px');
     expect(getComputedStyle(body).marginTop).toBe('8px');
-    expect(getComputedStyle(body).marginLeft).toBe('16px');
+    expect(getComputedStyle(body).marginLeft).toBe('20px');
     expect(getComputedStyle(body).marginBottom).toBe('16px');
     expect(getComputedStyle(extra).marginTop).toBe('0px');
     expect(getComputedStyle(extra).marginLeft).toBe('20px');
 
     modal.size = 'pc';
     await modal.updateComplete;
-    expect(getComputedStyle(title).marginLeft).toBe('16px');
+    expect(getComputedStyle(title).marginLeft).toBe('32px');
     expect(getComputedStyle(body).marginBottom).toBe('16px');
     expect(getComputedStyle(extra).marginLeft).toBe('32px');
 
     modal.contentMargin = false;
     await modal.updateComplete;
-    expect(getComputedStyle(title).marginLeft).toBe('16px');
-    expect(getComputedStyle(body).marginLeft).toBe('16px');
+    expect(getComputedStyle(title).marginLeft).toBe('32px');
+    expect(getComputedStyle(body).marginLeft).toBe('32px');
     expect(getComputedStyle(extra).marginRight).toBe('0px');
     expect(getComputedStyle(title).marginTop).toBe('16px');
   });

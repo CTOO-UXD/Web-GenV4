@@ -2,6 +2,17 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-20
+
+* 主图弹窗底栏改成三个可选按钮，标题左右与同档内容边距对齐
+  * `hero-modal/hero-modal.ts`
+  * `hero-modal/internal/hero-modal.ts`
+  * `hero-modal/internal/_hero-modal.scss`
+  * `hero-modal/hero-modal_test.ts`
+  * `testing/genv4/hero-modal.html`
+  * `feature-tour-modal/internal/_feature-tour-modal.scss`
+  * `feature-tour-modal/feature-tour-modal_test.ts`
+
 ## 2026-10-19
 
 * 新增功能引导卡片，用来在页面旁边分步说明；内容边距不再带动标题

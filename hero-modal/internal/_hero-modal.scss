@@ -53,7 +53,7 @@ $primary: var(--md-sys-color-primary, #6c43c6);
     font-size: var(--md-sys-typescale-headline-medium-size, 1.75rem);
     font-weight: 700;
     line-height: var(--md-sys-typescale-headline-medium-line-height, 2.25rem);
-    margin: var(--_title-padding);
+    margin: var(--_title-padding) var(--_inline);
   }
 
   #{$page} :is(h1, h2, h3):has(+ p) {
@@ -63,13 +63,14 @@ $primary: var(--md-sys-color-primary, #6c43c6);
   #{$page} p {
     font-size: var(--md-sys-typescale-body-large-size, 1rem);
     line-height: var(--md-sys-typescale-body-large-line-height, 1.5rem);
-    margin: var(--_title-gap) var(--_title-padding) var(--_title-padding);
+    margin: var(--_title-gap) var(--_inline) var(--_title-padding);
   }
 
   #{$page} > #{$content} {
     margin: 0 var(--_inline);
   }
 
+  md-hero-modal:is([size='tablet'], [size='pc']) > :not([slot]) :is(h1, h2, h3, p),
   md-hero-modal:is([size='tablet'], [size='pc']) > :not([slot]) > #{$content} {
     margin-inline: var(--_inline-wide);
   }
@@ -261,26 +262,29 @@ $primary: var(--md-sys-color-primary, #6c43c6);
     padding: var(--_inline) var(--_inline) var(--_inline) var(--_inline-wide);
   }
 
-  .default-actions {
+  .default-actions,
+  .start,
+  .end {
+    align-items: center;
     display: flex;
-    flex-direction: column;
+  }
+
+  .default-actions,
+  .end,
+  .start {
     gap: var(--_title-gap);
+  }
+
+  .default-actions {
+    flex-direction: column;
   }
 
   .end {
-    display: flex;
-    flex-direction: column;
-    gap: var(--_title-gap);
+    flex-direction: column-reverse;
     width: 100%;
   }
 
-  .check {
-    align-items: center;
-    display: flex;
-    gap: var(--_title-gap);
-  }
-
-  .check ::slotted(*) {
+  .start ::slotted(*) {
     color: $on-surface;
     font-size: var(--md-sys-typescale-body-medium-size, 0.875rem);
     line-height: var(--md-sys-typescale-body-medium-line-height, 1.25rem);
@@ -291,15 +295,19 @@ $primary: var(--md-sys-color-primary, #6c43c6);
     width: 100%;
   }
 
+  .default-actions md-text-button,
+  .default-actions md-outlined-button {
+    align-self: center;
+  }
+
   :host([size='tablet']),
   :host([size='pc']) {
     .default-actions {
-      align-items: center;
       flex-direction: row;
       justify-content: flex-end;
     }
 
-    .check {
+    .start {
       margin-inline-end: auto;
     }
 
@@ -308,15 +316,21 @@ $primary: var(--md-sys-color-primary, #6c43c6);
       width: auto;
     }
 
-    .default-actions md-filled-button {
-      order: 1;
+    .default-actions md-filled-button,
+    .default-actions md-text-button,
+    .default-actions md-outlined-button {
+      align-self: center;
       width: auto;
     }
   }
 
   .default-actions md-text-button {
-    align-self: center;
     @include button-color('text-button', 'label-text', $on-surface);
+  }
+
+  .default-actions md-outlined-button {
+    @include button-color('outlined-button', 'label-text', $on-surface);
+    @include button-color('outlined-button', 'outline', $on-surface);
   }
 
   .walk {

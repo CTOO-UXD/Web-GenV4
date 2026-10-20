@@ -46,7 +46,7 @@ $surface: var(--md-sys-color-surface, #fff);
     font-size: var(--md-sys-typescale-headline-medium-size, 1.75rem);
     font-weight: 700;
     line-height: var(--md-sys-typescale-headline-medium-line-height, 2.25rem);
-    margin: var(--_inset);
+    margin: var(--_inset) var(--_inline);
   }
 
   #{$page} :is(h1, h2, h3):has(+ p) {
@@ -56,7 +56,7 @@ $surface: var(--md-sys-color-surface, #fff);
   #{$page} p {
     font-size: var(--md-sys-typescale-body-large-size, 1rem);
     line-height: var(--md-sys-typescale-body-large-line-height, 1.5rem);
-    margin: var(--_title-gap) var(--_inset) var(--_inset);
+    margin: var(--_title-gap) var(--_inline) var(--_inset);
   }
 
   #{$page} > #{$content} {

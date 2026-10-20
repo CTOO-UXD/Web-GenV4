@@ -206,12 +206,12 @@ describe('<md-feature-tour-modal>', () => {
     const headingStyle = getComputedStyle(heading);
     expect(headingStyle.fontWeight).toBe('700');
     expect(headingStyle.marginTop).toBe('16px');
-    expect(headingStyle.marginLeft).toBe('16px');
+    expect(headingStyle.marginLeft).toBe('32px');
     expect(getComputedStyle(extra).marginLeft).toBe('32px');
 
     modal.contentMargin = false;
     await modal.updateComplete;
-    expect(getComputedStyle(heading).marginLeft).toBe('16px');
+    expect(getComputedStyle(heading).marginLeft).toBe('32px');
     expect(getComputedStyle(extra).marginLeft).toBe('0px');
   });
 
