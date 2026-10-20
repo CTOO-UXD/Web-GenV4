@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Process stepper</title>
+    <style>
+      body {
+        background: #fff;
+        color: #1c1b1b;
+        font: 14px/20px sans-serif;
+        margin: 24px;
+      }
+
+      section {
+        margin-block: 28px;
+      }
+
+      h2 {
+        font-size: 16px;
+        margin: 0 0 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h2>横向 · 序号</h2>
+      <md-process-stepper>
+        <md-process-step state="complete">账户</md-process-step>
+        <md-process-step state="in-progress">资料</md-process-step>
+        <md-process-step>确认</md-process-step>
+        <md-process-step state="disabled">完成</md-process-step>
+      </md-process-stepper>
+    </section>
+
+    <section>
+      <h2>横向 · 连续禁用才是灰线</h2>
+      <md-process-stepper>
+        <md-process-step>一</md-process-step>
+        <md-process-step state="disabled">二</md-process-step>
+        <md-process-step state="disabled">三</md-process-step>
+        <md-process-step>四</md-process-step>
+      </md-process-stepper>
+    </section>
+
+    <section>
+      <h2>横向 · 图标</h2>
+      <md-process-stepper type="icon">
+        <md-process-step icon="mail" state="complete">邮件</md-process-step>
+        <md-process-step icon="edit" state="in-progress">填写</md-process-step>
+        <md-process-step icon="search">查找</md-process-step>
+        <md-process-step icon="block" state="disabled">停用</md-process-step>
+        <md-process-step>没写连字</md-process-step>
+      </md-process-stepper>
+    </section>
+
+    <section>
+      <h2>横向 · 空圈</h2>
+      <md-process-stepper type="empty">
+        <md-process-step state="complete">完成</md-process-step>
+        <md-process-step state="in-progress">进行中</md-process-step>
+        <md-process-step>未开始</md-process-step>
+        <md-process-step state="disabled">禁用</md-process-step>
+      </md-process-stepper>
+    </section>
+
+    <section>
+      <h2>横向 · 两步同时进行中</h2>
+      <md-process-stepper>
+        <md-process-step state="complete">一</md-process-step>
+        <md-process-step state="in-progress">二</md-process-step>
+        <md-process-step state="in-progress">三</md-process-step>
+      </md-process-stepper>
+    </section>
+
+    <section>
+      <h2>竖向 · 序号</h2>
+      <md-process-stepper orientation="vertical" style="height: 420px">
+        <md-process-step state="complete">账户</md-process-step>
+        <md-process-step state="in-progress">资料</md-process-step>
+        <md-process-step>确认</md-process-step>
+        <md-process-step state="disabled">审核</md-process-step>
+        <md-process-step state="disabled">完成</md-process-step>
+      </md-process-stepper>
+    </section>
+
+    <section>
+      <h2>横向 · 不显示标签</h2>
+      <md-process-stepper id="nolabel" type="number">
+        <md-process-step state="complete">账户</md-process-step>
+        <md-process-step state="in-progress">资料</md-process-step>
+        <md-process-step>确认</md-process-step>
+      </md-process-stepper>
+    </section>
+
+    <script type="module">
+      import '../../process-stepper/process-stepper.js';
+
+      document.querySelector('#nolabel').showLabels = false;
+    </script>
+  </body>
+</html>

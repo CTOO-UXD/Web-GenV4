@@ -4,6 +4,13 @@
 
 ## 2026-10-20
 
+* 新增流程步骤条，页面自己标每一步的状态，线跟着组件的宽高拉开
+  * `process-stepper/`
+  * `tokens/_md-comp-process-stepper.scss`
+  * `tokens/_index.scss`
+  * `all.ts`
+  * `testing/genv4/process-stepper.html`
+
 * 对话弹窗可以用 icon 换成自己的图标连字，不写仍用外观自带的
   * `modal/internal/modal.ts`
   * `modal/modal_test.ts`

@@ -1,0 +1,200 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:list';
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../tokens';
+// go/keep-sorted end
+
+$on-primary: var(--md-sys-color-on-primary, #fff);
+$on-surface-variant: var(--md-sys-color-on-surface-variant, #5f5e60);
+$outline: var(--md-sys-color-outline, #7a757f);
+$primary: var(--md-sys-color-primary, #6c43c6);
+
+@mixin theme($tokens) {
+  $supported-tokens: tokens.$md-comp-process-stepper-supported-tokens;
+
+  @each $token, $value in $tokens {
+    @if list.index($supported-tokens, $token) == null {
+      @error 'Token `#{$token}` is not a supported token.';
+    }
+
+    @if $value {
+      --md-process-stepper-#{$token}: #{$value};
+    }
+  }
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-process-stepper-values();
+
+  :host(md-process-stepper),
+  :host(md-process-step) {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  }
+
+  :host(md-process-stepper) {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  :host(md-process-stepper[orientation='vertical']) {
+    flex-direction: column;
+  }
+
+  :host(md-process-stepper) slot {
+    display: contents;
+  }
+
+  :host(md-process-step) {
+    color: #{$primary};
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    font-size: var(--_label-size);
+    font-weight: var(--_label-weight);
+    gap: var(--_label-gap);
+    line-height: var(--_label-line-height);
+    min-inline-size: var(--_step-min-size);
+  }
+
+  :host(md-process-step[data-last]) {
+    flex: 0 0 auto;
+    min-inline-size: 0;
+  }
+
+  :host(md-process-step[state='disabled']) {
+    color: #{$on-surface-variant};
+  }
+
+  :host(md-process-step[orientation='vertical']) {
+    column-gap: var(--_marker-gap);
+    display: grid;
+    flex: 1 1 auto;
+    grid-template-columns: var(--_circle-size) minmax(0, max-content);
+    grid-template-rows: auto minmax(0, 1fr);
+    inline-size: max-content;
+    min-inline-size: 0;
+    row-gap: 0;
+  }
+
+  :host(md-process-step[orientation='vertical'][data-last]) {
+    flex: 0 0 auto;
+    grid-template-rows: auto;
+  }
+
+  .track {
+    align-items: center;
+    display: flex;
+    min-block-size: var(--_circle-size);
+  }
+
+  .circle {
+    align-items: center;
+    background: transparent;
+    border: var(--_border-size) solid #{$primary};
+    border-radius: 50%;
+    box-sizing: border-box;
+    color: #{$primary};
+    display: grid;
+    flex: none;
+    height: var(--_circle-size);
+    justify-items: center;
+    width: var(--_circle-size);
+  }
+
+  :host(md-process-step[state='complete']) .circle,
+  :host(md-process-step[state='in-progress']) .circle {
+    background: #{$primary};
+    color: #{$on-primary};
+  }
+
+  :host(md-process-step[state='disabled']) .circle {
+    background: transparent;
+    border-color: #{$outline};
+    color: #{$on-surface-variant};
+  }
+
+  .number {
+    font-size: var(--_number-size);
+    font-weight: var(--_number-weight);
+    line-height: var(--_number-line-height);
+  }
+
+  .circle md-icon {
+    --md-icon-size: var(--_marker-size);
+    color: inherit;
+  }
+
+  .trail {
+    display: flex;
+    flex: 1 1 auto;
+    min-inline-size: var(--_trail-min-size);
+    padding-inline: var(--_trail-padding);
+  }
+
+  .trail::before {
+    background: #{$primary};
+    block-size: var(--_trail-size);
+    content: '';
+    flex: 1 1 auto;
+  }
+
+  .trail.completed::before {
+    block-size: var(--_trail-completed-size);
+  }
+
+  .trail.muted::before {
+    background: #{$outline};
+  }
+
+  :host(md-process-step[orientation='vertical']) .track {
+    display: contents;
+  }
+
+  :host(md-process-step[orientation='vertical']) .circle {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  :host(md-process-step[orientation='vertical']) .label {
+    align-self: center;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  :host(md-process-step[orientation='vertical']) .trail {
+    align-self: stretch;
+    box-sizing: border-box;
+    flex-direction: column;
+    grid-column: 1;
+    grid-row: 2;
+    inline-size: var(--_trail-size);
+    justify-self: center;
+    min-block-size: calc(var(--_trail-min-size) + var(--_trail-padding) * 2);
+    min-inline-size: 0;
+    padding-block: var(--_trail-padding);
+    padding-inline: 0;
+  }
+
+  :host(md-process-step[orientation='vertical']) .trail::before {
+    block-size: auto;
+    flex: 1 1 auto;
+    inline-size: 100%;
+  }
+
+  :host(md-process-step[orientation='vertical']) .trail.completed {
+    inline-size: var(--_trail-completed-size);
+  }
+}

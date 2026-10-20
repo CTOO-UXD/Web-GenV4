@@ -1,0 +1,71 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'border-size',
+  'circle-size',
+  'label-gap',
+  'label-line-height',
+  'label-size',
+  'label-weight',
+  'marker-gap',
+  'marker-size',
+  'number-line-height',
+  'number-size',
+  'number-weight',
+  'step-min-size',
+  'trail-completed-size',
+  'trail-min-size',
+  'trail-padding',
+  'trail-size',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $tokens: (
+    'border-size': 2px,
+    'circle-size': 24px,
+    'label-gap': 8px,
+    'label-line-height': 22px,
+    'label-size': 16px,
+    'label-weight': 600,
+    'marker-gap': 8px,
+    'marker-size': 16px,
+    'number-line-height': 16px,
+    'number-size': 12px,
+    'number-weight': 600,
+    'step-min-size': 88px,
+    'trail-completed-size': 3px,
+    'trail-min-size': 32px,
+    'trail-padding': 4px,
+    'trail-size': 2px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-process-stepper-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}
