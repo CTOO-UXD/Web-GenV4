@@ -57,7 +57,7 @@ import 'genv4/loading-modal/loading-modal.js';
 
 ```html
 <md-modal open variant="destructive" size="wide" layout="horizontal"
-    content-margin leading-item close title="删除项目？"
+    content-margin leading-item icon="delete" close title="删除项目？"
     show-subtitle subtitle="此操作无法撤销"
     show-cancel show-secondary-action show-tertiary-action tertiary="checkbox">
   <p>「GenV4 文档」及其 12 个文件会被永久删除。</p>
@@ -160,6 +160,7 @@ import 'genv4/loading-modal/loading-modal.js';
 | `tertiary` | `tertiary` | `"button" \| "checkbox"` | `'button'` | 第三操作的样子。取值 button、checkbox。 |
 | `title` | `title` | `string` | `''` | 标题。 |
 | `leadingItem` | `leading-item` | `boolean` | `true` | 标题前是否显示图标。默认开。要关掉只能在脚本里设为 false。 |
+| `icon` | `icon` | `string` | `''` | 标题前的图标连字。不写就用外观自带的图标。 |
 | `subtitle` | `subtitle` | `string` | `''` | 副标题。还要打开 show-subtitle 才会显示。 |
 | `showSubtitle` | `show-subtitle` | `boolean` | `false` | 是否显示副标题。 |
 | `closeButton` | `close` | `boolean` | `false` | 是否显示右上角关闭按钮。HTML 属性是 close。 |

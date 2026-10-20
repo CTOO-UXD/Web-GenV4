@@ -139,6 +139,12 @@ export class Modal extends LitElement {
   leadingItem = true;
 
   /**
+   * 标题前的图标连字。不写就用外观自带的图标。
+   * @en Icon ligature before the title. The variant icon is used when empty.
+   */
+  @property() icon = '';
+
+  /**
    * 副标题。还要打开 show-subtitle 才会显示。
    * @en Subtitle text. Also requires show-subtitle.
    */
@@ -274,7 +280,7 @@ export class Modal extends LitElement {
             ? html`<header>
                 ${this.leadingItem
                   ? html`<md-icon class="leading" aria-hidden="true"
-                      >${ICONS[this.variant]}</md-icon
+                      >${this.icon || ICONS[this.variant]}</md-icon
                     >`
                   : nothing}
                 <div class="titles">

@@ -4,6 +4,11 @@
 
 ## 2026-10-20
 
+* 对话弹窗可以用 icon 换成自己的图标连字，不写仍用外观自带的
+  * `modal/internal/modal.ts`
+  * `modal/modal_test.ts`
+  * `docs/components/modal.md`
+
 * 弹窗文档里的 open 补上说明和默认值，再生成也不会丢掉
   * `scripts/analyzer/analyze-element.ts`
   * `modal/internal/modal.ts`

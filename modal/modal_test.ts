@@ -177,6 +177,14 @@ describe('<md-modal>', () => {
     modal.variant = 'system';
     await modal.updateComplete;
     expect(iconText(modal)).toBe('system');
+
+    modal.icon = 'bookmark';
+    await modal.updateComplete;
+    expect(iconText(modal)).toBe('bookmark');
+
+    modal.icon = '';
+    await modal.updateComplete;
+    expect(iconText(modal)).toBe('system');
   });
 
   it('hides optional actions and switches the tertiary control', async () => {
