@@ -1,0 +1,81 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'close-inset',
+  'close-size',
+  'content-gap',
+  'content-padding-block-end',
+  'content-padding-block-start',
+  'content-padding-inline',
+  'footer-padding-block-end',
+  'footer-padding-block-start',
+  'footer-padding-inline',
+  'indicator-size',
+  'large-width',
+  'max-width',
+  'medium-title-gap',
+  'medium-width',
+  'message-padding-block-end',
+  'min-width',
+  'small-size',
+  'text-padding-block',
+  'text-padding-inline',
+  'title-gap',
+  'viewport-gutter',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $tokens: (
+    'close-inset': 16px,
+    'close-size': 40px,
+    'content-gap': 8px,
+    'content-padding-block-end': 20px,
+    'content-padding-block-start': 16px,
+    'content-padding-inline': 16px,
+    'footer-padding-block-end': 12px,
+    'footer-padding-block-start': 16px,
+    'footer-padding-inline': 16px,
+    'indicator-size': 48px,
+    'large-width': 520px,
+    'max-width': 520px,
+    'medium-title-gap': 2px,
+    'medium-width': 320px,
+    'message-padding-block-end': 4px,
+    'min-width': 320px,
+    'small-size': 80px,
+    'text-padding-block': 8px,
+    'text-padding-inline': 8px,
+    'title-gap': 4px,
+    'viewport-gutter': 40px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-loading-modal-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loading modal</title>
+    <style>
+      body {
+        font: 14px/20px sans-serif;
+        margin: 24px;
+      }
+
+      label {
+        display: inline-flex;
+        gap: 8px;
+        margin-inline-end: 16px;
+      }
+
+      .row {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-block: 12px;
+      }
+
+      #toolbar {
+        background: #fff;
+        border: none;
+        border-radius: 12px;
+        inset: 16px auto auto 16px;
+        margin: 0;
+        padding: 12px;
+        position: fixed;
+        z-index: 2;
+      }
+
+      md-loading-modal[container='inline'] {
+        margin-block: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <md-loading-modal id="modal" title="Loading">
+    <div class="row" id="toolbar" slot="controls">
+      <label>size
+        <select id="size">
+          <option value="large" selected>large</option>
+          <option value="medium">medium</option>
+          <option value="small">small</option>
+        </select>
+      </label>
+      <label>container
+        <select id="container">
+          <option value="modal" selected>modal</option>
+          <option value="inline">inline</option>
+        </select>
+      </label>
+      <label>title <input id="title" value="Loading" /></label>
+      <label><input id="actions" type="checkbox" /> actions</label>
+      <label><input id="close" type="checkbox" /> close</label>
+      <button id="open" type="button">打开</button>
+      <button id="complete" type="button">完成</button>
+      <button id="finish" type="button">页面关闭</button>
+    </div>
+      正在处理，请稍等。
+      <span slot="cancel">Cancel</span>
+    </md-loading-modal>
+    <p id="result">结果：</p>
+    <button type="button">页面上的按钮</button>
+
+    <script type="module">
+      import '../../loading-modal/loading-modal.js';
+
+      const modal = document.querySelector('#modal');
+      const result = document.querySelector('#result');
+      const size = document.querySelector('#size');
+      const container = document.querySelector('#container');
+      const title = document.querySelector('#title');
+      const actions = document.querySelector('#actions');
+      const close = document.querySelector('#close');
+
+      function apply() {
+        modal.size = size.value;
+        modal.container = container.value;
+        modal.title = title.value;
+        modal.actions = actions.checked;
+        modal.closeButton = close.checked;
+      }
+
+      for (const control of [size, container, title, actions, close]) {
+        control.addEventListener('input', apply);
+        control.addEventListener('change', apply);
+      }
+
+      document.querySelector('#open').addEventListener('click', () => {
+        apply();
+        if (modal.container === 'modal') {
+          modal.show();
+        }
+      });
+      document.querySelector('#complete').addEventListener('click', () => {
+        modal.complete = true;
+      });
+      document.querySelector('#finish').addEventListener('click', () => {
+        modal.close();
+      });
+      let fromCancel = false;
+      modal.addEventListener('cancel', () => {
+        fromCancel = true;
+      });
+      modal.addEventListener('close', () => {
+        result.textContent = fromCancel
+          ? '结果：cancel'
+          : `结果：${modal.returnValue || '（空）'}`;
+        fromCancel = false;
+      });
+    </script>
+  </body>
+</html>

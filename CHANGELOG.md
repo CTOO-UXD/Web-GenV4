@@ -4,6 +4,13 @@
 
 ## 2026-10-20
 
+* 新增加载弹窗，用来在处理时显示转圈，完成后停在勾上，等页面自己关闭
+  * `loading-modal/`
+  * `tokens/_md-comp-loading-modal.scss`
+  * `tokens/_index.scss`
+  * `all.ts`
+  * `testing/genv4/loading-modal.html`
+
 * 主图弹窗底栏改成三个可选按钮，标题左右与同档内容边距对齐
   * `hero-modal/hero-modal.ts`
   * `hero-modal/internal/hero-modal.ts`
