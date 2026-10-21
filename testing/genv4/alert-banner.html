@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alert banner</title>
+    <style>
+      :root {
+        --md-sys-color-primary: #6c43c6;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-secondary: #0156cf;
+        --md-sys-color-secondary-container: #dae2ff;
+        --md-sys-color-error: #ba1a1a;
+        --md-sys-color-error-container: #ffdad6;
+        --md-sys-color-on-surface: #1c1b1b;
+        --md-sys-color-surface: #ffffff;
+        --md-sys-color-surface-container: #fbf9f7;
+      }
+
+      body {
+        background: #f3f0ee;
+        color: #1c1b1b;
+        font: 14px/20px sans-serif;
+        margin: 24px;
+      }
+
+      section {
+        margin-block: 28px;
+      }
+
+      h2 {
+        font-size: 16px;
+        margin: 0 0 12px;
+      }
+
+      .row {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .check {
+        align-items: center;
+        display: inline-flex;
+        gap: 8px;
+      }
+
+      .narrow {
+        border: 1px dashed #7a757f;
+        overflow: auto;
+        width: 480px;
+      }
+
+      #restore {
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h2>平铺</h2>
+      <div class="row">
+        <md-alert-banner label="普通通知" supporting-text="默认底色和图标。">
+          <md-filled-button slot="actions">确定</md-filled-button>
+          <md-outlined-button slot="actions">取消</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner
+          scheme="informational"
+          label="说明"
+          supporting-text="补充一点信息。">
+          <md-filled-button slot="actions">知道了</md-filled-button>
+          <md-outlined-button slot="actions">详情</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner
+          scheme="success"
+          label="已完成"
+          supporting-text="操作成功。">
+          <md-filled-button slot="actions">继续</md-filled-button>
+          <md-outlined-button slot="actions">返回</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner
+          scheme="warning"
+          label="请注意"
+          supporting-text="这项设置会影响后续步骤。">
+          <md-filled-button slot="actions">仍然继续</md-filled-button>
+          <md-outlined-button slot="actions">修改</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner
+          scheme="error"
+          label="无法保存"
+          supporting-text="请检查必填项后再试。">
+          <md-filled-button slot="actions">重试</md-filled-button>
+          <md-outlined-button slot="actions">关闭</md-outlined-button>
+        </md-alert-banner>
+      </div>
+    </section>
+
+    <section>
+      <h2>带阴影</h2>
+      <div class="row">
+        <md-alert-banner elevated label="普通通知" supporting-text="带阴影。">
+          <md-filled-button slot="actions">确定</md-filled-button>
+        </md-alert-banner>
+        <md-alert-banner
+          elevated
+          scheme="informational"
+          label="说明"
+          supporting-text="带阴影。">
+          <md-outlined-button slot="actions">详情</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner
+          elevated
+          scheme="success"
+          label="已完成"
+          supporting-text="带阴影。">
+          <md-filled-button slot="actions">继续</md-filled-button>
+        </md-alert-banner>
+        <md-alert-banner
+          elevated
+          scheme="warning"
+          label="请注意"
+          supporting-text="带阴影。">
+          <md-outlined-button slot="actions">修改</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner
+          elevated
+          scheme="error"
+          label="无法保存"
+          supporting-text="带阴影。">
+          <md-filled-button slot="actions">重试</md-filled-button>
+        </md-alert-banner>
+      </div>
+    </section>
+
+    <section>
+      <h2>内容</h2>
+      <div class="row">
+        <md-alert-banner label="只有标题"></md-alert-banner>
+        <md-alert-banner supporting-text="只有正文"></md-alert-banner>
+        <md-alert-banner
+          label="这是一条很长的标题，用来看它是否停在一行末尾并显示省略号而不是把横幅撑高"></md-alert-banner>
+        <md-alert-banner
+          label="长正文"
+          supporting-text="正文可以在文字列里面换行。这段文字故意写得很长，用来确认它不会挤出横幅，也不会把标题挤成两行。勾选框和按钮仍留在文字旁边，放不下时再一起换到下面。"></md-alert-banner>
+        <md-alert-banner label="只有实心按钮" supporting-text="旁边一个按钮。">
+          <md-filled-button slot="actions">确定</md-filled-button>
+        </md-alert-banner>
+        <md-alert-banner label="两个按钮" supporting-text="实心和描边。">
+          <md-filled-button slot="actions">确定</md-filled-button>
+          <md-outlined-button slot="actions">取消</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner
+          scheme="success"
+          label="带勾选框"
+          supporting-text="勾选状态由页面自己记。">
+          <span class="check" slot="checkbox">
+            <md-checkbox></md-checkbox>
+            下次不再显示这条比较长的提示文字
+          </span>
+          <md-filled-button slot="actions">查看详情</md-filled-button>
+          <md-outlined-button slot="actions">取消这次操作</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner label="同一行" supporting-text="勾选框和两个按钮都在文字旁边。">
+          <span class="check" slot="checkbox">
+            <md-checkbox></md-checkbox>
+            不再显示
+          </span>
+          <md-filled-button slot="actions">确定</md-filled-button>
+          <md-outlined-button slot="actions">取消</md-outlined-button>
+        </md-alert-banner>
+        <md-alert-banner
+          label="没有按钮"
+          supporting-text="插槽是空的，不留按钮间距。"></md-alert-banner>
+        <md-alert-banner
+          scheme="informational"
+          icon="mail"
+          label="自定义图标"
+          supporting-text="连字换成 mail，颜色仍按说明方案。"></md-alert-banner>
+      </div>
+    </section>
+
+    <section>
+      <h2>关闭后下面上移</h2>
+      <div class="stack">
+        <md-alert-banner label="上面一条" supporting-text="点关闭后马上消失。"></md-alert-banner>
+        <md-alert-banner label="下面一条" supporting-text="上面关掉后这条上移。"></md-alert-banner>
+      </div>
+      <button id="restore" type="button">去掉 hidden，重新显示</button>
+    </section>
+
+    <section>
+      <h2>窄父级横向滚动</h2>
+      <div class="narrow">
+        <md-alert-banner
+          label="父级比 740 窄"
+          supporting-text="横幅不缩小，由父级滚动。"></md-alert-banner>
+      </div>
+    </section>
+
+    <script type="module">
+      import '../../alert-banner/alert-banner.js';
+      import '../../button/filled-button.js';
+      import '../../button/outlined-button.js';
+      import '../../checkbox/checkbox.js';
+
+      document.querySelector('#restore').addEventListener('click', () => {
+        for (const banner of document.querySelectorAll('md-alert-banner')) {
+          banner.hidden = false;
+        }
+      });
+    </script>
+  </body>
+</html>

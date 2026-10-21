@@ -1,0 +1,112 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'button-color',
+  'button-gap',
+  'button-height',
+  'button-label-color',
+  'button-label-line-height',
+  'button-label-size',
+  'button-label-weight',
+  'button-padding',
+  'button-padding-block',
+  'checkbox-label-line-height',
+  'checkbox-label-size',
+  'checkbox-label-tracking',
+  'close-icon-color',
+  'close-icon-size',
+  'close-size',
+  'column-gap',
+  'content-gap',
+  'copy-min-size',
+  'elevation',
+  'icon-container-height',
+  'icon-container-shape',
+  'icon-container-width',
+  'icon-size',
+  'label-line-height',
+  'label-size',
+  'label-tracking',
+  'label-weight',
+  'min-height',
+  'padding',
+  'shape',
+  'success-container-color',
+  'success-icon-color',
+  'supporting-weight',
+  'warning-container-color',
+  'warning-icon-color',
+  'width',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $tokens: (
+    'button-color': #0e131e,
+    'button-gap': 6px,
+    'button-height': 32px,
+    'button-label-color': var(--md-sys-color-on-primary, #fff),
+    'button-label-line-height': 16px,
+    'button-label-size': 12px,
+    'button-label-weight': 600,
+    'button-padding': 16px,
+    'button-padding-block': 8px,
+    'checkbox-label-line-height': 16px,
+    'checkbox-label-size': 12px,
+    'checkbox-label-tracking': 0.1px,
+    'close-icon-color': #0e131e,
+    'close-icon-size': 16px,
+    'close-size': 32px,
+    'column-gap': 12px,
+    'content-gap': 16px,
+    'copy-min-size': 268px,
+    'elevation':
+      '0 1px 3px 0 rgba(0, 0, 0, .3), 0 4px 8px 3px rgba(0, 0, 0, .12)',
+    'icon-container-height': 32px,
+    'icon-container-shape': 999px,
+    'icon-container-width': 32px,
+    'icon-size': 16px,
+    'label-line-height': 20px,
+    'label-size': 14px,
+    'label-tracking': 0.25px,
+    'label-weight': 600,
+    'min-height': 72px,
+    'padding': 12px,
+    'shape': 16px,
+    'success-container-color': #a8f5a6,
+    'success-icon-color': #3e8643,
+    'supporting-weight': 400,
+    'warning-container-color': #ffdeaa,
+    'warning-icon-color': #9c6e03,
+    'width': 740px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-alert-banner-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}

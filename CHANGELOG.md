@@ -4,6 +4,13 @@
 
 ## 2026-10-21
 
+* 新增提示横幅，页面自己放按钮和勾选框，关掉后留在页面上但不占高度
+  * `alert-banner/`
+  * `tokens/_md-comp-alert-banner.scss`
+  * `tokens/_index.scss`
+  * `all.ts`
+  * `testing/genv4/alert-banner.html`
+
 * 步骤条补上展示页，禁用步后面改成灰线，空心进行中改成圆环里的点
   * `process-stepper/internal/process-stepper.ts`
   * `process-stepper/internal/_process-stepper.scss`
