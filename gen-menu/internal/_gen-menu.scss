@@ -1,0 +1,139 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:list';
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../tokens';
+// go/keep-sorted end
+
+@mixin theme($tokens) {
+  $supported-tokens: tokens.$md-comp-gen-menu-supported-tokens;
+
+  @each $token, $value in $tokens {
+    @if list.index($supported-tokens, $token) == null {
+      @error 'Token `#{$token}` is not a supported token.';
+    }
+
+    @if $value {
+      --md-gen-menu-#{$token}: #{$value};
+    }
+  }
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-gen-menu-values();
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    display: contents;
+    color: unset;
+  }
+
+  :host([hidden]) {
+    display: none !important;
+  }
+
+  .menu {
+    box-sizing: border-box;
+    display: none;
+    position: absolute;
+    inset: auto;
+    width: var(--_width);
+    min-width: var(--_width);
+    max-width: var(--_width);
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    filter: var(--_shadow);
+    z-index: 20;
+    overflow: hidden;
+  }
+
+  .menu.fixed,
+  .menu.document {
+    position: fixed;
+  }
+
+  .menu::backdrop {
+    display: none;
+  }
+
+  .items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_gap);
+    box-sizing: border-box;
+    width: 100%;
+    height: inherit;
+    max-height: inherit;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+    outline: none;
+  }
+
+  .items::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  .items.single {
+    gap: 0;
+    background: var(--_card-color);
+    border-radius: var(--_card-shape);
+    padding-block: var(--_card-padding-block);
+    padding-inline: var(--_card-padding-inline);
+  }
+
+  :host([theme='vibrant']) .items.single {
+    background: var(--_card-color-vibrant);
+  }
+
+  :host([has-overflow]) .items {
+    overflow: visible;
+  }
+
+  slot {
+    display: contents;
+  }
+
+  .items.single slot {
+    display: block;
+  }
+
+  .bar {
+    position: absolute;
+    inset-block: 12px;
+    inset-inline-end: 4px;
+    width: var(--_scrollbar-size);
+    pointer-events: none;
+  }
+
+  .bar[hidden] {
+    display: none !important;
+  }
+
+  .thumb {
+    width: 100%;
+    background: var(--_scrollbar-color);
+    border-radius: var(--_scrollbar-size);
+  }
+
+  :host([has-overflow]) .bar {
+    display: none !important;
+  }
+}

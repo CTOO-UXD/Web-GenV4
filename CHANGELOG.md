@@ -4,6 +4,16 @@
 
 ## 2026-10-21
 
+* 新增分组菜单，旧菜单保持不动，选中只由页面设置
+  * `gen-menu/`
+  * `tokens/_md-comp-gen-menu.scss`
+  * `tokens/_md-comp-gen-menu-group.scss`
+  * `tokens/_md-comp-gen-menu-item.scss`
+  * `tokens/_index.scss`
+  * `all.ts`
+  * `scripts/component-custom-elements.ts`
+  * `testing/genv4/gen-menu.html`
+
 * 补上提示横幅展示页，并写明关掉后要不要再出现由页面决定
   * `docs/components/alert-banner.md`
   * `catalog/src/hydration-entrypoints/components/alert-banner.ts`

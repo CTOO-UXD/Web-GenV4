@@ -1,0 +1,64 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+@use 'sass:string';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'card-color',
+  'card-color-vibrant',
+  'card-padding-block',
+  'card-padding-inline',
+  'card-shape',
+  'gap',
+  'scrollbar-color',
+  'scrollbar-size',
+  'shadow',
+  'width',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $shadow: string.unquote(
+    'drop-shadow(0 1px 3px #0000004d) drop-shadow(0 4px 8px #00000026)'
+  );
+
+  $tokens: (
+    'card-color': var(--md-sys-color-surface-container, #fbf9f7),
+    'card-color-vibrant': var(--md-sys-color-tertiary-container, #ffdad8),
+    'card-padding-block': 2px,
+    'card-padding-inline': 0px,
+    'card-shape': 16px,
+    'gap': 2px,
+    'scrollbar-color': var(--md-sys-color-outline, #7a757f),
+    'scrollbar-size': 4px,
+    'shadow': $shadow,
+    'width': 208px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-gen-menu-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}

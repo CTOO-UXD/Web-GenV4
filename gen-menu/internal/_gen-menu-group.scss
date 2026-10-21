@@ -1,0 +1,52 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:list';
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../tokens';
+// go/keep-sorted end
+
+@mixin theme($tokens) {
+  $supported-tokens: tokens.$md-comp-gen-menu-group-supported-tokens;
+
+  @each $token, $value in $tokens {
+    @if list.index($supported-tokens, $token) == null {
+      @error 'Token `#{$token}` is not a supported token.';
+    }
+
+    @if $value {
+      --md-gen-menu-group-#{$token}: #{$value};
+    }
+  }
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-gen-menu-group-values();
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    display: block;
+    box-sizing: border-box;
+    background: var(--_container-color);
+    border-radius: var(--_shape);
+    padding-block: var(--_padding-block);
+    padding-inline: var(--_padding-inline);
+    box-shadow: none;
+  }
+
+  :host([hidden]) {
+    display: none !important;
+  }
+
+  :host-context(md-gen-menu[theme='vibrant']) {
+    background: var(--_container-color-vibrant);
+  }
+}

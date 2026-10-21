@@ -1,0 +1,49 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'container-color',
+  'container-color-vibrant',
+  'padding-block',
+  'padding-inline',
+  'shape',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $tokens: (
+    'container-color': var(--md-sys-color-surface-container, #fbf9f7),
+    'container-color-vibrant': var(--md-sys-color-tertiary-container, #ffdad8),
+    'padding-block': 2px,
+    'padding-inline': 0px,
+    'shape': 16px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-gen-menu-group-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}

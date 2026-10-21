@@ -31,6 +31,11 @@ export const COMPONENT_CUSTOM_ELEMENTS = {
   fab: ['fab/fab.ts', 'fab/branded-fab.ts'],
   field: ['field/filled-field.ts', 'field/outlined-field.ts'],
   focus: ['focus/md-focus-ring.ts'],
+  genMenu: [
+    'gen-menu/gen-menu.ts',
+    'gen-menu/gen-menu-group.ts',
+    'gen-menu/gen-menu-item.ts',
+  ],
   icon: ['icon/icon.ts'],
   iconButton: [
     'iconbutton/icon-button.ts',

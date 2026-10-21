@@ -1,0 +1,97 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'disabled-opacity',
+  'focus-opacity',
+  'focus-ring-color',
+  'focus-ring-selected-shape',
+  'focus-ring-shape',
+  'focus-ring-width',
+  'hover-color',
+  'hover-color-vibrant',
+  'hover-opacity',
+  'icon-size',
+  'label-color',
+  'label-color-vibrant',
+  'label-line-height',
+  'label-size',
+  'label-tracking',
+  'label-weight',
+  'padding-block',
+  'padding-inline',
+  'row-gap',
+  'row-height',
+  'row-padding-inline',
+  'selected-container-color',
+  'selected-container-color-vibrant',
+  'selected-hover-color',
+  'selected-hover-color-vibrant',
+  'selected-label-color',
+  'selected-label-color-vibrant',
+  'selected-shape',
+  'shape',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $tokens: (
+    'disabled-opacity': 0.38,
+    'focus-opacity': 0.1,
+    'focus-ring-color': var(--md-sys-color-secondary, #0156cf),
+    'focus-ring-selected-shape': 14px,
+    'focus-ring-shape': 6px,
+    'focus-ring-width': 2px,
+    'hover-color': var(--md-sys-color-on-surface, #1c1b1b),
+    'hover-color-vibrant': var(--md-sys-color-on-tertiary-container, #410008),
+    'hover-opacity': 0.08,
+    'icon-size': 20px,
+    'label-color': var(--md-sys-color-on-surface, #1c1b1b),
+    'label-color-vibrant': var(--md-sys-color-on-tertiary-container, #410008),
+    'label-line-height': 20px,
+    'label-size': 14px,
+    'label-tracking': 0.1px,
+    'label-weight': 500,
+    'padding-block': 2px,
+    'padding-inline': 4px,
+    'row-gap': 8px,
+    'row-height': 44px,
+    'row-padding-inline': 12px,
+    'selected-container-color': var(--md-sys-color-primary-fixed, #e9ddff),
+    'selected-container-color-vibrant': var(--md-sys-color-tertiary, #b52332),
+    'selected-hover-color': var(--md-sys-color-on-surface, #1c1b1b),
+    'selected-hover-color-vibrant': var(--md-sys-color-on-tertiary, #ffffff),
+    'selected-label-color': var(--md-sys-color-on-primary-fixed, #23005c),
+    'selected-label-color-vibrant': var(--md-sys-color-on-tertiary, #ffffff),
+    'selected-shape': 12px,
+    'shape': 4px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-gen-menu-item-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}
