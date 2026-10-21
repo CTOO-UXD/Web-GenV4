@@ -9,7 +9,8 @@ import {html} from 'lit';
 import {Environment} from '../testing/environment.js';
 import {createTokenTests} from '../testing/tokens.js';
 
-import {MdProcessStep, MdProcessStepper} from './process-stepper.js';
+import {MdProcessStep} from './process-step.js';
+import {MdProcessStepper} from './process-stepper.js';
 
 describe('<md-process-stepper>', () => {
   const env = new Environment();
@@ -87,15 +88,18 @@ describe('<md-process-stepper>', () => {
     expect(circle(steps[1]).textContent?.trim()).toBe('');
   });
 
-  it('draws an empty in-progress circle with no marker', async () => {
+  it('draws an empty in-progress circle as a ring with a 12px dot', async () => {
     const {steps} = await setup(html`
       <md-process-stepper type="empty">
         <md-process-step state="in-progress">进行中</md-process-step>
       </md-process-stepper>
     `);
 
-    expect(circle(steps[0]).textContent?.trim()).toBe('');
-    expect(getComputedStyle(circle(steps[0])).backgroundColor).not.toBe(
+    const dot = circle(steps[0]).querySelector('.dot');
+    expect(dot).not.toBeNull();
+    expect(getComputedStyle(dot!).width).toBe('12px');
+    expect(getComputedStyle(dot!).height).toBe('12px');
+    expect(getComputedStyle(circle(steps[0])).backgroundColor).toBe(
       'rgba(0, 0, 0, 0)',
     );
   });
@@ -120,20 +124,18 @@ describe('<md-process-stepper>', () => {
     expect(trail(steps[2])).toBeNull();
   });
 
-  it('draws a muted trail only between two disabled steps', async () => {
+  it('draws a muted trail after a disabled step', async () => {
     const {steps} = await setup(html`
       <md-process-stepper>
         <md-process-step state="enabled">一</md-process-step>
         <md-process-step state="disabled">二</md-process-step>
-        <md-process-step state="disabled">三</md-process-step>
-        <md-process-step state="enabled">四</md-process-step>
+        <md-process-step state="enabled">三</md-process-step>
       </md-process-stepper>
     `);
 
     expect(trail(steps[0])!.classList.contains('active')).toBeTrue();
     expect(trail(steps[1])!.classList.contains('muted')).toBeTrue();
-    expect(trail(steps[2])!.classList.contains('active')).toBeTrue();
-    expect(trail(steps[3])).toBeNull();
+    expect(trail(steps[2])).toBeNull();
   });
 
   it('draws a thick trail after a completed step', async () => {
@@ -148,20 +150,20 @@ describe('<md-process-stepper>', () => {
     expect(trail(steps[1])).toBeNull();
   });
 
-  it('updates the previous trail when the next step becomes disabled', async () => {
+  it('changes only this step\'s trail when it becomes disabled', async () => {
     const {steps} = await setup(html`
       <md-process-stepper>
-        <md-process-step state="disabled">一</md-process-step>
+        <md-process-step state="enabled">一</md-process-step>
         <md-process-step state="enabled">二</md-process-step>
       </md-process-stepper>
     `);
 
     expect(trail(steps[0])!.classList.contains('active')).toBeTrue();
-    steps[1].state = 'disabled';
-    await steps[1].updateComplete;
+    steps[0].state = 'disabled';
     await steps[0].updateComplete;
 
     expect(trail(steps[0])!.classList.contains('muted')).toBeTrue();
+    expect(trail(steps[1])).toBeNull();
   });
 
   it('hides labels without removing the circle', async () => {

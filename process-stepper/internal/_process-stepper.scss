@@ -120,6 +120,17 @@ $primary: var(--md-sys-color-primary, #6c43c6);
     color: #{$on-primary};
   }
 
+  :host(md-process-step[state='in-progress']) .circle.ring {
+    background: transparent;
+  }
+
+  .dot {
+    background: #{$primary};
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+  }
+
   :host(md-process-step[state='disabled']) .circle {
     background: transparent;
     border-color: #{$outline};

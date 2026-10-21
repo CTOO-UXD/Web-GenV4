@@ -34,6 +34,7 @@ export const docsToElementMapping: {[key: string]: readonly string[]} = {
     'feature-tour-modal/feature-tour-modal.ts',
     'loading-modal/loading-modal.ts',
   ],
+  'process-stepper.md': COMPONENT_CUSTOM_ELEMENTS.processStepper,
   'progress.md': COMPONENT_CUSTOM_ELEMENTS.progress,
   'radio.md': COMPONENT_CUSTOM_ELEMENTS.radio,
   'ripple.md': COMPONENT_CUSTOM_ELEMENTS.ripple,

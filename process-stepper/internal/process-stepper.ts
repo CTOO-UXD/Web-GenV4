@@ -7,7 +7,6 @@
 import {html, LitElement, nothing, PropertyValues} from 'lit';
 import {property, state} from 'lit/decorators.js';
 
-type Orientation = 'horizontal' | 'vertical';
 type Marker = 'number' | 'icon' | 'empty';
 type StepState = 'complete' | 'in-progress' | 'enabled' | 'disabled';
 type Trail = 'none' | 'completed' | 'active' | 'muted';
@@ -22,17 +21,17 @@ export class ProcessStepper extends LitElement {
    * 方向。取值 horizontal、vertical。
    * @en Flow direction.
    */
-  @property({reflect: true}) orientation: Orientation = 'horizontal';
+  @property({reflect: true}) orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   /**
    * 圆点里画什么。取值 number、icon、empty。一条流程只用一种。
    * @en What to draw inside each circle. One type for the whole flow.
    */
-  @property({reflect: true}) type: Marker = 'number';
+  @property({reflect: true}) type: 'number' | 'icon' | 'empty' = 'number';
 
   /**
-   * 是否显示每一步的标签。默认开。
-   * @en Whether each step shows its label.
+   * 是否显示每一步的标签。默认开。要关掉，在脚本里把 showLabels 设为 false。
+   * @en Whether each step shows its label. Set showLabels to false in script to hide them.
    */
   @property({type: Boolean, reflect: true, attribute: 'show-labels'})
   showLabels = true;
@@ -73,10 +72,11 @@ export class ProcessStepper extends LitElement {
  */
 export class ProcessStep extends LitElement {
   /**
-   * 这一步的状态。取值 complete、in-progress、enabled、disabled。默认 enabled。
-   * @en Visual state of this step.
+   * 这一步的状态。取值 complete、in-progress、enabled、disabled。默认 enabled。完成后面是 3px 主色线，禁用后面是灰细线，进行中和未开始后面是细主色线。最后一步没有线。
+   * @en Visual state of this step. The outgoing line follows this state.
    */
-  @property({reflect: true}) state: StepState = 'enabled';
+  @property({reflect: true}) state: 'complete' | 'in-progress' | 'enabled' | 'disabled' =
+    'enabled';
 
   /**
    * 图标连字。只在父级 type 为 icon、且这一步不是完成时使用。不写就画空圈。
@@ -88,10 +88,18 @@ export class ProcessStep extends LitElement {
   @state() private labelsOn = true;
   @state() private markerKind: Marker = 'number';
   @state() private trail: Trail = 'none';
-  private seenState: StepState = 'enabled';
 
-  override willUpdate() {
-    const parent = this.closest('md-process-stepper') as ProcessStepper | null;
+  private syncAfterHydration = false;
+
+  protected override willUpdate() {
+    // Server rendering has no parent, so the first hydrating update must match
+    // that fallback before reading the real parent.
+    const hydrating =
+      !this.hasUpdated &&
+      this.shadowRoot !== null &&
+      this.shadowRoot.childNodes.length > 0;
+    this.syncAfterHydration = hydrating;
+    const parent = hydrating ? null : enclosingStepper(this);
     if (!parent) {
       this.stepNumber = 1;
       this.labelsOn = true;
@@ -110,22 +118,17 @@ export class ProcessStep extends LitElement {
     this.markerKind = parent.type;
     this.setAttribute('orientation', parent.orientation);
     this.toggleAttribute('data-last', !next);
-    this.trail = trailBetween(this.state, next?.state);
+    this.trail = trailAfter(this.state, Boolean(next));
   }
 
-  override updated() {
-    if (this.state === this.seenState) {
-      return;
+  protected override firstUpdated() {
+    if (this.syncAfterHydration) {
+      this.requestUpdate();
     }
+  }
 
-    this.seenState = this.state;
-    const parent = this.closest('md-process-stepper');
-    if (!parent) {
-      return;
-    }
-
-    const steps = [...parent.querySelectorAll(':scope > md-process-step')] as ProcessStep[];
-    steps[steps.indexOf(this) - 1]?.requestUpdate();
+  private get ring() {
+    return this.markerKind === 'empty' && this.state === 'in-progress';
   }
 
   private get marker() {
@@ -141,6 +144,10 @@ export class ProcessStep extends LitElement {
       return html`<md-icon>${this.icon}</md-icon>`;
     }
 
+    if (this.ring) {
+      return html`<span class="dot"></span>`;
+    }
+
     return nothing;
   }
 
@@ -151,7 +158,7 @@ export class ProcessStep extends LitElement {
         : html`<div class="trail ${this.trail}"></div>`;
     return html`
       <div class="track">
-        <div class="circle">${this.marker}</div>
+        <div class="circle ${this.ring ? 'ring' : ''}">${this.marker}</div>
         ${trail}
       </div>
       <div class="label" ?hidden=${!this.labelsOn}><slot></slot></div>
@@ -159,12 +166,26 @@ export class ProcessStep extends LitElement {
   }
 }
 
-function trailBetween(state: StepState, next?: StepState): Trail {
-  if (!next) {
+function enclosingStepper(step: HTMLElement): ProcessStepper | null {
+  if (typeof step.closest === 'function') {
+    return step.closest('md-process-stepper') as ProcessStepper | null;
+  }
+
+  for (let node = step.parentElement; node; node = node.parentElement) {
+    if (node.localName === 'md-process-stepper') {
+      return node as ProcessStepper;
+    }
+  }
+
+  return null;
+}
+
+function trailAfter(state: StepState, hasNext: boolean): Trail {
+  if (!hasNext) {
     return 'none';
   }
 
-  if (state === 'disabled' && next === 'disabled') {
+  if (state === 'disabled') {
     return 'muted';
   }
 

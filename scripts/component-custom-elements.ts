@@ -39,6 +39,10 @@ export const COMPONENT_CUSTOM_ELEMENTS = {
   ],
   list: ['list/list.ts', 'list/list-item.ts'],
   menu: ['menu/menu.ts', 'menu/menu-item.ts', 'menu/sub-menu.ts'],
+  processStepper: [
+    'process-stepper/process-stepper.ts',
+    'process-stepper/process-step.ts',
+  ],
   progress: ['progress/linear-progress.ts', 'progress/circular-progress.ts'],
   radio: ['radio/radio.ts'],
   ripple: ['ripple/ripple.ts'],

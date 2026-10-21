@@ -90,6 +90,7 @@ async function updateDocFileApiSection(
     'icon-button.md':
       '四种图标按钮的属性相同，下表适用于 `<md-icon-button>`、`<md-filled-icon-button>`、`<md-filled-tonal-icon-button>`、`<md-outlined-icon-button>`。',
     'modal.md': '四类弹窗的属性不同，下面分表列出。',
+    'process-stepper.md': '步骤条和步骤的属性不同，下面分表列出。',
     'text-input.md':
       '三种输入的属性相同，下表适用于 `<md-text-input>`、`<md-action-input>`、`<md-text-area>`。',
   };
@@ -176,6 +177,8 @@ function generateTableSection(
     'hero-modal/hero-modal.ts': '主视觉弹窗',
     'feature-tour-modal/feature-tour-modal.ts': '功能引导',
     'loading-modal/loading-modal.ts': '加载弹窗',
+    'process-stepper/process-stepper.ts': '步骤条',
+    'process-stepper/process-step.ts': '步骤',
   };
   const zhTitle = zhTitles[elementEntrypoint];
 

@@ -235,6 +235,21 @@ const modalSections = await Promise.all(
 );
 await writeTheme('modal.md', modalSections);
 
+const processStepperWrapper = await readFile(
+  join(root, 'tokens', '_md-comp-process-stepper.scss'),
+  'utf8',
+);
+await writeTheme('process-stepper.md', [
+  tableFromSources(
+    processStepperWrapper,
+    '',
+    '--md-process-stepper-',
+    '步骤条',
+    'md-process-stepper',
+    'process-stepper/internal/_process-stepper.scss',
+  ),
+]);
+
 const textInputWrapper = await readFile(
   join(root, 'tokens', '_md-comp-text-input.scss'),
   'utf8',

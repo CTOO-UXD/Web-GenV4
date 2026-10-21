@@ -2,6 +2,26 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-21
+
+* 步骤条补上展示页，禁用步后面改成灰线，空心进行中改成圆环里的点
+  * `process-stepper/internal/process-stepper.ts`
+  * `process-stepper/internal/_process-stepper.scss`
+  * `process-stepper/process-stepper.ts`
+  * `process-stepper/process-step.ts`
+  * `process-stepper/process-stepper_test.ts`
+  * `docs/components/process-stepper.md`
+  * `catalog/src/hydration-entrypoints/components/process-stepper.ts`
+  * `scripts/analyzer/element-docs-map.ts`
+  * `scripts/analyzer/update-docs.ts`
+  * `scripts/component-custom-elements.ts`
+  * `scripts/update-button-theme-docs.mjs`
+  * `all.ts`
+  * `testing/genv4/process-stepper.html`
+
+* 展示页的代码块和行内代码改用 Montserrat
+  * `catalog/site/css/syntax-highlight.css`
+
 ## 2026-10-20
 
 * 新增流程步骤条，页面自己标每一步的状态，线跟着组件的宽高拉开
