@@ -15,11 +15,10 @@ const ICONS = {
   error: 'error',
 } as const;
 
-type Scheme = keyof typeof ICONS;
-
 /**
  * 内容上方的一条提示。配色由 scheme 决定，按钮和勾选框由页面放进插槽。
  *
+ * @fires close {Event} 点关闭时发出。组件随即加上 hidden，不再占高度。组件不记住这次关闭，要不要再出现由页面决定。 --bubbles --composed @en Dispatched when the close button is pressed.
  * @en A banner above page content. scheme picks the colors. The page supplies buttons and a checkbox.
  */
 export class AlertBanner extends LitElement {
@@ -27,7 +26,12 @@ export class AlertBanner extends LitElement {
    * 配色。取值 default、informational、success、warning、error。
    * @en Color scheme.
    */
-  @property({reflect: true}) scheme: Scheme = 'default';
+  @property({reflect: true}) scheme:
+    | 'default'
+    | 'informational'
+    | 'success'
+    | 'warning'
+    | 'error' = 'default';
 
   /**
    * 为真时加阴影。默认没有。

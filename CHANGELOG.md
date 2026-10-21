@@ -4,6 +4,15 @@
 
 ## 2026-10-21
 
+* 补上提示横幅展示页，并写明关掉后要不要再出现由页面决定
+  * `docs/components/alert-banner.md`
+  * `catalog/src/hydration-entrypoints/components/alert-banner.ts`
+  * `alert-banner/internal/alert-banner.ts`
+  * `scripts/analyzer/element-docs-map.ts`
+  * `scripts/analyzer/update-docs.ts`
+  * `scripts/component-custom-elements.ts`
+  * `scripts/update-button-theme-docs.mjs`
+
 * 新增提示横幅，页面自己放按钮和勾选框，关掉后留在页面上但不占高度
   * `alert-banner/`
   * `tokens/_md-comp-alert-banner.scss`

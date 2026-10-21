@@ -9,6 +9,7 @@
  */
 export const COMPONENT_CUSTOM_ELEMENTS = {
   aiInput: ['ai-input/ai-input.ts'],
+  alertBanner: ['alert-banner/alert-banner.ts'],
   button: [
     'button/elevated-button.ts',
     'button/filled-button.ts',

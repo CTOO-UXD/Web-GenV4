@@ -85,6 +85,7 @@ async function updateDocFileApiSection(
 
   const zhIntro: {[key: string]: string} = {
     'ai-input.md': '下表适用于 `<md-ai-input>`。',
+    'alert-banner.md': '下表适用于 `<md-alert-banner>`。',
     'button.md':
       '五种按钮的属性相同，下表适用于 `<md-filled-button>`、`<md-filled-tonal-button>`、`<md-elevated-button>`、`<md-outlined-button>`、`<md-text-button>`。',
     'icon-button.md':
@@ -155,10 +156,7 @@ function generateTableSection(
     docFileName === 'modal.md',
   );
   const methodsTable = generateMethodMarkdownTable(elementDoc);
-  const eventsTable = generateEventsMarkdownTable(
-    elementDoc,
-    docFileName === 'modal.md',
-  );
+  const eventsTable = generateEventsMarkdownTable(elementDoc, zhHeaders);
 
   if (propertiesTable.rows.length > 0) {
     tables.push({name: zhHeaders ? '属性' : 'Properties', table: propertiesTable});

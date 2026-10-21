@@ -12,6 +12,7 @@ import {COMPONENT_CUSTOM_ELEMENTS} from '../component-custom-elements.js';
  */
 export const docsToElementMapping: {[key: string]: readonly string[]} = {
   'ai-input.md': ['ai-input/ai-input.ts'],
+  'alert-banner.md': COMPONENT_CUSTOM_ELEMENTS.alertBanner,
   // Five buttons share one property table, so only the filled entry is registered.
   // 'button.md': COMPONENT_CUSTOM_ELEMENTS.button,
   'button.md': ['button/filled-button.ts'],

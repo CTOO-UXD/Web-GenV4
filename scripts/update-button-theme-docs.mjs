@@ -84,6 +84,9 @@ function assignedDefaults(source) {
     if (value.endsWith(',')) {
       value = value.slice(0, -1).trim();
     }
+    if (value.startsWith("'") && value.endsWith("'")) {
+      value = value.slice(1, -1);
+    }
     if (value.startsWith('var(')) {
       value = value.slice(4, value.lastIndexOf(')')).split(',')[0].trim();
     } else if (value.startsWith('$')) {
@@ -247,6 +250,21 @@ await writeTheme('process-stepper.md', [
     '步骤条',
     'md-process-stepper',
     'process-stepper/internal/_process-stepper.scss',
+  ),
+]);
+
+const alertBannerWrapper = await readFile(
+  join(root, 'tokens', '_md-comp-alert-banner.scss'),
+  'utf8',
+);
+await writeTheme('alert-banner.md', [
+  tableFromSources(
+    alertBannerWrapper,
+    '',
+    '--md-alert-banner-',
+    '提示横幅',
+    'md-alert-banner',
+    'alert-banner/internal/_alert-banner.scss',
   ),
 ]);
 
