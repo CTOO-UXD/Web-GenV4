@@ -44,6 +44,7 @@
       import '../../gen-menu/gen-menu.js';
       import '../../gen-menu/gen-menu-group.js';
       import '../../gen-menu/gen-menu-item.js';
+      import '../../icon/icon.js';
       import '../../text-input/text-input.js';
 
       const outline =
@@ -53,9 +54,12 @@
       const inner = outline.slice(outline.lastIndexOf('M12 20'));
 
       const star = (filled) =>
-        `<svg slot="start" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="${filled ? filledDisk + inner : outline}"></path></svg>`;
+        `<svg slot="start" ${filled ? 'selected' : ''} viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="${filled ? filledDisk + inner : outline}"></path></svg>`;
+      const stars = () => star(false) + star(true);
       const arrow =
         '<svg slot="end" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M8.333 14.167V5.833L12.5 10L8.333 14.167Z"></path></svg>';
+      const check = (slot) =>
+        `<md-icon slot="${slot}" selected aria-hidden="true">check</md-icon>`;
 
       function menu(id, label, theme, body, extra = '') {
         return `
@@ -80,11 +84,11 @@
               theme,
               `
                 ${row('没有图标')}
-                <md-gen-menu-item>${star(false)}空心星</md-gen-menu-item>
+                <md-gen-menu-item>${stars()}空心星</md-gen-menu-item>
                 <md-gen-menu-item>箭头 ${arrow}</md-gen-menu-item>
-                <md-gen-menu-item selected>${star(true)}选中 ${arrow}</md-gen-menu-item>
+                <md-gen-menu-item selected>${stars()}选中 ${arrow}</md-gen-menu-item>
                 <md-gen-menu-item disabled>禁用</md-gen-menu-item>
-                <md-gen-menu-item selected disabled>${star(true)}选中并且禁用 ${arrow}</md-gen-menu-item>
+                <md-gen-menu-item selected disabled>${stars()}选中并且禁用 ${arrow}</md-gen-menu-item>
                 <md-gen-menu-item>这是一段长得不应该把菜单撑宽的文字</md-gen-menu-item>
               `,
             )}
@@ -92,7 +96,7 @@
               `${theme}-two`,
               '两组',
               theme,
-              group(`${row('第一组')}${row(`${star(true)}第一组另一条`, 'selected')}`) +
+              group(`${row('第一组')}${row(`${stars()}第一组另一条`, 'selected')}`) +
                 group(`${row('第二组')}${row('第二组另一条')}`),
             )}
             ${menu(
@@ -114,16 +118,57 @@
               row('宽度改成 280'),
               'style="--md-gen-menu-width: 280px"',
             )}
+            ${menu(
+              `${theme}-add`,
+              '选中加图标',
+              theme,
+              ['一条', '两条', '三条', '四条', '五条']
+                .map(
+                  (label, index) =>
+                    `<md-gen-menu-item ${index === 2 ? 'selected' : ''}>${check('start')}${label}</md-gen-menu-item>`,
+                )
+                .join(''),
+            )}
+            ${menu(
+              `${theme}-swap`,
+              '选中换星',
+              theme,
+              ['一条', '两条', '三条', '四条']
+                .map(
+                  (label, index) =>
+                    `<md-gen-menu-item ${index === 1 ? 'selected' : ''}>${stars()}${label}</md-gen-menu-item>`,
+                )
+                .join(''),
+            )}
+            ${menu(
+              `${theme}-end`,
+              '尾部换勾',
+              theme,
+              ['一条', '两条', '三条', '四条']
+                .map(
+                  (label, index) =>
+                    `<md-gen-menu-item ${index === 1 ? 'selected' : ''}>${star(false)}${arrow}${check('end')}${label}</md-gen-menu-item>`,
+                )
+                .join(''),
+            )}
           </section>`;
       }
 
       const root = document.querySelector('#themes');
       root.innerHTML = section('standard') + section('vibrant');
 
+      function labelOf(item) {
+        return Array.from(item.childNodes)
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .map((node) => node.textContent.trim())
+          .filter(Boolean)
+          .join('');
+      }
+
       for (const menu of root.querySelectorAll('md-gen-menu')) {
         const field = document.getElementById(menu.anchor);
         const picked = menu.querySelector('md-gen-menu-item[selected]');
-        if (picked) field.value = picked.textContent.trim();
+        if (picked) field.value = labelOf(picked);
         field.addEventListener('click', () => {
           if (menu.open) {
             menu.close();
@@ -137,7 +182,7 @@
         menu.addEventListener('click', (event) => {
           const item = event.target.closest('md-gen-menu-item');
           if (!item || !menu.contains(item) || item.disabled) return;
-          field.value = item.textContent.trim();
+          field.value = labelOf(item);
           for (const other of menu.querySelectorAll('md-gen-menu-item')) {
             other.selected = other === item;
           }
