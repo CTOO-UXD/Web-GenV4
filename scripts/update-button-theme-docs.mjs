@@ -268,6 +268,21 @@ await writeTheme('alert-banner.md', [
   ),
 ]);
 
+const searchBarWrapper = await readFile(
+  join(root, 'tokens', '_md-comp-search-bar.scss'),
+  'utf8',
+);
+await writeTheme('search-bar.md', [
+  tableFromSources(
+    searchBarWrapper,
+    '',
+    '--md-search-bar-',
+    '搜索栏',
+    'md-search-bar',
+    'search-bar/internal/_search-bar.scss',
+  ),
+]);
+
 const genMenuThemes = [
   ['gen-menu', '菜单', 'md-gen-menu', 'gen-menu/internal/_gen-menu.scss'],
   ['gen-menu-group', '组', 'md-gen-menu-group', 'gen-menu/internal/_gen-menu-group.scss'],

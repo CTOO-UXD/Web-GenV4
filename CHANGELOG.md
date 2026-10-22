@@ -4,6 +4,14 @@
 
 ## 2026-10-22
 
+* 补上搜索栏展示页，宽窄各展示空输入和打开结果
+  * `docs/components/search-bar.md`
+  * `catalog/src/hydration-entrypoints/components/search-bar.ts`
+  * `scripts/analyzer/element-docs-map.ts`
+  * `scripts/analyzer/update-docs.ts`
+  * `scripts/update-button-theme-docs.mjs`
+  * `search-bar/internal/search-bar.ts`
+
 * 新增搜索栏，宽窄按组件宽度切换，结果由页面放进插槽
   * `search-bar/`
   * `tokens/_md-comp-search-bar.scss`

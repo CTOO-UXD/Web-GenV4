@@ -43,9 +43,16 @@ export class SearchBar extends LitElement {
   @query('.scrollbar') private scrollbarEl!: HTMLElement | null;
   @query('.thumb') private thumbEl!: HTMLElement | null;
 
-  private readonly resizeObserver = new ResizeObserver(() => {
-    this.syncScrollbar();
-  });
+  private resizeObserver?: ResizeObserver;
+
+  override connectedCallback() {
+    if (!this.resizeObserver && typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.syncScrollbar();
+      });
+    }
+    super.connectedCallback();
+  }
 
   private get hasText() {
     return this.value.trim().length > 0;
@@ -53,12 +60,14 @@ export class SearchBar extends LitElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.resizeObserver.disconnect();
+    this.resizeObserver?.disconnect();
   }
 
   protected override updated() {
     if (this.itemsEl) {
-      this.resizeObserver.observe(this.itemsEl);
+      this.resizeObserver?.observe(this.itemsEl);
+    } else {
+      this.resizeObserver?.disconnect();
     }
     this.syncScrollbar();
   }

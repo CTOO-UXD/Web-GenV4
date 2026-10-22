@@ -40,6 +40,7 @@ export const docsToElementMapping: {[key: string]: readonly string[]} = {
   'progress.md': COMPONENT_CUSTOM_ELEMENTS.progress,
   'radio.md': COMPONENT_CUSTOM_ELEMENTS.radio,
   'ripple.md': COMPONENT_CUSTOM_ELEMENTS.ripple,
+  'search-bar.md': COMPONENT_CUSTOM_ELEMENTS.searchBar,
   'slider.md': COMPONENT_CUSTOM_ELEMENTS.slider,
   'switch.md': COMPONENT_CUSTOM_ELEMENTS.switch,
   'tabs.md': COMPONENT_CUSTOM_ELEMENTS.tabs,

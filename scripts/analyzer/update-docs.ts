@@ -93,6 +93,7 @@ async function updateDocFileApiSection(
     'gen-menu.md': '菜单、组和条目的属性不同，下面分表列出。',
     'modal.md': '四类弹窗的属性不同，下面分表列出。',
     'process-stepper.md': '步骤条和步骤的属性不同，下面分表列出。',
+    'search-bar.md': '下表适用于 `<md-search-bar>`。',
     'text-input.md':
       '三种输入的属性相同，下表适用于 `<md-text-input>`、`<md-action-input>`、`<md-text-area>`。',
   };
