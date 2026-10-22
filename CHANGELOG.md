@@ -2,6 +2,17 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-22
+
+* 补上分组菜单展示页，两组圆角和选中换图标在页面上能分开
+  * `docs/components/gen-menu.md`
+  * `catalog/src/hydration-entrypoints/components/gen-menu.ts`
+  * `scripts/analyzer/element-docs-map.ts`
+  * `scripts/analyzer/update-docs.ts`
+  * `scripts/update-button-theme-docs.mjs`
+  * `gen-menu/`
+  * `tokens/_md-comp-gen-menu-group.scss`
+
 ## 2026-10-21
 
 * 新增分组菜单，旧菜单保持不动，选中只由页面设置

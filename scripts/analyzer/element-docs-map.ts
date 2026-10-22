@@ -22,6 +22,7 @@ export const docsToElementMapping: {[key: string]: readonly string[]} = {
   'divider.md': COMPONENT_CUSTOM_ELEMENTS.divider,
   'elevation.md': COMPONENT_CUSTOM_ELEMENTS.elevation,
   'fab.md': COMPONENT_CUSTOM_ELEMENTS.fab,
+  'gen-menu.md': COMPONENT_CUSTOM_ELEMENTS.genMenu,
   'focus-ring.md': COMPONENT_CUSTOM_ELEMENTS.focus,
   // Four icon buttons share one property table, so only the standard entry is registered.
   // 'icon-button.md': COMPONENT_CUSTOM_ELEMENTS.iconButton,

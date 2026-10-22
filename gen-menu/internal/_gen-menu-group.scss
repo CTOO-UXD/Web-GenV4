@@ -42,6 +42,10 @@
     box-shadow: none;
   }
 
+  :host-context(md-gen-menu[multi-group]) {
+    border-radius: var(--_shape-multi);
+  }
+
   :host([hidden]) {
     display: none !important;
   }

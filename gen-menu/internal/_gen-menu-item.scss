@@ -117,6 +117,20 @@
     color: currentColor;
   }
 
+  slot[name='start']::slotted([selected]),
+  slot[name='end']::slotted([selected]) {
+    display: none;
+  }
+
+  :host([selected]) slot[swap]::slotted(:not([selected])) {
+    display: none;
+  }
+
+  :host([selected]) slot[name='start']::slotted([selected]),
+  :host([selected]) slot[name='end']::slotted([selected]) {
+    display: inline-flex;
+  }
+
   .row::before {
     content: '';
     position: absolute;

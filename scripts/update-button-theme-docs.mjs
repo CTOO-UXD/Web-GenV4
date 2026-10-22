@@ -268,6 +268,22 @@ await writeTheme('alert-banner.md', [
   ),
 ]);
 
+const genMenuThemes = [
+  ['gen-menu', '菜单', 'md-gen-menu', 'gen-menu/internal/_gen-menu.scss'],
+  ['gen-menu-group', '组', 'md-gen-menu-group', 'gen-menu/internal/_gen-menu-group.scss'],
+  ['gen-menu-item', '条目', 'md-gen-menu-item', 'gen-menu/internal/_gen-menu-item.scss'],
+];
+const genMenuSections = await Promise.all(
+  genMenuThemes.map(async ([fileBase, title, tag, stylePath]) => {
+    const wrapper = await readFile(
+      join(root, 'tokens', `_md-comp-${fileBase}.scss`),
+      'utf8',
+    );
+    return tableFromSources(wrapper, '', `--${tag}-`, title, tag, stylePath);
+  }),
+);
+await writeTheme('gen-menu.md', genMenuSections);
+
 const textInputWrapper = await readFile(
   join(root, 'tokens', '_md-comp-text-input.scss'),
   'utf8',

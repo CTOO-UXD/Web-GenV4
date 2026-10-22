@@ -55,50 +55,140 @@ function getFocusedElement(
  * @fires closed {Event} 菜单已经关闭
  */
 export class GenMenu extends LitElement {
+  /**
+   * 锚点元素的 id。和锚点要在同一个根节点里。
+   *
+   * @en Id of the anchor element in the same root node.
+   */
   @property() anchor = '';
 
+  /**
+   * 相对谁定位。`absolute` 相对锚点的定位父级，`fixed` 相对窗口，`document` 相对文档，`popover` 用顶层，浏览器不支持时退回 `fixed`。
+   *
+   * @en Positioning context. `popover` falls back to `fixed` when unsupported.
+   */
   @property() positioning: 'absolute' | 'fixed' | 'document' | 'popover' =
     'absolute';
 
+  /**
+   * 跳过打开和关闭动画。
+   *
+   * @en Skips the opening and closing animations.
+   */
   @property({type: Boolean}) quick = false;
 
+  /**
+   * 为真时不裁剪内容，也不出现滚动条。
+   *
+   * @en Shows overflowing content and hides the scrollbar.
+   */
   @property({type: Boolean, attribute: 'has-overflow'}) hasOverflow = false;
 
+  /**
+   * 菜单是否打开。
+   *
+   * @en Whether the menu is open.
+   */
   @property({type: Boolean, reflect: true}) open = false;
 
+  /**
+   * 相对锚点的水平偏移，单位像素。从左到右时正数向右，从右到左时正数向左。
+   *
+   * @en Horizontal offset from the anchor in pixels. Direction aware.
+   */
   @property({type: Number, attribute: 'x-offset'}) xOffset = 0;
 
+  /**
+   * 相对锚点的垂直偏移，单位像素。正数向下。
+   *
+   * @en Vertical offset from the anchor in pixels. Positive is downward.
+   */
   @property({type: Number, attribute: 'y-offset'}) yOffset = 0;
 
+  /**
+   * 为真时，菜单在水平方向超出视口也不翻转。
+   *
+   * @en Keeps the horizontal corner when the menu would leave the viewport.
+   */
   @property({type: Boolean, attribute: 'no-horizontal-flip'})
   noHorizontalFlip = false;
 
+  /**
+   * 为真时，菜单在垂直方向超出视口也不翻转。
+   *
+   * @en Keeps the vertical corner when the menu would leave the viewport.
+   */
   @property({type: Boolean, attribute: 'no-vertical-flip'}) noVerticalFlip =
     false;
 
+  /**
+   * 键盘按字跳转时，两次按键之间最多隔多久，单位毫秒。超时后重新开始匹配。
+   *
+   * @en Max time in milliseconds between typeahead keystrokes.
+   */
   @property({type: Number, attribute: 'typeahead-delay'})
   typeaheadDelay = DEFAULT_TYPEAHEAD_BUFFER_TIME;
 
+  /**
+   * 锚点用来对齐的角，写成「块方向-行方向」，例如 `end-start`。
+   *
+   * @en Anchor corner as block-inline, for example `end-start`.
+   */
   @property({attribute: 'anchor-corner'}) anchorCorner: Corner =
     Corner.END_START;
 
+  /**
+   * 菜单用来对齐的角，写成「块方向-行方向」，例如 `start-start`。
+   *
+   * @en Menu corner as block-inline, for example `start-start`.
+   */
   @property({attribute: 'menu-corner'}) menuCorner: Corner = Corner.START_START;
 
+  /**
+   * 为真时，点菜单和锚点以外的地方不关闭。
+   *
+   * @en Stays open when clicking outside the menu and anchor.
+   */
   @property({type: Boolean, attribute: 'stay-open-on-outside-click'})
   stayOpenOnOutsideClick = false;
 
+  /**
+   * 为真时，焦点离开菜单不关闭。
+   *
+   * @en Stays open when focus leaves the menu.
+   */
   @property({type: Boolean, attribute: 'stay-open-on-focusout'})
   stayOpenOnFocusout = false;
 
+  /**
+   * 为真时，关闭后不把焦点还回打开前的元素。
+   *
+   * @en Does not restore focus after closing.
+   */
   @property({type: Boolean, attribute: 'skip-restore-focus'})
   skipRestoreFocus = false;
 
+  /**
+   * 打开后焦点落在哪里。`none` 不动，`list-root` 落在列表，`first-item` 第一条，`last-item` 最后一条。
+   *
+   * @en Where focus lands after opening.
+   */
   @property({attribute: 'default-focus'}) defaultFocus: FocusState =
     FocusState.FIRST_ITEM;
 
+  /**
+   * 为真时，键盘移到头或尾不再绕回。
+   *
+   * @en Does not wrap keyboard navigation at the ends.
+   */
   @property({type: Boolean, attribute: 'no-navigation-wrap'})
   noNavigationWrap = false;
 
+  /**
+   * 配色。`standard` 或 `vibrant`，不是页面的亮色和暗色。
+   *
+   * @en Color theme, `standard` or `vibrant`. Not the page light or dark theme.
+   */
   @property({reflect: true}) theme: 'standard' | 'vibrant' = 'standard';
 
   @query('.menu') private readonly surfaceEl!: HTMLElement | null;
@@ -106,8 +196,8 @@ export class GenMenu extends LitElement {
   @query('.bar') private readonly barEl!: HTMLElement | null;
   @query('.thumb') private readonly thumbEl!: HTMLElement | null;
 
-  @state() private singleCard = true;
   @state() private typeaheadActive = true;
+  private renderedGroupCount = -1;
 
   private currentAnchorElement: HTMLElement | null = null;
   private lastFocusedElement: HTMLElement | null = null;
@@ -168,6 +258,11 @@ export class GenMenu extends LitElement {
     }
   }
 
+  /**
+   * 锚点元素。写了 `anchor` 时以那个 id 为准。
+   *
+   * @en Anchor element. `anchor` wins when set.
+   */
   get anchorElement(): HTMLElement | null {
     if (this.anchor) {
       return (this.getRootNode() as Document | ShadowRoot).querySelector(
@@ -182,18 +277,38 @@ export class GenMenu extends LitElement {
     this.requestUpdate('anchorElement');
   }
 
+  /**
+   * 菜单里的条目，按页面顺序。
+   *
+   * @en Menu items in page order.
+   */
   get items(): MenuItem[] {
     return this.listController.items;
   }
 
+  /**
+   * 打开菜单。
+   *
+   * @en Opens the menu.
+   */
   show() {
     this.open = true;
   }
 
+  /**
+   * 关闭菜单。
+   *
+   * @en Closes the menu.
+   */
   close() {
     this.open = false;
   }
 
+  /**
+   * 按当前锚点重新计算位置。
+   *
+   * @en Repositions the menu against its anchor.
+   */
   reposition() {
     if (this.open) {
       this.positionController.position();
@@ -227,6 +342,8 @@ export class GenMenu extends LitElement {
         this.setAttribute('aria-hidden', 'true');
       }
     }
+    this.renderedGroupCount = this.groupCount();
+    this.toggleAttribute('multi-group', this.renderedGroupCount > 1);
   }
 
   protected override updated(changed: PropertyValues<GenMenu>) {
@@ -238,6 +355,8 @@ export class GenMenu extends LitElement {
       }
     }
     this.syncScrollbar();
+    // 服务端数不到组，会先渲染成单卡。class 绑定不会清掉这时留下的 single。
+    this.itemsEl?.classList.toggle('single', this.groupCount() === 0);
   }
 
   protected override render() {
@@ -256,7 +375,7 @@ export class GenMenu extends LitElement {
           'min-width': 'var(--_width)',
           'max-width': 'var(--_width)',
         })}>
-        <div class="items ${classMap({single: this.singleCard})}" tabindex="-1" @scroll=${this.syncScrollbar} role="menu">
+        <div class=${this.groupCount() === 0 ? 'items single' : 'items'} tabindex="-1" @scroll=${this.syncScrollbar} role="menu">
           <slot
             @slotchange=${this.onSlotchange}
             @close-menu=${this.onCloseMenu}
@@ -284,16 +403,18 @@ export class GenMenu extends LitElement {
     return items;
   }
 
-  private onSlotchange = () => {
-    const slot = this.renderRoot.querySelector('slot');
-    const assigned = slot?.assignedElements({flatten: true}) ?? [];
-    const grouped = assigned.some(
+  private groupCount() {
+    if (isServer || !this.children) return 0;
+    return Array.from(this.children).filter(
       (element) => element.tagName === 'MD-GEN-MENU-GROUP',
-    );
-    if (this.singleCard === grouped) {
-      this.singleCard = !grouped;
-    }
+    ).length;
+  }
+
+  private onSlotchange = () => {
     this.listController.onSlotchange();
+    if (this.groupCount() !== this.renderedGroupCount) {
+      this.requestUpdate();
+    }
     this.updateComplete.then(() => this.syncScrollbar());
   };
 

@@ -17,6 +17,10 @@ declare global {
 }
 
 /**
+ * 一张圆角卡。没有属性，颜色跟着菜单的 theme。
+ *
+ * @en A rounded card with no properties. Color follows the menu theme.
+ *
  * @final
  * @suppress {visibility}
  */

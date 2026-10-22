@@ -90,6 +90,7 @@ async function updateDocFileApiSection(
       '五种按钮的属性相同，下表适用于 `<md-filled-button>`、`<md-filled-tonal-button>`、`<md-elevated-button>`、`<md-outlined-button>`、`<md-text-button>`。',
     'icon-button.md':
       '四种图标按钮的属性相同，下表适用于 `<md-icon-button>`、`<md-filled-icon-button>`、`<md-filled-tonal-icon-button>`、`<md-outlined-icon-button>`。',
+    'gen-menu.md': '菜单、组和条目的属性不同，下面分表列出。',
     'modal.md': '四类弹窗的属性不同，下面分表列出。',
     'process-stepper.md': '步骤条和步骤的属性不同，下面分表列出。',
     'text-input.md':
@@ -155,7 +156,7 @@ function generateTableSection(
     zhHeaders,
     docFileName === 'modal.md',
   );
-  const methodsTable = generateMethodMarkdownTable(elementDoc);
+  const methodsTable = generateMethodMarkdownTable(elementDoc, zhHeaders);
   const eventsTable = generateEventsMarkdownTable(elementDoc, zhHeaders);
 
   if (propertiesTable.rows.length > 0) {
@@ -163,7 +164,7 @@ function generateTableSection(
   }
 
   if (docFileName !== 'modal.md' && methodsTable.rows.length > 0) {
-    tables.push({name: 'Methods', table: methodsTable});
+    tables.push({name: zhHeaders ? '方法' : 'Methods', table: methodsTable});
   }
 
   if (eventsTable.rows.length > 0) {
@@ -171,6 +172,9 @@ function generateTableSection(
   }
 
   const zhTitles: {[key: string]: string} = {
+    'gen-menu/gen-menu.ts': '菜单',
+    'gen-menu/gen-menu-group.ts': '组',
+    'gen-menu/gen-menu-item.ts': '条目',
     'modal/modal.ts': '对话弹窗',
     'hero-modal/hero-modal.ts': '主视觉弹窗',
     'feature-tour-modal/feature-tour-modal.ts': '功能引导',
@@ -341,13 +345,15 @@ function generateFieldMarkdownTable(
  * @returns A Markdown table where the rows are the public methods of the
  * element.
  */
-function generateMethodMarkdownTable(element: MdModuleInfo): MarkdownTable {
-  const methodsTable = new MarkdownTable([
-    'Method',
-    'Parameters',
-    'Returns',
-    'Description',
-  ]);
+function generateMethodMarkdownTable(
+  element: MdModuleInfo,
+  zhHeaders = false,
+): MarkdownTable {
+  const methodsTable = new MarkdownTable(
+    zhHeaders
+      ? ['方法', '参数', '返回值', '说明']
+      : ['Method', 'Parameters', 'Returns', 'Description'],
+  );
   const methodNameOrder: string[] = [];
   const methodToRow = new Map<
     string,
@@ -370,7 +376,9 @@ function generateMethodMarkdownTable(element: MdModuleInfo): MarkdownTable {
         name: method.name,
         parameters: method.parameters,
         returns: method.returns,
-        description: method.description,
+        description: zhHeaders
+          ? method.description?.split(/@en\b/)[0].trim()
+          : method.description,
       };
 
       const isMethodInSubclass = methodToRow.has(method.name);
@@ -392,7 +400,8 @@ function generateMethodMarkdownTable(element: MdModuleInfo): MarkdownTable {
     const rowObj = methodToRow.get(methodName);
     methodsTable.addRow([
       `\`${rowObj.name}\``,
-      rowObj.parameters.map((p) => `\`${p.name}\``).join(', ') || '_None_',
+      rowObj.parameters.map((p) => `\`${p.name}\``).join(', ') ||
+        (zhHeaders ? '无' : '_None_'),
       `\`${rowObj.returns ?? 'void'}\``,
       rowObj.description ?? '',
     ]);
@@ -562,8 +571,16 @@ function stringifyMarkdownTableSections(elements: ElementTableSection[]) {
           customElementName ? ` <code>&lt;${customElementName}&gt;</code>` : ''
         }`
       : '';
+    const blurb = [element.summary, element.description]
+      .filter(Boolean)
+      .join('\n')
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('@'))
+      .join('\n');
+    const summary = tables.length === 0 && blurb ? `\n\n${blurb}\n` : '';
     const headingLevel = className ? '####' : '###';
-    tablesStrings += `${heading}${tables
+    tablesStrings += `${heading}${summary}${tables
       .map(
         ({name, table}) => `
 ${headingLevel} ${name}

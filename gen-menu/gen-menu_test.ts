@@ -8,6 +8,8 @@ import {html, render} from 'lit';
 
 import {createTokenTests} from '../testing/tokens.js';
 
+import '../icon/icon.js';
+
 import {MdGenMenu} from './gen-menu.js';
 import {MdGenMenuGroup} from './gen-menu-group.js';
 import {MdGenMenuItem} from './gen-menu-item.js';
@@ -260,11 +262,15 @@ describe('gen menu', () => {
     const gap = second.getBoundingClientRect().top - first.getBoundingClientRect().bottom;
     expect(Math.round(gap)).toBe(2);
     expect(getComputedStyle(first).backgroundColor).toBe(rgb('#fbf9f7'));
-    expect(getComputedStyle(first).borderRadius).toBe('16px');
+    expect(getComputedStyle(first).borderRadius).toBe('8px');
+    expect(getComputedStyle(second).borderRadius).toBe('8px');
     expect(getComputedStyle(first).paddingTop).toBe('2px');
     expect(getComputedStyle(first).paddingLeft).toBe('0px');
     expect(getComputedStyle(root.querySelector('#vivid')!).backgroundColor).toBe(
       rgb('#ffdad8'),
+    );
+    expect(getComputedStyle(root.querySelector('#vivid')!).borderRadius).toBe(
+      '16px',
     );
   });
 
@@ -414,5 +420,75 @@ describe('gen menu', () => {
     const shortItem = root.querySelector<HTMLElement>('#short-item')!;
     const longItem = root.querySelector<HTMLElement>('#item-0')!;
     expect(longItem.offsetWidth).toBe(shortItem.offsetWidth);
+  });
+
+  it('caps the menu at the host max-height', async () => {
+    const many = Array.from({length: 8}, (_, index) => index);
+    await paint(
+      root,
+      html`
+        <button id="anchor">Open</button>
+        <md-gen-menu id="menu" anchor="anchor" quick style="max-height: 196px">
+          ${many.map(
+            (index) => html`<md-gen-menu-item>Item ${index}</md-gen-menu-item>`,
+          )}
+        </md-gen-menu>
+      `,
+    );
+    const menu = root.querySelector<MdGenMenu>('#menu')!;
+    await openMenu(menu);
+    const items = menu.shadowRoot!.querySelector('.items') as HTMLElement;
+    expect(items.clientHeight).toBeLessThanOrEqual(196);
+    expect(items.scrollHeight).toBeGreaterThan(items.clientHeight);
+    expect((menu.shadowRoot!.querySelector('.bar') as HTMLElement).hidden).toBe(
+      false,
+    );
+  });
+
+  it('swaps slot icons with the selected state', async () => {
+    await paint(
+      root,
+      html`
+        <button id="anchor">Open</button>
+        <md-gen-menu anchor="anchor" quick stay-open-on-focusout>
+          <md-gen-menu-item id="plain">Plain</md-gen-menu-item>
+          <md-gen-menu-item id="add">
+            <md-icon slot="start" selected id="add-mark">check</md-icon>
+            Add
+          </md-gen-menu-item>
+          <md-gen-menu-item id="swap" selected>
+            <span slot="start" id="swap-idle">idle</span>
+            <span slot="start" selected id="swap-mark">mark</span>
+            <span slot="end" id="end-stay">stay</span>
+            Swap
+          </md-gen-menu-item>
+        </md-gen-menu>
+      `,
+    );
+    const menu = root.querySelector<MdGenMenu>('md-gen-menu')!;
+    await openMenu(menu);
+    const shown = (id: string) =>
+      getComputedStyle(root.querySelector(id)!).display !== 'none';
+    const labelLeft = (id: string) =>
+      root
+        .querySelector(id)!
+        .shadowRoot!.querySelector('.label')!
+        .getBoundingClientRect().left;
+    expect(shown('#add-mark')).toBe(false);
+    expect(labelLeft('#add')).toBe(labelLeft('#plain'));
+    expect(shown('#swap-idle')).toBe(false);
+    expect(shown('#swap-mark')).toBe(true);
+    expect(shown('#end-stay')).toBe(true);
+
+    const add = root.querySelector<MdGenMenuItem>('#add')!;
+    const swap = root.querySelector<MdGenMenuItem>('#swap')!;
+    add.selected = true;
+    swap.selected = false;
+    await Promise.all([add.updateComplete, swap.updateComplete]);
+    expect(shown('#add-mark')).toBe(true);
+    expect(labelLeft('#add')).toBeGreaterThan(labelLeft('#plain'));
+    expect(shown('#swap-idle')).toBe(true);
+    expect(shown('#swap-mark')).toBe(false);
+    expect(shown('#end-stay')).toBe(true);
   });
 });

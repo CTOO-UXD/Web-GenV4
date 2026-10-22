@@ -17,6 +17,7 @@ $supported-tokens: (
   'padding-block',
   'padding-inline',
   'shape',
+  'shape-multi',
   // go/keep-sorted end
 );
 
@@ -31,6 +32,7 @@ $supported-tokens: (
     'padding-block': 2px,
     'padding-inline': 0px,
     'shape': 16px,
+    'shape-multi': 8px,
   );
 
   $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
