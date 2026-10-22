@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GenV4 Search Bar 验收</title>
+    <script type="module">
+      import '../../search-bar/search-bar.js';
+      import '../../gen-menu/gen-menu-item.js';
+
+      const bar = document.querySelector('md-search-bar');
+      const log = document.querySelector('#log');
+      const note = (text) => {
+        log.textContent = text;
+      };
+      bar.addEventListener('input', () => note(`input: ${bar.value}`));
+      bar.addEventListener('submit', (event) => note(`submit: ${event.detail.value}`));
+      bar.addEventListener('mic', () => note('mic'));
+    </script>
+    <style>
+      body {
+        margin: 0;
+        background: #c8c4c0;
+        color: #1c1b1b;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        display: grid;
+        gap: 32px;
+        width: min(960px, calc(100% - 32px));
+        margin: 32px auto;
+      }
+
+      .examples {
+        display: grid;
+        gap: 160px;
+      }
+
+      md-search-bar {
+        position: relative;
+        width: 100%;
+        z-index: 2;
+        --md-search-bar-results-max-height: 200px;
+      }
+
+      .narrow {
+        width: 360px;
+        z-index: 1;
+      }
+
+      #log {
+        min-height: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p id="log"></p>
+      <label><input id="open" type="checkbox" /> 打开上面这条的结果</label>
+      <div class="examples">
+        <md-search-bar placeholder="What are you looking for?">
+          <md-gen-menu-item slot="results" selected>Menu item</md-gen-menu-item>
+          <md-gen-menu-item slot="results">Menu item</md-gen-menu-item>
+          <md-gen-menu-item slot="results">Menu item</md-gen-menu-item>
+          <md-gen-menu-item slot="results">Menu item</md-gen-menu-item>
+          <md-gen-menu-item slot="results">Menu item</md-gen-menu-item>
+          <md-gen-menu-item slot="results">Menu item</md-gen-menu-item>
+        </md-search-bar>
+        <md-search-bar class="narrow" placeholder="What are you looking for?" open>
+          <md-gen-menu-item slot="results" selected>Menu item</md-gen-menu-item>
+          <md-gen-menu-item slot="results">Menu item</md-gen-menu-item>
+          <md-gen-menu-item slot="results">Menu item</md-gen-menu-item>
+          <md-gen-menu-item slot="results">Menu item</md-gen-menu-item>
+        </md-search-bar>
+      </div>
+      <p>后面的内容。窄栏打开结果时不该被往下推。</p>
+    </main>
+    <script>
+      document.querySelector('#open').addEventListener('change', (event) => {
+        document.querySelector('md-search-bar').open = event.target.checked;
+      });
+    </script>
+  </body>
+</html>

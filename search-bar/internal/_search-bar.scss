@@ -1,0 +1,245 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:list';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../tokens';
+// go/keep-sorted end
+
+// Container queries cannot read CSS variables. 560px is the wide layout.
+$wide-breakpoint: 560px;
+
+@mixin theme($tokens) {
+  $supported-tokens: tokens.$md-comp-search-bar-supported-tokens;
+
+  @each $token, $value in $tokens {
+    @if list.index($supported-tokens, $token) == null {
+      @error 'Token `#{$token}` is not a supported token.';
+    }
+
+    @if $value {
+      --md-search-bar-#{$token}: #{$value};
+    }
+  }
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-search-bar-values();
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    container-type: inline-size;
+    color: var(--_input-text-color);
+    font-size: var(--_input-text-size);
+    line-height: var(--_input-text-line-height);
+    font-weight: var(--_input-text-weight);
+    --_button-icon-size: var(--_icon-size);
+    --_button-icon-color: var(--_icon-color);
+  }
+
+  .capsule {
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--_wide-padding);
+    border-radius: var(--_capsule-shape);
+    background: var(--_capsule-color);
+    box-shadow: var(--_capsule-shadow);
+  }
+
+  :host([open]) .capsule {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_results-gap);
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: var(--_wide-gap);
+    min-width: 0;
+  }
+
+  .field {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: var(--_field-gap);
+    box-sizing: border-box;
+    min-width: 0;
+    height: var(--_field-height);
+    padding-inline-end: var(--_field-gap);
+    border-radius: var(--_field-shape);
+    background: var(--_field-color);
+  }
+
+  .leading {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--_leading-size);
+    height: var(--_field-height);
+    color: var(--_icon-color);
+  }
+
+  .leading md-icon {
+    --md-icon-size: var(--_icon-size);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    caret-color: var(--_caret-color);
+  }
+
+  input::placeholder {
+    color: var(--_placeholder-color);
+    opacity: 1;
+  }
+
+  .mic,
+  .empty,
+  .clear,
+  .filled {
+    --md-icon-button-icon-size: var(--_button-icon-size);
+    --md-filled-icon-button-icon-size: var(--_button-icon-size);
+    --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
+    --md-icon-button-icon-color: var(--_button-icon-color);
+    --md-icon-button-hover-icon-color: var(--_button-icon-color);
+    --md-icon-button-focus-icon-color: var(--_button-icon-color);
+    --md-icon-button-pressed-icon-color: var(--_button-icon-color);
+  }
+
+  .mic {
+    --md-icon-button-state-layer-width: var(--_action-size);
+    --md-icon-button-state-layer-height: var(--_action-size);
+  }
+
+  .empty {
+    border-radius: 50%;
+    background: var(--_field-color);
+    --md-icon-button-state-layer-width: var(--_wide-submit-size);
+    --md-icon-button-state-layer-height: var(--_wide-submit-size);
+  }
+
+  .clear {
+    --md-filled-tonal-icon-button-container-width: var(--_action-size);
+    --md-filled-tonal-icon-button-container-height: var(--_action-size);
+    --md-filled-tonal-icon-button-container-color: var(--_clear-container-color);
+    --md-filled-tonal-icon-button-icon-color: var(--_button-icon-color);
+    --md-filled-tonal-icon-button-hover-icon-color: var(--_button-icon-color);
+    --md-filled-tonal-icon-button-focus-icon-color: var(--_button-icon-color);
+    --md-filled-tonal-icon-button-pressed-icon-color: var(--_button-icon-color);
+  }
+
+  .filled {
+    --md-filled-icon-button-container-width: var(--_wide-submit-size);
+    --md-filled-icon-button-container-height: var(--_wide-submit-size);
+    --md-filled-icon-button-container-color: var(--_submit-container-color);
+    --md-filled-icon-button-icon-color: var(--_submit-icon-color);
+    --md-filled-icon-button-hover-icon-color: var(--_submit-icon-color);
+    --md-filled-icon-button-focus-icon-color: var(--_submit-icon-color);
+    --md-filled-icon-button-pressed-icon-color: var(--_submit-icon-color);
+  }
+
+  .results {
+    position: relative;
+    box-sizing: border-box;
+    min-width: 0;
+    border-radius: var(--_results-shape);
+    max-height: var(--_results-max-height);
+    padding-block: var(--_results-padding-block);
+  }
+
+  .items {
+    box-sizing: border-box;
+    max-height: calc(var(--_results-max-height) - 2 * var(--_results-padding-block));
+    overflow: auto;
+    scrollbar-width: none;
+  }
+
+  .items::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  .scrollbar {
+    position: absolute;
+    top: var(--_scrollbar-inset-block);
+    bottom: var(--_scrollbar-inset-block);
+    inset-inline-end: var(--_scrollbar-inset-inline);
+    width: var(--_scrollbar-size);
+    pointer-events: none;
+  }
+
+  .scrollbar[hidden] {
+    display: none !important;
+  }
+
+  .thumb {
+    width: 100%;
+    min-height: var(--_thumb-min-size);
+    background: var(--_scrollbar-color);
+    border-radius: var(--_scrollbar-size);
+  }
+
+  @container (max-width: #{$wide-breakpoint - 1px}) {
+    .capsule {
+      padding: var(--_narrow-padding);
+    }
+
+    .bar-row {
+      position: relative;
+      gap: 0;
+      border-radius: var(--_field-shape);
+      background: var(--_field-color);
+    }
+
+    .field {
+      padding-inline-end: calc(var(--_narrow-submit-size) + 2 * var(--_field-gap));
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .empty {
+      background: transparent;
+      --md-icon-button-state-layer-width: var(--_narrow-submit-size);
+      --md-icon-button-state-layer-height: var(--_narrow-submit-size);
+    }
+
+    .submit {
+      position: absolute;
+      inset-inline-end: var(--_field-gap);
+    }
+
+    .filled {
+      --md-filled-icon-button-container-width: var(--_narrow-submit-size);
+      --md-filled-icon-button-container-height: var(--_narrow-submit-size);
+    }
+
+    .results {
+      position: absolute;
+      inset-inline: 0;
+      top: calc(100% + var(--_results-offset));
+      background: var(--_results-color);
+      box-shadow: var(--_results-shadow);
+    }
+  }
+}

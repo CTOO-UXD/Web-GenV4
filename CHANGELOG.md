@@ -4,6 +4,14 @@
 
 ## 2026-10-22
 
+* 新增搜索栏，宽窄按组件宽度切换，结果由页面放进插槽
+  * `search-bar/`
+  * `tokens/_md-comp-search-bar.scss`
+  * `tokens/_index.scss`
+  * `all.ts`
+  * `scripts/component-custom-elements.ts`
+  * `testing/genv4/search-bar.html`
+
 * 补上分组菜单展示页，两组圆角和选中换图标在页面上能分开
   * `docs/components/gen-menu.md`
   * `catalog/src/hydration-entrypoints/components/gen-menu.ts`

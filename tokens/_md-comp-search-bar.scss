@@ -1,0 +1,124 @@
+//
+// Copyright 2026 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+@use 'sass:string';
+// go/keep-sorted end
+// go/keep-sorted start
+@use 'internal/validate';
+// go/keep-sorted end
+
+$supported-tokens: (
+  // go/keep-sorted start
+  'action-size',
+  'capsule-color',
+  'capsule-shadow',
+  'capsule-shape',
+  'caret-color',
+  'clear-container-color',
+  'field-color',
+  'field-gap',
+  'field-height',
+  'field-shape',
+  'icon-color',
+  'icon-size',
+  'input-text-color',
+  'input-text-line-height',
+  'input-text-size',
+  'input-text-weight',
+  'leading-size',
+  'narrow-padding',
+  'narrow-submit-size',
+  'placeholder-color',
+  'results-color',
+  'results-gap',
+  'results-max-height',
+  'results-offset',
+  'results-padding-block',
+  'results-shadow',
+  'results-shape',
+  'scrollbar-color',
+  'scrollbar-inset-block',
+  'scrollbar-inset-inline',
+  'scrollbar-size',
+  'submit-container-color',
+  'submit-icon-color',
+  'thumb-min-size',
+  'wide-gap',
+  'wide-padding',
+  'wide-submit-size',
+  // go/keep-sorted end
+);
+
+@function values(
+  $deps: null,
+  $exclude-hardcoded-values: false,
+  $exclude-custom-properties: false
+) {
+  $capsule-color: string.unquote(
+    'hsl(from var(--md-sys-color-surface, #ffffff) h s l / 80%)'
+  );
+  $capsule-shadow: string.unquote(
+    '0 0 10px hsl(from var(--md-sys-color-shadow, #000) h s l / 12%)'
+  );
+  $results-shadow: string.unquote(
+    '0 2px 6px hsl(from var(--md-sys-color-shadow, #000) h s l / 12%), 0 1px 2px hsl(from var(--md-sys-color-shadow, #000) h s l / 30%)'
+  );
+
+  $tokens: (
+    'action-size': 40px,
+    'capsule-color': $capsule-color,
+    'capsule-shadow': $capsule-shadow,
+    'capsule-shape': 32px,
+    'caret-color': var(--md-sys-color-primary, #6c43c6),
+    'clear-container-color': var(--md-sys-color-surface-container-high, #e7e2dd),
+    'field-color': var(--md-sys-color-surface, #ffffff),
+    'field-gap': 4px,
+    'field-height': 48px,
+    'field-shape': 24px,
+    'icon-color': var(--md-sys-color-on-surface, #1c1b1b),
+    'icon-size': 24px,
+    'input-text-color': var(--md-sys-color-on-surface, #1c1b1b),
+    'input-text-line-height': 20px,
+    'input-text-size': 14px,
+    'input-text-weight': 400,
+    'leading-size': 48px,
+    'narrow-padding': 4px,
+    'narrow-submit-size': 40px,
+    'placeholder-color': var(--md-sys-color-on-surface-variant, #49454e),
+    'results-color': var(--md-sys-color-surface, #ffffff),
+    'results-gap': 4px,
+    'results-max-height': none,
+    'results-offset': 8px,
+    'results-padding-block': 2px,
+    'results-shadow': $results-shadow,
+    'results-shape': 16px,
+    'scrollbar-color': var(--md-sys-color-outline, #7a757f),
+    'scrollbar-inset-block': 12px,
+    'scrollbar-inset-inline': 4px,
+    'scrollbar-size': 4px,
+    'submit-container-color': var(--md-sys-color-primary, #6c43c6),
+    'submit-icon-color': var(--md-sys-color-on-primary, #ffffff),
+    'thumb-min-size': 16px,
+    'wide-gap': 12px,
+    'wide-padding': 8px,
+    'wide-submit-size': 48px,
+  );
+
+  $tokens: validate.values($tokens, $supported-tokens: $supported-tokens);
+
+  @if not $exclude-custom-properties {
+    @each $token, $value in $tokens {
+      $tokens: map.set(
+        $tokens,
+        $token,
+        var(--md-search-bar-#{$token}, #{$value})
+      );
+    }
+  }
+
+  @return $tokens;
+}
