@@ -202,6 +202,8 @@ $surface-container: var(--md-sys-color-surface-container);
   }
 
   ::slotted([slot='checkbox']) {
+    align-items: center;
+    display: inline-flex;
     font-size: var(--_checkbox-label-size);
     letter-spacing: var(--_checkbox-label-tracking);
     line-height: var(--_checkbox-label-line-height);

@@ -115,7 +115,7 @@ describe('<md-modal>', () => {
     await env.waitForStability();
     expect(cancel).toHaveBeenCalled();
     expect(modal.open).toBeFalse();
-    expect(modal.returnValue).toBe('kept');
+    expect(modal.returnValue).toBe('cancel');
   });
 
   it('cancels from the scrim and Escape', async () => {

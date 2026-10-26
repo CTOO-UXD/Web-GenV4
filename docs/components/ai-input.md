@@ -18,7 +18,7 @@ import 'genv4/ai-input/ai-input.js';
 
 ### 默认
 
-没有文字时发送按钮不可点。点左侧加号可以上传文件。
+没有文字时发送按钮不可点。Enter 发送，Shift+Enter 换行。点左侧加号可以上传文件，按 Esc 或点外面关掉这个菜单。
 
 <div class="figure-wrapper">
   <figure style="display:block;width:100%;background:var(--md-sys-color-surface-container);padding-block:16px">
@@ -125,7 +125,7 @@ import 'genv4/ai-input/ai-input.js';
 
 | Event | Type | [Bubbles](https://developer.mozilla.org/en-US/docs/Web/API/Event/bubbles) | [Composed](https://developer.mozilla.org/en-US/docs/Web/API/Event/composed) | Description |
 | --- | --- | --- | --- | --- |
-| `send` | `CustomEvent` | Yes | Yes | 点击发送。detail 含 value 和 files |
+| `send` | `CustomEvent` | Yes | Yes | 点击或按 Enter 发送。Shift+Enter 换行。detail 含 value 和 files |
 | `interrupt` | `CustomEvent` | Yes | Yes | 发送中点击停止 |
 | `files-change` | `CustomEvent` | Yes | Yes | 已选文件变化。detail 含 files |
 

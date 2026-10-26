@@ -152,7 +152,7 @@ describe('<md-hero-modal>', () => {
     await env.waitForStability();
     expect(cancel).toHaveBeenCalledTimes(1);
     expect(modal.open).toBeFalse();
-    expect(modal.returnValue).toBe('');
+    expect(modal.returnValue).toBe('cancel');
 
     await modal.show();
     modal.showCancel = true;
@@ -161,7 +161,7 @@ describe('<md-hero-modal>', () => {
     buttonWith(modal, 'md-text-button', 'Cancel').click();
     await env.waitForStability();
     expect(cancel).toHaveBeenCalledTimes(2);
-    expect(modal.returnValue).toBe('kept');
+    expect(modal.returnValue).toBe('cancel');
 
     await modal.show();
     const dialog = dialogOf(modal);
@@ -369,7 +369,9 @@ describe('<md-hero-modal>', () => {
     modal.shadowRoot!.querySelectorAll<HTMLButtonElement>('.dot')[3].click();
     await modal.updateComplete;
     expect(pages[3].hasAttribute('data-current')).toBeTrue();
-    expect(modal.querySelector('[slot="next"] md-icon')!.textContent?.trim()).toBe('check');
+    expect(modal.querySelector('[slot="next"] md-icon')!.textContent?.trim()).toBe(
+      'check',
+    );
 
     const heroSurface = modal.shadowRoot!.querySelector('.hero')!;
     heroSurface.dispatchEvent(new PointerEvent('pointerdown', {clientX: 200, bubbles: true}));

@@ -7,3 +7,4 @@
 import 'genv4/alert-banner/alert-banner.js';
 import 'genv4/button/filled-button.js';
 import 'genv4/button/outlined-button.js';
+import 'genv4/checkbox/checkbox.js';

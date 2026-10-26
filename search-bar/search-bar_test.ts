@@ -45,7 +45,7 @@ describe('<md-search-bar>', () => {
     expect(button(bar.renderRoot, '麦克风')).not.toBeUndefined();
     expect(button(bar.renderRoot, '清除')).toBeUndefined();
     expect(button(bar.renderRoot, '提交')!.tagName).toBe('MD-ICON-BUTTON');
-    expect(button(bar.renderRoot, '提交')!.hasAttribute('disabled')).toBeFalse();
+    expect(button(bar.renderRoot, '提交')!.hasAttribute('disabled')).toBeTrue();
   });
 
   it('treats spaces as empty and ignores the idle arrow', async () => {

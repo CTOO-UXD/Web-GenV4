@@ -44,12 +44,6 @@
         flex-direction: column;
       }
 
-      .check {
-        align-items: center;
-        display: inline-flex;
-        gap: 8px;
-      }
-
       .narrow {
         border: 1px dashed #7a757f;
         overflow: auto;
@@ -158,18 +152,18 @@
           scheme="success"
           label="带勾选框"
           supporting-text="勾选状态由页面自己记。">
-          <span class="check" slot="checkbox">
-            <md-checkbox></md-checkbox>
+          <label slot="checkbox">
+            <md-checkbox touch-target="wrapper"></md-checkbox>
             下次不再显示这条比较长的提示文字
-          </span>
+          </label>
           <md-filled-button slot="actions">查看详情</md-filled-button>
           <md-outlined-button slot="actions">取消这次操作</md-outlined-button>
         </md-alert-banner>
         <md-alert-banner label="同一行" supporting-text="勾选框和两个按钮都在文字旁边。">
-          <span class="check" slot="checkbox">
-            <md-checkbox></md-checkbox>
+          <label slot="checkbox">
+            <md-checkbox touch-target="wrapper"></md-checkbox>
             不再显示
-          </span>
+          </label>
           <md-filled-button slot="actions">确定</md-filled-button>
           <md-outlined-button slot="actions">取消</md-outlined-button>
         </md-alert-banner>

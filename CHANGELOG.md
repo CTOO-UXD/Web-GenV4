@@ -2,6 +2,25 @@
 
 按提交记录 GenV4 自己的改动，新的在上面。哈希可以在仓库里打开对应提交。
 
+## 2026-10-26
+
+* 补上当前页、取消返回值和发送键，末页下一步换成勾，空着的搜索不能提交
+  * `modal/`
+  * `hero-modal/`
+  * `feature-tour-modal/`
+  * `search-bar/`
+  * `text-input/`
+  * `ai-input/`
+  * `alert-banner/`
+  * `docs/components/modal.md`
+  * `docs/components/search-bar.md`
+  * `docs/components/text-input.md`
+  * `docs/components/ai-input.md`
+  * `docs/components/alert-banner.md`
+  * `docs/components/gen-menu.md`
+  * `catalog/src/hydration-entrypoints/components/alert-banner.ts`
+  * `testing/genv4/alert-banner.html`
+
 ## 2026-10-22
 
 * 补上搜索栏展示页，宽窄各展示空输入和打开结果

@@ -16,16 +16,18 @@ label: 提示横幅 Alert banner
 | `<md-alert-banner>` | 页面内容上方的一条通知、说明、成功、警告或错误 |
 | `<md-filled-button>` | 横幅里的主操作 |
 | `<md-outlined-button>` | 横幅里的次操作 |
+| `<md-checkbox>` | 横幅里的勾选 |
 
 ```js
 import 'genv4/alert-banner/alert-banner.js';
 import 'genv4/button/filled-button.js';
 import 'genv4/button/outlined-button.js';
+import 'genv4/checkbox/checkbox.js';
 ```
 
 ## 示例
 
-宽度固定 740。父级更窄时横幅不缩小，由页面滚动。关闭按钮一直在。点关闭会发出 `close`，并加上 `hidden`，不再占高度。组件不记住这次关闭。页面去掉 `hidden` 就会再显示；页面如果记下关闭，下次可以不渲染。
+默认宽 740px，用 `--md-alert-banner-width` 覆盖。父级更窄时横幅不缩小，由页面滚动。关闭按钮一直在。点关闭会发出 `close`，并加上 `hidden`，不再占高度。组件不记住这次关闭。页面去掉 `hidden` 就会再显示；页面如果记下关闭，下次可以不渲染。
 
 <style>
   .figure-wrapper figure {
@@ -117,6 +119,24 @@ import 'genv4/button/outlined-button.js';
 <md-alert-banner scheme="error" label="无法保存" supporting-text="实心按钮改成深色。">
   <md-filled-button slot="actions">确定</md-filled-button>
   <md-outlined-button slot="actions">取消</md-outlined-button>
+</md-alert-banner>
+```
+
+### 勾选
+
+勾选放在 `checkbox` 插槽。勾上没有由组件记住。
+
+<div class="figure-wrapper">
+  <figure>
+    <md-alert-banner label="带勾选框" supporting-text="勾选状态由页面自己记。">
+      <label slot="checkbox"><md-checkbox touch-target="wrapper"></md-checkbox>下次不再显示</label>
+    </md-alert-banner>
+  </figure>
+</div>
+
+```html
+<md-alert-banner label="带勾选框" supporting-text="勾选状态由页面自己记。">
+  <label slot="checkbox"><md-checkbox touch-target="wrapper"></md-checkbox>下次不再显示</label>
 </md-alert-banner>
 ```
 

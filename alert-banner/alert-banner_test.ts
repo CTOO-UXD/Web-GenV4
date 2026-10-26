@@ -306,6 +306,7 @@ describe('<md-alert-banner>', () => {
     `);
     const text = getComputedStyle(banner.querySelector('[slot="checkbox"]')!);
 
+    expect(text.display).toBe('inline-flex');
     expect(text.fontSize).toBe('12px');
     expect(text.lineHeight).toBe('16px');
     expect(text.letterSpacing).toBe('0.1px');

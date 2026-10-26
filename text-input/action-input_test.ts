@@ -133,17 +133,18 @@ describe('<md-action-input>', () => {
     expect(detail).toEqual(['hello']);
   });
 
-  it('does not send on Enter', async () => {
+  it('sends on Enter and skips whitespace', async () => {
     const input = await render(html`<md-action-input label="Label" value="hello"></md-action-input>`);
-    let sent = false;
-    input.addEventListener('send', () => {
-      sent = true;
-    });
-
-    input.renderRoot.querySelector('input')!.dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}),
-    );
-    expect(sent).toBeFalse();
+    const values: string[] = [];
+    input.addEventListener('send', ((event: CustomEvent<{value: string}>) => {
+      values.push(event.detail.value);
+    }) as EventListener);
+    const field = input.renderRoot.querySelector('input')!;
+    field.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
+    input.value = '   ';
+    await input.updateComplete;
+    field.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
+    expect(values).toEqual(['hello']);
   });
 
   it('does not send when disabled', async () => {

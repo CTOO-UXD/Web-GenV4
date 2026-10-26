@@ -40,6 +40,7 @@ function ensurePageStyles(host: HTMLElement) {
  * @fires close {Event} 正要关闭。调用 preventDefault 可以拦住。 @en Dispatched when the modal is closing.
  * @fires closed {Event} 关闭动画结束后发出。 @en Dispatched when the modal has closed.
  * @fires cancel {Event} 点遮罩、按 Esc 或点取消按钮时发出。调用 preventDefault 可以拦住。 @en Dispatched when the scrim, Escape, or cancel closes it.
+ * @fires page-change {CustomEvent<{page: number, previousPage: number}>} 用户翻页且页码变化时发出。脚本赋值不发。 --bubbles --composed
  */
 export class HeroModal extends LitElement {
   /**
@@ -67,8 +68,8 @@ export class HeroModal extends LitElement {
   }
 
   /**
-   * 关掉时写入。主按钮是 primary，次要是 secondary，第三操作是 tertiary，关闭按钮是 close。取消时为空。walkthrough 最后一页的下一步是 done。只能用脚本读写。
-   * @en Which control closed the modal. Empty when canceled.
+   * 关掉时写入。主按钮是 primary，次要是 secondary，第三操作是 tertiary，关闭按钮是 close。取消钮、Esc、点遮罩是 cancel。walkthrough 最后一页的下一步是 done。只能用脚本读写。
+   * @en Which control closed the modal. Cancel paths set cancel. The last walkthrough next sets done.
    */
   @property({attribute: false}) returnValue = '';
 
@@ -126,6 +127,19 @@ export class HeroModal extends LitElement {
   @property({reflect: true}) tertiary: 'button' | 'checkbox' = 'button';
 
   /**
+   * 第三操作是勾选时，是否勾上。只在 default 底栏出现。
+   * @en Whether the tertiary checkbox is checked. Shown on the default footer.
+   */
+  @property({type: Boolean, reflect: true, attribute: 'tertiary-checked'})
+  tertiaryChecked = false;
+
+  /**
+   * 当前页，从 0 开始。脚本赋值不发 page-change。
+   * @en Current page, starting at 0. Assigning it does not emit page-change.
+   */
+  @property({type: Number, reflect: true}) page = 0;
+
+  /**
    * 是否显示主图上的关闭按钮。HTML 属性是 close。默认开。要关掉只能在脚本里设为 false。
    * @en Whether to show the close button on the hero. The attribute is close.
    */
@@ -135,7 +149,6 @@ export class HeroModal extends LitElement {
   getOpenAnimation = () => DIALOG_DEFAULT_OPEN_ANIMATION;
   getCloseAnimation = () => DIALOG_DEFAULT_CLOSE_ANIMATION;
 
-  @state() private index = 0;
 
   private isOpen = false;
   private isOpening = false;
@@ -157,6 +170,7 @@ export class HeroModal extends LitElement {
   private escapePressedWithoutCancel = false;
   private swipeX = Number.NaN;
   private swipeY = Number.NaN;
+  @state() private hasNext = false;
   private nextIconText: string | null = null;
   private wheelX = 0;
   private wheelLocked = false;
@@ -182,6 +196,7 @@ export class HeroModal extends LitElement {
     }
 
     dialog.showModal();
+    this.page = 0;
     this.open = true;
     this.querySelector<HTMLElement>('[autofocus]')?.focus();
     await this.animateDialog(this.getOpenAnimation());
@@ -189,7 +204,7 @@ export class HeroModal extends LitElement {
     this.isOpening = false;
   }
 
-  /** Closes the modal. Scrim and Escape call this without a return value. */
+  /** Closes the modal. Scrim and Escape pass cancel. */
   async close(returnValue = this.returnValue) {
     this.isOpening = false;
     if (!this.isConnected) {
@@ -313,7 +328,10 @@ export class HeroModal extends LitElement {
     }
     if (this.tertiary === 'checkbox') {
       return html`<div class="start">
-        <md-checkbox touch-target="none"></md-checkbox>
+        <md-checkbox
+          touch-target="none"
+          .checked=${this.tertiaryChecked}
+          @change=${this.onTertiaryChange}></md-checkbox>
         <slot name="tertiary" @click=${this.toggleCheckbox}></slot>
       </div>`;
     }
@@ -332,19 +350,27 @@ export class HeroModal extends LitElement {
             class="dot"
             type="button"
             aria-label="Page ${i + 1}"
-            aria-current=${i === this.index ? 'true' : nothing}
-            ?current=${i === this.index}
+            aria-current=${i === this.page ? 'true' : nothing}
+            ?current=${i === this.page}
             @click=${() => {
-              this.index = i;
+              this.goTo(i);
             }}></button>`;
         })}
       </div>
       <div class="navs">
-        <div class="nav prev" ?hidden=${this.index === 0}>
+        <div class="nav prev" ?hidden=${this.page === 0}>
           <slot name="previous" @click=${this.retreat}></slot>
         </div>
         <div class="nav">
-          <slot name="next" @click=${this.advance}></slot>
+          <slot
+            name="next"
+            @slotchange=${this.onNextSlot}
+            @click=${this.advance}></slot>
+          ${this.onLastPage && !this.hasNext
+            ? html`<md-icon-button type="button" aria-label="Next" @click=${this.advance}>
+                <md-icon>check</md-icon>
+              </md-icon-button>`
+            : nothing}
         </div>
       </div>
     </div>`;
@@ -352,15 +378,15 @@ export class HeroModal extends LitElement {
 
   private syncPages = () => {
     const max = Math.max(0, this.pageElements().length - 1);
-    if (this.index > max) {
-      this.index = max;
+    if (this.page > max) {
+      this.page = max;
       return;
     }
     this.requestUpdate();
   };
 
   private applyPage() {
-    const current = this.type === 'walkthrough' ? this.index : 0;
+    const current = this.type === 'walkthrough' ? this.page : 0;
     this.pageElements().forEach((page, i) => {
       page.toggleAttribute('data-current', i === current);
     });
@@ -375,12 +401,7 @@ export class HeroModal extends LitElement {
     if (this.nextIconText === null) {
       this.nextIconText = icon.textContent?.trim() ?? '';
     }
-    const pages = this.pageElements();
-    const last =
-      this.type === 'walkthrough' &&
-      pages.length > 0 &&
-      this.index >= pages.length - 1;
-    icon.textContent = last ? 'check' : this.nextIconText;
+    icon.textContent = this.onLastPage ? 'check' : this.nextIconText;
   }
 
   private pageElements() {
@@ -390,7 +411,7 @@ export class HeroModal extends LitElement {
   }
 
   private advance = () => {
-    if (this.index >= this.pageElements().length - 1) {
+    if (this.page >= this.pageElements().length - 1) {
       this.close('done');
       return;
     }
@@ -402,11 +423,41 @@ export class HeroModal extends LitElement {
   };
 
   private move(step: number) {
+    this.goTo(this.page + step);
+  }
+
+  private goTo(next: number) {
     const count = this.pageElements().length;
     if (count === 0) {
       return;
     }
-    this.index = Math.min(count - 1, Math.max(0, this.index + step));
+    const page = Math.min(count - 1, Math.max(0, next));
+    if (page === this.page) {
+      return;
+    }
+    const previousPage = this.page;
+    this.page = page;
+    this.dispatchEvent(
+      new CustomEvent('page-change', {
+        detail: {page, previousPage},
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
+  private onNextSlot = (event: Event) => {
+    const slot = event.target as HTMLSlotElement;
+    this.hasNext = slot.assignedElements({flatten: true}).length > 0;
+  };
+
+  private get onLastPage() {
+    const pages = this.pageElements();
+    return (
+      this.type === 'walkthrough' &&
+      pages.length > 0 &&
+      this.page >= pages.length - 1
+    );
   }
 
   private handlePointerDown = (event: PointerEvent) => {
@@ -488,7 +539,11 @@ export class HeroModal extends LitElement {
     if (!this.checkbox) {
       return;
     }
-    this.checkbox.checked = !this.checkbox.checked;
+    this.tertiaryChecked = !this.tertiaryChecked;
+  };
+
+  private onTertiaryChange = (event: Event) => {
+    this.tertiaryChecked = (event.target as HTMLInputElement).checked;
   };
 
   private cancelFromControl = () => {
@@ -498,7 +553,7 @@ export class HeroModal extends LitElement {
     if (!proceed) {
       return;
     }
-    this.close();
+    this.close('cancel');
   };
 
   private handleDialogClick() {
@@ -526,7 +581,7 @@ export class HeroModal extends LitElement {
       return;
     }
 
-    this.close();
+    this.close('cancel');
   }
 
   private handleClose() {

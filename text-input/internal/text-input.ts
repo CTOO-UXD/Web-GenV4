@@ -42,7 +42,7 @@ const textInputBaseClass = mixinOnReportValidity(
  * --bubbles --composed
  * @fires change {Event} 文字提交时触发。
  * --bubbles
- * @fires send {CustomEvent<{value: string}>} 仅 `<md-action-input>`。有文字时点击发送，detail.value 是当前文字，文字留在框里。
+ * @fires send {CustomEvent<{value: string}>} 仅 `<md-action-input>`。有文字时点击或按 Enter 发送，detail.value 是当前文字，文字留在框里。空的、只有空格的、禁用的不发。
  * --bubbles --composed
  */
 export class TextInput extends textInputBaseClass {
@@ -188,7 +188,8 @@ export class TextInput extends textInputBaseClass {
           aria-invalid=${this.showErrorChrome ? 'true' : 'false'}
           aria-describedby=${message ? 'support' : nothing}
           @input=${this.onInput}
-          @change=${this.onChange} />`;
+          @change=${this.onChange}
+          @keydown=${this.onControlKeydown} />`;
     return html`
       <div
         class="root ${classMap({
@@ -273,6 +274,14 @@ export class TextInput extends textInputBaseClass {
     const full = area.scrollHeight;
     area.style.height = `${Math.min(Math.max(full, line), max)}px`;
     area.style.overflowY = full > max ? 'auto' : 'hidden';
+  }
+
+  private onControlKeydown(event: KeyboardEvent) {
+    if (!this.showsSend || event.key !== 'Enter' || event.shiftKey || event.isComposing) {
+      return;
+    }
+    event.preventDefault();
+    this.onSend();
   }
 
   private onSend() {

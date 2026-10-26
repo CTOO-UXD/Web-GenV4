@@ -74,7 +74,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
   <figure class="gen-menu-figure">
     <div class="gen-menu-demo">
       <md-text-input id="height-anchor" label="菜单" readonly value="三条"></md-text-input>
-      <md-gen-menu id="height-menu" anchor="height-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4" style="max-height: 196px">
+      <md-gen-menu id="height-menu" anchor="height-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4" style="max-height: 196px">
         <md-gen-menu-item><md-icon slot="start" selected aria-hidden="true">check</md-icon>一条</md-gen-menu-item>
         <md-gen-menu-item><md-icon slot="start" selected aria-hidden="true">check</md-icon>两条</md-gen-menu-item>
         <md-gen-menu-item selected><md-icon slot="start" selected aria-hidden="true">check</md-icon>三条</md-gen-menu-item>
@@ -90,7 +90,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
 ```html
 <div style="position: relative">
   <md-text-input id="height-anchor" label="菜单" readonly value="三条"></md-text-input>
-  <md-gen-menu id="height-menu" anchor="height-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4" style="max-height: 196px">
+  <md-gen-menu id="height-menu" anchor="height-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4" style="max-height: 196px">
     <md-gen-menu-item><md-icon slot="start" selected aria-hidden="true">check</md-icon>一条</md-gen-menu-item>
     <md-gen-menu-item><md-icon slot="start" selected aria-hidden="true">check</md-icon>两条</md-gen-menu-item>
     <md-gen-menu-item selected><md-icon slot="start" selected aria-hidden="true">check</md-icon>三条</md-gen-menu-item>
@@ -116,7 +116,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
   <figure class="gen-menu-figure">
     <div class="gen-menu-demo">
       <md-text-input id="swap-anchor" label="菜单" readonly value="两条"></md-text-input>
-      <md-gen-menu id="swap-menu" anchor="swap-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4">
+      <md-gen-menu id="swap-menu" anchor="swap-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4">
         <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="start" selected data-icon="star-filled"></svg>一条</md-gen-menu-item>
         <md-gen-menu-item selected><svg slot="start" data-icon="star"></svg><svg slot="start" selected data-icon="star-filled"></svg>两条</md-gen-menu-item>
         <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="start" selected data-icon="star-filled"></svg>三条</md-gen-menu-item>
@@ -129,7 +129,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
 ```html
 <div style="position: relative">
   <md-text-input id="swap-anchor" label="菜单" readonly value="两条"></md-text-input>
-  <md-gen-menu id="swap-menu" anchor="swap-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4">
+  <md-gen-menu id="swap-menu" anchor="swap-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4">
     <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="start" selected data-icon="star-filled"></svg>一条</md-gen-menu-item>
     <md-gen-menu-item selected><svg slot="start" data-icon="star"></svg><svg slot="start" selected data-icon="star-filled"></svg>两条</md-gen-menu-item>
     <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="start" selected data-icon="star-filled"></svg>三条</md-gen-menu-item>
@@ -152,7 +152,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
   <figure class="gen-menu-figure">
     <div class="gen-menu-demo">
       <md-filled-tonal-button id="icons-anchor"><svg slot="icon" data-icon="star"></svg>标签</md-filled-tonal-button>
-      <md-gen-menu id="icons-menu" anchor="icons-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4">
+      <md-gen-menu id="icons-menu" anchor="icons-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4">
         <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="end" data-icon="arrow"></svg>一条</md-gen-menu-item>
         <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="end" data-icon="arrow"></svg>两条</md-gen-menu-item>
         <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="end" data-icon="arrow"></svg>三条</md-gen-menu-item>
@@ -165,7 +165,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
 ```html
 <div style="position: relative">
   <md-filled-tonal-button id="icons-anchor"><svg slot="icon" data-icon="star"></svg>标签</md-filled-tonal-button>
-  <md-gen-menu id="icons-menu" anchor="icons-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4">
+  <md-gen-menu id="icons-menu" anchor="icons-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4">
     <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="end" data-icon="arrow"></svg>一条</md-gen-menu-item>
     <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="end" data-icon="arrow"></svg>两条</md-gen-menu-item>
     <md-gen-menu-item><svg slot="start" data-icon="star"></svg><svg slot="end" data-icon="arrow"></svg>三条</md-gen-menu-item>
@@ -188,7 +188,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
   <figure class="gen-menu-figure">
     <div class="gen-menu-demo">
       <md-filled-icon-button id="groups-anchor" aria-label="打开菜单"><svg data-icon="star"></svg></md-filled-icon-button>
-      <md-gen-menu id="groups-menu" anchor="groups-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4" theme="vibrant">
+      <md-gen-menu id="groups-menu" anchor="groups-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4" theme="vibrant">
         <md-gen-menu-group>
           <md-gen-menu-item><svg slot="end" data-icon="arrow"></svg><md-icon slot="end" selected aria-hidden="true">check</md-icon>一条</md-gen-menu-item>
           <md-gen-menu-item selected><svg slot="end" data-icon="arrow"></svg><md-icon slot="end" selected aria-hidden="true">check</md-icon>两条</md-gen-menu-item>
@@ -206,7 +206,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
 ```html
 <div style="position: relative">
   <md-filled-icon-button id="groups-anchor" aria-label="打开菜单"><svg data-icon="star"></svg></md-filled-icon-button>
-  <md-gen-menu id="groups-menu" anchor="groups-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4" theme="vibrant">
+  <md-gen-menu id="groups-menu" anchor="groups-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4" theme="vibrant">
     <md-gen-menu-group>
       <md-gen-menu-item><svg slot="end" data-icon="arrow"></svg><md-icon slot="end" selected aria-hidden="true">check</md-icon>一条</md-gen-menu-item>
       <md-gen-menu-item selected><svg slot="end" data-icon="arrow"></svg><md-icon slot="end" selected aria-hidden="true">check</md-icon>两条</md-gen-menu-item>
@@ -234,7 +234,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
   <figure class="gen-menu-figure">
     <div class="gen-menu-demo">
       <md-filled-tonal-button id="disabled-anchor"><svg slot="icon" data-icon="star"></svg>标签</md-filled-tonal-button>
-      <md-gen-menu id="disabled-menu" anchor="disabled-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4">
+      <md-gen-menu id="disabled-menu" anchor="disabled-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4">
         <md-gen-menu-item>一条</md-gen-menu-item>
         <md-gen-menu-item disabled>禁用</md-gen-menu-item>
         <md-gen-menu-item selected disabled>选中并且禁用</md-gen-menu-item>
@@ -247,7 +247,7 @@ for (const svg of document.querySelectorAll('svg[data-icon]')) {
 ```html
 <div style="position: relative">
   <md-filled-tonal-button id="disabled-anchor"><svg slot="icon" data-icon="star"></svg>标签</md-filled-tonal-button>
-  <md-gen-menu id="disabled-menu" anchor="disabled-anchor" quick default-focus="none" anchor-corner="end-start" menu-corner="start-start" y-offset="4">
+  <md-gen-menu id="disabled-menu" anchor="disabled-anchor" quick anchor-corner="end-start" menu-corner="start-start" y-offset="4">
     <md-gen-menu-item>一条</md-gen-menu-item>
     <md-gen-menu-item disabled>禁用</md-gen-menu-item>
     <md-gen-menu-item selected disabled>选中并且禁用</md-gen-menu-item>

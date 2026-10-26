@@ -59,8 +59,8 @@ export class Modal extends LitElement {
   }
 
   /**
-   * 关掉时写入。主按钮是 primary，次要是 secondary，第三操作是 tertiary，关闭按钮是 close。取消时为空。只能用脚本读写。
-   * @en Which control closed the modal. Empty when canceled.
+   * 关掉时写入。主按钮是 primary，次要是 secondary，第三操作是 tertiary，关闭按钮是 close。取消钮、Esc、点遮罩是 cancel。只能用脚本读写。
+   * @en Which control closed the modal. Cancel, Escape, and the scrim set cancel.
    */
   @property({attribute: false}) returnValue = '';
 
@@ -124,6 +124,13 @@ export class Modal extends LitElement {
    * @en Tertiary action form.
    */
   @property({reflect: true}) tertiary: 'button' | 'checkbox' = 'button';
+
+  /**
+   * 第三操作是勾选时，是否勾上。
+   * @en Whether the tertiary checkbox is checked.
+   */
+  @property({type: Boolean, reflect: true, attribute: 'tertiary-checked'})
+  tertiaryChecked = false;
 
   /**
    * 标题。
@@ -210,7 +217,7 @@ export class Modal extends LitElement {
   }
 
   /**
-   * Closes the modal. Scrim and Escape call this without a return value.
+   * Closes the modal. Scrim and Escape pass cancel.
    */
   async close(returnValue = this.returnValue) {
     this.isOpening = false;
@@ -304,7 +311,10 @@ export class Modal extends LitElement {
               ? html`<div class="start">
                   ${this.tertiary === 'checkbox'
                     ? html`<div class="check">
-                        <md-checkbox touch-target="none"></md-checkbox>
+                        <md-checkbox
+                          touch-target="none"
+                          .checked=${this.tertiaryChecked}
+                          @change=${this.onTertiaryChange}></md-checkbox>
                         <slot
                           name="tertiary"
                           @click=${this.toggleCheckbox}></slot>
@@ -342,7 +352,11 @@ export class Modal extends LitElement {
     if (!this.checkbox) {
       return;
     }
-    this.checkbox.checked = !this.checkbox.checked;
+    this.tertiaryChecked = !this.tertiaryChecked;
+  };
+
+  private onTertiaryChange = (event: Event) => {
+    this.tertiaryChecked = (event.target as HTMLInputElement).checked;
   };
 
   private cancelFromControl = () => {
@@ -352,7 +366,7 @@ export class Modal extends LitElement {
     if (!proceed) {
       return;
     }
-    this.close();
+    this.close('cancel');
   };
 
   private handleDialogClick() {
@@ -380,7 +394,7 @@ export class Modal extends LitElement {
       return;
     }
 
-    this.close();
+    this.close('cancel');
   }
 
   private handleClose() {

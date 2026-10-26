@@ -17,7 +17,7 @@ interface Attachment {
  *
  * @en AI composer. The text control is a native textarea.
  *
- * @fires send {CustomEvent} 点击发送。detail 含 value 和 files --bubbles --composed
+ * @fires send {CustomEvent} 点击或按 Enter 发送。Shift+Enter 换行。detail 含 value 和 files --bubbles --composed
  * @fires interrupt {CustomEvent} 发送中点击停止 --bubbles --composed
  * @fires files-change {CustomEvent} 已选文件变化。detail 含 files --bubbles --composed
  */
@@ -77,7 +77,13 @@ export class AiInput extends LitElement {
     return this.value.trim().length > 0;
   }
 
+  override connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('click', this.onDocumentClick);
+  }
+
   override disconnectedCallback() {
+    document.removeEventListener('click', this.onDocumentClick);
     super.disconnectedCallback();
     for (const item of this.attachments) {
       URL.revokeObjectURL(item.url);
@@ -110,7 +116,7 @@ export class AiInput extends LitElement {
     );
 
     return html`
-      <div class="main">
+      <div class="main" @keydown=${this.onKeydown}>
         <div class="frame">
           <div class="field" part="field">
           ${images.length
@@ -145,6 +151,7 @@ export class AiInput extends LitElement {
                 rows="1"
                 ?readonly=${this.thinking}
                 @input=${this.onInput}
+                @keydown=${this.onFieldKeydown}
               ></textarea>
             </div>
             <div class="cluster">
@@ -231,6 +238,27 @@ export class AiInput extends LitElement {
     }
     this.value = field.value;
   }
+
+  private onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.menuOpen = false;
+    }
+  }
+
+  private onFieldKeydown(event: KeyboardEvent) {
+    if (event.key !== 'Enter' || event.shiftKey || event.isComposing) {
+      return;
+    }
+    event.preventDefault();
+    this.onSend();
+  }
+
+  private onDocumentClick = (event: Event) => {
+    if (!this.menuOpen || event.composedPath().includes(this)) {
+      return;
+    }
+    this.menuOpen = false;
+  };
 
   private toggleMenu() {
     this.menuOpen = !this.menuOpen;

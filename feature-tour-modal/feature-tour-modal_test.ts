@@ -145,7 +145,7 @@ describe('<md-feature-tour-modal>', () => {
     await env.waitForStability();
     expect(canceled).toBeTrue();
     expect(modal.open).toBeFalse();
-    expect(modal.returnValue).toBe('');
+    expect(modal.returnValue).toBe('cancel');
   });
 
   it('places the caret on four edges', async () => {

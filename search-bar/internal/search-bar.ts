@@ -38,6 +38,12 @@ export class SearchBar extends LitElement {
    */
   @property({type: Boolean, reflect: true}) open = false;
 
+  /**
+   * 禁用输入、清空、麦克风和提交。
+   * @en Disables typing, clear, the microphone, and submit.
+   */
+  @property({type: Boolean, reflect: true}) disabled = false;
+
   @query('input') private textField!: HTMLInputElement;
   @query('.items') private itemsEl!: HTMLElement | null;
   @query('.scrollbar') private scrollbarEl!: HTMLElement | null;
@@ -83,6 +89,7 @@ export class SearchBar extends LitElement {
               .value=${this.value}
               placeholder=${this.placeholder}
               aria-label="搜索"
+              ?disabled=${this.disabled}
               @input=${this.onInput}
               @keydown=${this.onKeydown}
             />
@@ -90,6 +97,7 @@ export class SearchBar extends LitElement {
               ? html`<md-filled-tonal-icon-button
                   class="clear"
                   aria-label="清除"
+                  ?disabled=${this.disabled}
                   @click=${this.clearText}
                 >
                   <md-icon>close</md-icon>
@@ -97,6 +105,7 @@ export class SearchBar extends LitElement {
               : html`<md-icon-button
                   class="mic"
                   aria-label="麦克风"
+                  ?disabled=${this.disabled}
                   @click=${this.onMic}
                 >
                   <md-icon>mic</md-icon>
@@ -107,11 +116,12 @@ export class SearchBar extends LitElement {
               ? html`<md-filled-icon-button
                   class="filled"
                   aria-label="提交"
+                  ?disabled=${this.disabled}
                   @click=${this.submit}
                 >
                   <md-icon>arrow_forward</md-icon>
                 </md-filled-icon-button>`
-              : html`<md-icon-button class="empty" aria-label="提交">
+              : html`<md-icon-button class="empty" aria-label="提交" disabled>
                   <md-icon>arrow_forward</md-icon>
                 </md-icon-button>`}
           </div>
@@ -143,7 +153,7 @@ export class SearchBar extends LitElement {
   }
 
   private submit() {
-    if (!this.hasText) {
+    if (this.disabled || !this.hasText) {
       return;
     }
     this.dispatchEvent(
@@ -156,6 +166,9 @@ export class SearchBar extends LitElement {
   }
 
   private onMic() {
+    if (this.disabled) {
+      return;
+    }
     this.dispatchEvent(new CustomEvent('mic', {bubbles: true, composed: true}));
   }
 
