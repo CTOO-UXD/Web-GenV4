@@ -4,6 +4,10 @@
 
 ## 2026-10-26
 
+* 发布v0.0.2版本
+  * `package.json`
+  * `package-lock.json`
+
 * 分步引导没放上一页或下一页时自己画按钮，页面放了就不改
   * `hero-modal/`
   * `feature-tour-modal/`
