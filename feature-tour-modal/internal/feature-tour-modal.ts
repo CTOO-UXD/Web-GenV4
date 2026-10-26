@@ -201,7 +201,11 @@ export class FeatureTourModal extends LitElement {
       return;
     }
 
+    const previousFocus = document.activeElement;
     dialog.show();
+    if (previousFocus instanceof HTMLElement) {
+      previousFocus.focus();
+    }
     this.returnValue = '';
     this.page = 0;
     this.open = true;
