@@ -177,7 +177,7 @@ export class FeatureTourModal extends LitElement {
   private swipeX = Number.NaN;
   private swipeY = Number.NaN;
   @state() private hasNext = false;
-  private nextIconText: string | null = null;
+  @state() private hasPrevious = false;
   private wheelX = 0;
   private wheelLocked = false;
   private wheelTimer = 0;
@@ -371,18 +371,29 @@ export class FeatureTourModal extends LitElement {
       </div>
       <div class="navs">
         <div class="nav prev" ?hidden=${this.page === 0}>
-          <slot name="previous" @click=${this.retreat}></slot>
+          <slot
+            name="previous"
+            @slotchange=${this.onPrevSlot}
+            @click=${this.retreat}></slot>
+          ${this.hasPrevious
+            ? nothing
+            : html`<md-outlined-icon-button
+                type="button"
+                aria-label="Previous"
+                @click=${this.retreat}>
+                <md-icon>arrow_back</md-icon>
+              </md-outlined-icon-button>`}
         </div>
         <div class="nav">
           <slot
             name="next"
             @slotchange=${this.onNextSlot}
             @click=${this.advance}></slot>
-          ${this.onLastPage && !this.hasNext
-            ? html`<md-icon-button type="button" aria-label="Next" @click=${this.advance}>
-                <md-icon>check</md-icon>
-              </md-icon-button>`
-            : nothing}
+          ${this.hasNext
+            ? nothing
+            : html`<md-filled-icon-button type="button" aria-label="Next" @click=${this.advance}>
+                <md-icon>${this.onLastPage ? 'check' : 'arrow_forward'}</md-icon>
+              </md-filled-icon-button>`}
         </div>
       </div>
     </div>`;
@@ -402,18 +413,6 @@ export class FeatureTourModal extends LitElement {
     this.pageElements().forEach((page, i) => {
       page.toggleAttribute('data-current', i === current);
     });
-    this.syncNextIcon();
-  }
-
-  private syncNextIcon() {
-    const icon = this.querySelector('[slot="next"] md-icon');
-    if (!(icon instanceof HTMLElement)) {
-      return;
-    }
-    if (this.nextIconText === null) {
-      this.nextIconText = icon.textContent?.trim() ?? '';
-    }
-    icon.textContent = this.onLastPage ? 'check' : this.nextIconText;
   }
 
   private pageElements() {
@@ -462,6 +461,11 @@ export class FeatureTourModal extends LitElement {
   private onNextSlot = (event: Event) => {
     const slot = event.target as HTMLSlotElement;
     this.hasNext = slot.assignedElements({flatten: true}).length > 0;
+  };
+
+  private onPrevSlot = (event: Event) => {
+    const slot = event.target as HTMLSlotElement;
+    this.hasPrevious = slot.assignedElements({flatten: true}).length > 0;
   };
 
   private get onLastPage() {

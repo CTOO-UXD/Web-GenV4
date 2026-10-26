@@ -370,8 +370,10 @@ describe('<md-hero-modal>', () => {
     await modal.updateComplete;
     expect(pages[3].hasAttribute('data-current')).toBeTrue();
     expect(modal.querySelector('[slot="next"] md-icon')!.textContent?.trim()).toBe(
-      'check',
+      'arrow_forward',
     );
+    expect(modal.shadowRoot!.querySelector('.navs md-filled-icon-button')).toBeNull();
+    expect(modal.shadowRoot!.querySelector('.navs md-outlined-icon-button')).toBeNull();
 
     const heroSurface = modal.shadowRoot!.querySelector('.hero')!;
     heroSurface.dispatchEvent(new PointerEvent('pointerdown', {clientX: 200, bubbles: true}));
@@ -392,6 +394,42 @@ describe('<md-hero-modal>', () => {
     await env.waitForStability();
     expect(modal.open).toBeFalse();
     expect(modal.returnValue).toBe('done');
+  });
+
+  it('uses an arrow then a check when next is not slotted', async () => {
+    const modal = await setup();
+    modal.querySelector('[slot="next"]')!.remove();
+    modal.type = 'walkthrough';
+    await modal.updateComplete;
+    await modal.show();
+    const builtin = () =>
+      modal.shadowRoot!.querySelector('.navs .nav:last-child md-filled-icon-button md-icon')!;
+    expect(builtin().textContent?.trim()).toBe('arrow_forward');
+    expect(modal.shadowRoot!.querySelector('.nav.prev md-outlined-icon-button')).toBeNull();
+    modal.shadowRoot!.querySelectorAll<HTMLButtonElement>('.dot')[3].click();
+    await modal.updateComplete;
+    expect(builtin().textContent?.trim()).toBe('check');
+    expect(modal.querySelector('[slot="next"]')).toBeNull();
+  });
+
+  it('shows a back button from the second page when previous is not slotted', async () => {
+    const modal = await setup();
+    modal.querySelector('[slot="previous"]')!.remove();
+    modal.type = 'walkthrough';
+    await modal.updateComplete;
+    await modal.show();
+    const prev = modal.shadowRoot!.querySelector('.nav.prev')!;
+    expect(prev.hasAttribute('hidden')).toBeTrue();
+    modal.querySelector<HTMLElement>('[slot="next"]')!.click();
+    await modal.updateComplete;
+    expect(prev.hasAttribute('hidden')).toBeFalse();
+    expect(prev.querySelector('md-outlined-icon-button md-icon')!.textContent?.trim()).toBe(
+      'arrow_back',
+    );
+    expect(modal.querySelector('[slot="previous"]')).toBeNull();
+    expect(modal.querySelector('[slot="next"] md-icon')!.textContent?.trim()).toBe(
+      'arrow_forward',
+    );
   });
 
   it('shows only the first page for the default type', async () => {

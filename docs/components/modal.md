@@ -113,6 +113,25 @@ import 'genv4/loading-modal/loading-modal.js';
 </md-feature-tour-modal>
 ```
 
+### 分步引导（walkthrough）
+
+只有 `<md-hero-modal>` 和 `<md-feature-tour-modal>` 有 `type="walkthrough"`。`<md-modal>` 和 `<md-loading-modal>` 没有这个类型。
+
+底栏是圆点和上一页、下一页。每一页是一个不带 slot 的 `<section>`。最后一页的下一步关掉弹窗，`returnValue` 是 `done`。当前页用 `page`，从 0 开始。用户翻页才发 `page-change`，脚本赋值不发。
+
+没放 `slot="next"` 时，前面的页是箭头，最后一页是勾。
+
+```html
+<md-feature-tour-modal type="walkthrough" open close content-margin>
+  <img slot="hero" src="tour.png" alt="">
+  <section><h2>第一页</h2><p>介绍一</p></section>
+  <section><h2>第二页</h2><p>介绍二</p></section>
+  <section><h2>第三页</h2><p>介绍三</p></section>
+</md-feature-tour-modal>
+```
+
+`<md-hero-modal>` 写法相同。页面如果放了 `slot="next"`，整页用页面的按钮，组件不改里面的节点。
+
 ### 加载弹窗
 
 上排是浮层，下排留在页面里。从左到右是大号、中号、小号。小号只有转圈，浮层小号是一块白卡片。完成后由页面把 `complete` 设为 true，转圈换成勾，卡片不自己关。

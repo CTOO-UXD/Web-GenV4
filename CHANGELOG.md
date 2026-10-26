@@ -4,6 +4,11 @@
 
 ## 2026-10-26
 
+* 分步引导没放上一页或下一页时自己画按钮，页面放了就不改
+  * `hero-modal/`
+  * `feature-tour-modal/`
+  * `docs/components/modal.md`
+
 * 补上当前页、取消返回值和发送键，末页下一步换成勾，空着的搜索不能提交
   * `modal/`
   * `hero-modal/`

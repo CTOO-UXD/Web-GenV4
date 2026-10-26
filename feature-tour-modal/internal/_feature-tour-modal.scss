@@ -342,7 +342,9 @@ $surface: var(--md-sys-color-surface, #fff);
     display: none;
   }
 
-  .nav ::slotted(*) {
+  .nav ::slotted(*),
+  .nav md-filled-icon-button,
+  .nav md-outlined-icon-button {
     --_nav-size: 48px;
     --md-filled-icon-button-container-height: var(--_nav-size);
     --md-filled-icon-button-container-width: var(--_nav-size);

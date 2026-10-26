@@ -305,7 +305,9 @@ describe('<md-feature-tour-modal>', () => {
     await modal.updateComplete;
     expect(pages[3].hasAttribute('data-current')).toBeTrue();
     const nextIcon = modal.querySelector('[slot="next"] md-icon')!;
-    expect(nextIcon.textContent?.trim()).toBe('check');
+    expect(nextIcon.textContent?.trim()).toBe('arrow_forward');
+    expect(modal.shadowRoot!.querySelector('.navs md-filled-icon-button')).toBeNull();
+    expect(modal.shadowRoot!.querySelector('.navs md-outlined-icon-button')).toBeNull();
 
     const closed = whenClosed(modal);
     (modal.querySelector('[slot="next"]') as HTMLElement).click();
@@ -318,6 +320,42 @@ describe('<md-feature-tour-modal>', () => {
     expect(pages[0].hasAttribute('data-current')).toBeTrue();
     expect(modal.shadowRoot!.querySelector('.nav.prev')!.hasAttribute('hidden')).toBeTrue();
     expect(nextIcon.textContent?.trim()).toBe('arrow_forward');
+  });
+
+  it('uses an arrow then a check when next is not slotted', async () => {
+    const modal = await setup();
+    modal.querySelector('[slot="next"]')!.remove();
+    modal.type = 'walkthrough';
+    await modal.updateComplete;
+    await modal.show();
+    const builtin = () =>
+      modal.shadowRoot!.querySelector('.navs .nav:last-child md-filled-icon-button md-icon')!;
+    expect(builtin().textContent?.trim()).toBe('arrow_forward');
+    expect(modal.shadowRoot!.querySelector('.nav.prev md-outlined-icon-button')).toBeNull();
+    (modal.shadowRoot!.querySelectorAll('.dot')[3] as HTMLElement).click();
+    await modal.updateComplete;
+    expect(builtin().textContent?.trim()).toBe('check');
+    expect(modal.querySelector('[slot="next"]')).toBeNull();
+  });
+
+  it('shows a back button from the second page when previous is not slotted', async () => {
+    const modal = await setup();
+    modal.querySelector('[slot="previous"]')!.remove();
+    modal.type = 'walkthrough';
+    await modal.updateComplete;
+    await modal.show();
+    const prev = modal.shadowRoot!.querySelector('.nav.prev')!;
+    expect(prev.hasAttribute('hidden')).toBeTrue();
+    (modal.querySelector('[slot="next"]') as HTMLElement).click();
+    await modal.updateComplete;
+    expect(prev.hasAttribute('hidden')).toBeFalse();
+    expect(prev.querySelector('md-outlined-icon-button md-icon')!.textContent?.trim()).toBe(
+      'arrow_back',
+    );
+    expect(modal.querySelector('[slot="previous"]')).toBeNull();
+    expect(modal.querySelector('[slot="next"] md-icon')!.textContent?.trim()).toBe(
+      'arrow_forward',
+    );
   });
 
   it('keeps the same hero while paging', async () => {

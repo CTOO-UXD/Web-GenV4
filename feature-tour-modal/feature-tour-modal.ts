@@ -13,7 +13,9 @@ import '../button/text-button.js';
 import '../checkbox/checkbox.js';
 import '../elevation/elevation.js';
 import '../icon/icon.js';
+import '../iconbutton/filled-icon-button.js';
 import '../iconbutton/icon-button.js';
+import '../iconbutton/outlined-icon-button.js';
 
 import {FeatureTourModal} from './internal/feature-tour-modal.js';
 import {styles} from './internal/feature-tour-modal-styles.cssresult.js';
